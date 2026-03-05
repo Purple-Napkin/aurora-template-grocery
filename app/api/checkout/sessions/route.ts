@@ -8,7 +8,8 @@ import { createCheckoutSession } from "@/lib/aurora";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { successUrl, cancelUrl, lineItems, currency, deliverySlotId, metadata } = body;
+    const { successUrl, cancelUrl, lineItems, currency, deliverySlotId, metadata, holmes_session_id } =
+      body;
 
     if (!successUrl || !cancelUrl || !lineItems?.length) {
       return NextResponse.json(
@@ -17,14 +18,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const result = await createCheckoutSession({
+    const params = {
       successUrl,
       cancelUrl,
       lineItems,
       currency,
       deliverySlotId,
       metadata,
-    });
+      ...(holmes_session_id && { holmes_session_id }),
+    };
+    const result = await createCheckoutSession(params as Parameters<typeof createCheckoutSession>[0]);
 
     return NextResponse.json(result);
   } catch (e) {

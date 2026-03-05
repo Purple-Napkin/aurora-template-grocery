@@ -54,6 +54,12 @@ export function Nav() {
               >
                 About
               </Link>
+              <Link
+                href="/demo"
+                className="text-sm text-aurora-accent/90 hover:text-aurora-accent font-medium transition-colors"
+              >
+                Demo
+              </Link>
             </div>
           </div>
 

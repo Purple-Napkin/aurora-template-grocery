@@ -45,7 +45,7 @@ export default function CartPage() {
 
   return (
     <div className="max-w-5xl mx-auto py-12 px-4 sm:px-6">
-      <h1 className="text-2xl font-bold mb-6">Your Basket</h1>
+      <h1 className="font-display text-2xl font-bold mb-6">Your Basket</h1>
 
       {store && (
         <div className="flex items-center justify-between p-4 rounded-component bg-aurora-surface/80 border border-aurora-border mb-6">

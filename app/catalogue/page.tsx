@@ -195,7 +195,7 @@ function CatalogueContent() {
 
         {/* Main content */}
         <main className="flex-1 min-w-0 sm:min-w-[280px]">
-          <h1 className="text-xl sm:text-2xl font-bold mb-4">Products</h1>
+          <h1 className="font-display text-xl sm:text-2xl font-bold mb-4">Products</h1>
 
           {/* Mobile filter drawer */}
           {filtersOpen && (
@@ -240,7 +240,7 @@ function CatalogueContent() {
                   return (
                     <div
                       key={id}
-                      className="group p-4 rounded-component bg-aurora-surface/80 border border-aurora-border hover:border-aurora-accent/40 hover:shadow-lg transition-all overflow-hidden"
+                      className="group p-4 rounded-2xl bg-aurora-surface/60 border border-aurora-border/80 hover:border-aurora-accent/50 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
                     >
                       <Link href={`/catalogue/${id}`} className="block">
                         <div className="aspect-square rounded-component bg-aurora-surface-hover mb-3 overflow-hidden">
@@ -256,7 +256,7 @@ function CatalogueContent() {
                             </div>
                           )}
                         </div>
-                        <p className="font-semibold text-sm sm:text-base truncate group-hover:text-aurora-accent transition-colors">
+                        <p className="font-display font-semibold text-sm sm:text-base truncate group-hover:text-aurora-accent transition-colors">
                           {name}
                         </p>
                         {(priceCents != null || (sellByWeight && pricePerUnit != null)) && (

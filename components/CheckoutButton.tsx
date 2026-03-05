@@ -26,6 +26,9 @@ export function CheckoutButton() {
       },
     }));
 
+    const holmes_session_id =
+      typeof window !== "undefined" ? window.holmes?.getSessionId?.() : undefined;
+
     try {
       const res = await fetch("/api/checkout/sessions", {
         method: "POST",
@@ -34,6 +37,7 @@ export function CheckoutButton() {
           successUrl,
           cancelUrl,
           lineItems,
+          ...(holmes_session_id && { holmes_session_id }),
         }),
       });
 

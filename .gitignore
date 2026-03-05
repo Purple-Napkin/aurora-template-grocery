@@ -4,3 +4,7 @@ node_modules
 .DS_Store
 sdk/node_modules
 tsconfig.tsbuildinfo
+
+# Playwright
+playwright-report/
+test-results/

@@ -30,49 +30,51 @@ export async function HeroBanner() {
   const subtitle = banner?.subtitle ?? "Quality products at affordable prices, delivered when you need them.";
 
   return (
-    <section className="relative py-20 sm:py-28 px-4 sm:px-6 overflow-hidden min-h-[320px]">
-      <div className="absolute inset-0 bg-gradient-to-b from-aurora-surface/30 to-transparent" />
+    <section className="relative py-24 sm:py-32 px-4 sm:px-6 overflow-hidden min-h-[360px]">
+      <div className="absolute inset-0 bg-gradient-to-br from-aurora-accent/5 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-aurora-bg/80 via-transparent to-transparent" />
       <div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-25 scale-105"
         style={{
           backgroundImage: `url(${bgImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(56,189,248,0.12),transparent)]" />
       <div className="relative z-10 flex flex-col items-center justify-center text-center">
         {logoUrl ? (
-          <Link href="/" className="mb-6 block drop-shadow-2xl">
+          <Link href="/" className="mb-8 block drop-shadow-2xl transition-transform hover:scale-105">
             <img
               src={logoUrl}
               alt=""
-              className="h-24 sm:h-32 md:h-40 w-auto object-contain max-w-[min(80vw,360px)]"
+              className="h-28 sm:h-36 md:h-44 w-auto object-contain max-w-[min(80vw,400px)]"
             />
           </Link>
         ) : (
-          <p className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6 text-white drop-shadow-2xl">
+          <p className="font-display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-8 text-white drop-shadow-2xl">
             {siteName}
           </p>
         )}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-white drop-shadow-lg">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-5 text-white drop-shadow-lg">
           {title}
         </h1>
-        <p className="text-aurora-muted text-base sm:text-lg max-w-2xl mx-auto font-medium mb-2 drop-shadow">
+        <p className="text-aurora-muted text-lg sm:text-xl max-w-2xl mx-auto font-medium mb-3 drop-shadow">
           {subtitle}
         </p>
         <p className="text-aurora-muted/80 text-sm max-w-xl mx-auto mb-8 drop-shadow">
           Browse vegetables, bakery, dairy, snacks & more — all from your favourite local stores.
         </p>
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-4 mt-2">
           <Link
             href={banner?.link_url ?? "/catalogue"}
-            className="inline-block px-8 py-4 rounded-component bg-aurora-accent text-aurora-bg font-bold text-base hover:opacity-90 hover:shadow-lg transition-all"
+            className="inline-block px-8 py-4 rounded-xl bg-aurora-accent text-aurora-bg font-bold text-base hover:opacity-90 hover:shadow-[0_0_30px_rgba(56,189,248,0.4)] transition-all duration-300"
           >
             Shop Now
           </Link>
           <Link
             href="/offers"
-            className="inline-block px-8 py-4 rounded-component border-2 border-white/30 text-white font-bold text-base hover:bg-white/10 transition-all"
+            className="inline-block px-8 py-4 rounded-xl border-2 border-white/40 text-white font-semibold text-base hover:bg-white/10 hover:border-white/60 transition-all duration-300"
           >
             View Offers
           </Link>
