@@ -30,7 +30,7 @@ export default function HomePage() {
       <section className="py-12">
         <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
           Special Offers
-          <span className="text-aurora-muted text-base font-normal">Store-specific promotions</span>
+          <span className="text-aurora-muted text-base font-normal">Store-specific offers</span>
         </h2>
         <SpecialOffers />
       </section>

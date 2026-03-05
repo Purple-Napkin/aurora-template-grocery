@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { HolmesSprinkleIcon } from "./HolmesSprinkleIcon";
 
 export type CategoryItem = { name: string; slug: string };
 
@@ -15,6 +16,7 @@ type CatalogueFiltersProps = {
   storeName?: string;
   onClose?: () => void;
   variant?: "sidebar" | "drawer";
+  suggestedSlugs?: string[];
 };
 
 export function CatalogueFilters({
@@ -25,6 +27,7 @@ export function CatalogueFilters({
   storeName,
   onClose,
   variant = "sidebar",
+  suggestedSlugs = [],
 }: CatalogueFiltersProps) {
   const sortOptions: { id: SortOption; label: string }[] = [
     { id: "featured", label: "Featured" },
@@ -52,20 +55,32 @@ export function CatalogueFilters({
           >
             All categories
           </Link>
-          {categories.map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/catalogue?category=${encodeURIComponent(cat.slug)}`}
-              onClick={onClose}
-              className={`block px-3 py-2 rounded-component text-sm font-medium transition-colors ${
-                currentCategory === cat.slug
-                  ? "bg-aurora-accent/20 text-aurora-accent border border-aurora-accent/40"
-                  : "text-aurora-muted hover:text-white hover:bg-aurora-surface/60 border border-transparent"
-              }`}
-            >
-              {cat.name}
-            </Link>
-          ))}
+          {[...categories]
+            .sort((a, b) => {
+              const aSuggested = suggestedSlugs.includes(a.slug);
+              const bSuggested = suggestedSlugs.includes(b.slug);
+              if (aSuggested && !bSuggested) return -1;
+              if (!aSuggested && bSuggested) return 1;
+              return 0;
+            })
+            .map((cat) => {
+              const isSuggested = suggestedSlugs.includes(cat.slug);
+              return (
+              <Link
+                key={cat.slug}
+                href={`/catalogue?category=${encodeURIComponent(cat.slug)}`}
+                onClick={onClose}
+                className={`flex items-center gap-2 px-3 py-2 rounded-component text-sm font-medium transition-colors ${
+                  currentCategory === cat.slug
+                    ? "bg-aurora-accent/20 text-aurora-accent border border-aurora-accent/40"
+                    : "text-aurora-muted hover:text-white hover:bg-aurora-surface/60 border border-transparent"
+                }`}
+              >
+                {isSuggested && <HolmesSprinkleIcon className="shrink-0" />}
+                {cat.name}
+              </Link>
+            );
+          })}
         </nav>
       </section>
 

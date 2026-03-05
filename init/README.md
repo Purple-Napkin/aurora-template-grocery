@@ -6,14 +6,15 @@ This folder holds everything that runs **once** when your app starts, so the Aur
 
 | File | Purpose |
 |------|--------|
-| **schema.json** | Template schema (tables, optional reports/workflows). Sent to `POST /v1/provision-schema` when the tenant has no tables. |
-| **provision.ts** | Logic: check if tables exist → if not, load schema and call the API. Used by `register.ts` and by `pnpm schema:provision`. |
+| **schema-v2.json** | Enterprise schema (Offers, vendor_products, etc.). Preferred when present. |
+| **schema.json** | Base template schema. Used when schema-v2.json is absent. |
+| **provision.ts** | Logic: load schema-v2.json if exists else schema.json → call API. Used by `register.ts` and `pnpm schema:provision`. |
 | **register.ts** | Next.js instrumentation hook: calls `runFirstRunProvision()` on server start. Root `instrumentation.ts` only re-exports this (Next.js requires that file at project root). |
 
 ## When it runs
 
 - **On server start:** Next.js runs root `instrumentation.ts` → `init/register.ts` → `runFirstRunProvision()`. Skips if env vars are missing or the tenant already has tables.
-- **Manually:** `pnpm schema:provision` (see `scripts/provision-schema.mjs`) reads `init/schema.json` and calls the same API.
+- **Manually:** `pnpm schema:provision` (see `scripts/provision-schema.mjs`) reads `init/schema-v2.json` (or `schema.json`) and calls the same API.
 
 ## Env vars
 

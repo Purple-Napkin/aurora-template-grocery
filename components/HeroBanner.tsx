@@ -71,10 +71,10 @@ export async function HeroBanner() {
             Shop Now
           </Link>
           <Link
-            href="/promotions"
+            href="/offers"
             className="inline-block px-8 py-4 rounded-component border-2 border-white/30 text-white font-bold text-base hover:bg-white/10 transition-all"
           >
-            View Promotions
+            View Offers
           </Link>
         </div>
       </div>

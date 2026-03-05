@@ -83,7 +83,10 @@ export default function CartPage() {
                 key={item.id}
                 className="flex gap-4 p-4 rounded-component bg-aurora-surface border border-aurora-border"
               >
-                <div className="w-16 h-16 rounded-component bg-aurora-surface-hover shrink-0 overflow-hidden">
+                <Link
+                  href={`/catalogue/${item.recordId}`}
+                  className="w-16 h-16 rounded-component bg-aurora-surface-hover shrink-0 overflow-hidden block hover:opacity-90 transition-opacity"
+                >
                   {item.imageUrl ? (
                     <img
                       src={item.imageUrl}
@@ -91,10 +94,15 @@ export default function CartPage() {
                       className="w-full h-full object-cover"
                     />
                   ) : null}
-                </div>
+                </Link>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-sm text-aurora-muted">
+                  <Link
+                    href={`/catalogue/${item.recordId}`}
+                    className="font-medium hover:text-aurora-accent transition-colors block"
+                  >
+                    {item.name}
+                  </Link>
+                  <p className="text-sm text-aurora-muted mt-0.5">
                     {formatPrice(item.unitAmount)}
                     {item.sellByWeight ? `/${item.unit || "kg"}` : ""} × {item.quantity}
                     {item.sellByWeight ? ` ${item.unit || "kg"}` : ""}
@@ -130,6 +138,7 @@ export default function CartPage() {
               </div>
             ))}
           </div>
+          <div data-holmes="basket-bundle" className="mt-6" />
         </div>
 
         <div>

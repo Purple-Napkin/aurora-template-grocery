@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 /**
  * Provision the e-commerce schema for your Aurora tenant (first run).
- * Reads init/schema.json and POSTs to /v1/provision-schema. Base: marketplace-base.
+ * Prefers init/schema-v2.json (enterprise/Offers), falls back to init/schema.json.
+ * POSTs to /v1/provision-schema. Base: marketplace-base.
  *
  * Requires: AURORA_API_URL, AURORA_API_KEY. Run: pnpm schema:provision
  */
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
@@ -20,8 +21,12 @@ if (!apiUrl || !apiKey) {
   process.exit(1);
 }
 
+const schemaV2Path = join(__dirname, "../init/schema-v2.json");
 const schemaPath = join(__dirname, "../init/schema.json");
-const schema = JSON.parse(readFileSync(schemaPath, "utf8"));
+const pathToUse = existsSync(schemaV2Path) ? schemaV2Path : schemaPath;
+const raw = readFileSync(pathToUse, "utf8");
+const parsed = JSON.parse(raw);
+const schema = typeof parsed.tables !== "undefined" ? parsed : { tables: parsed };
 
 const base = apiUrl.replace(/\/$/, "");
 const url = `${base}/v1/provision-schema`;

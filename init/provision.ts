@@ -45,13 +45,16 @@ export async function tenantHasTables(baseUrl: string, apiKey: string): Promise<
   return Array.isArray(tables) && tables.length > 0;
 }
 
-/** Load init/schema.json from the project root. Uses fs/path so Webpack can externalize them. */
+/** Load schema from init/. Prefers schema-v2.json (enterprise/Offers) when it exists. */
 export function loadSchema(): SchemaShape {
   const fs = require("fs") as typeof import("node:fs");
   const path = require("path") as typeof import("node:path");
+  const schemaV2Path = path.join(process.cwd(), "init", "schema-v2.json");
   const schemaPath = path.join(process.cwd(), "init", "schema.json");
-  const raw = fs.readFileSync(schemaPath, "utf8");
-  return JSON.parse(raw);
+  const pathToUse = fs.existsSync(schemaV2Path) ? schemaV2Path : schemaPath;
+  const raw = fs.readFileSync(pathToUse, "utf8");
+  const parsed = JSON.parse(raw);
+  return typeof parsed.tables !== "undefined" ? parsed : { tables: parsed };
 }
 
 /** POST schema to Aurora; returns the API response. */

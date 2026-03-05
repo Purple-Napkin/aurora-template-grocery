@@ -90,6 +90,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  useEffect(() => {
+    if (!mounted) return;
+    const handler = (e: Event) => {
+      const d = (e as CustomEvent<{ products: Array<{ id: string; name: string; price: number; image?: string }>; tableSlug: string }>).detail;
+      if (!d?.products?.length || !d.tableSlug) return;
+      for (const p of d.products) {
+        addItem({
+          recordId: p.id,
+          tableSlug: d.tableSlug,
+          name: p.name,
+          unitAmount: p.price,
+          imageUrl: p.image,
+        });
+      }
+    };
+    document.addEventListener("holmes:addBundle", handler);
+    return () => document.removeEventListener("holmes:addBundle", handler);
+  }, [addItem, mounted]);
+
   const removeItem = useCallback((id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
   }, []);

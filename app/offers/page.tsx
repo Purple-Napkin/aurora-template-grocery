@@ -1,0 +1,214 @@
+import Link from "next/link";
+import { createAuroraClient } from "@/lib/aurora";
+import { AddToCartButton } from "@/components/AddToCartButton";
+import { StoreContextBar } from "@/components/StoreContextBar";
+
+export const dynamic = "force-dynamic";
+
+function getImageUrl(record: Record<string, unknown>): string | null {
+  const field = ["image_url", "image", "thumbnail", "photo"].find((f) => record[f]);
+  return field ? String(record[field]) : null;
+}
+
+function getPrice(record: Record<string, unknown>): number | undefined {
+  if (record.on_sale && record.sale_price != null) return Number(record.sale_price);
+  if (record.reduced_price != null) return Number(record.reduced_price);
+  const field = ["price", "amount", "value"].find((f) => record[f] != null);
+  return field ? Number(record[field]) : undefined;
+}
+
+function getDisplayName(record: Record<string, unknown>): string {
+  return String(record.name_en ?? record.name ?? record.title ?? record.id ?? "");
+}
+
+function formatPrice(cents: number, currency = "GBP"): string {
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency,
+  }).format(cents / 100);
+}
+
+type ContentMode = "offers" | "products";
+
+export default async function OffersPage() {
+  let records: Record<string, unknown>[] = [];
+  let catalogTableSlug: string | null = null;
+  let currency = "GBP";
+  let mode: ContentMode = "products";
+
+  try {
+    const aurora = createAuroraClient();
+    const config = await aurora.store.config();
+    if (!config.enabled) {
+      return (
+        <div className="max-w-6xl mx-auto py-16 px-6 text-center">
+          <p className="text-aurora-muted">Unable to load offers. Configure your store in Aurora Studio.</p>
+        </div>
+      );
+    }
+
+    catalogTableSlug = config.catalogTableSlug ?? null;
+    currency = (config as { currency?: string }).currency ?? "GBP";
+
+    try {
+      const offersResult = await aurora.tables("offers").records.list({
+        limit: 48,
+        sort: "created_at",
+        order: "desc",
+      });
+      const offerRecords = (offersResult.data ?? []).filter(
+        (r: Record<string, unknown>) => {
+          const startsAt = r.starts_at as string | null | undefined;
+          const endsAt = r.ends_at as string | null | undefined;
+          const now = new Date().toISOString();
+          if (startsAt && startsAt > now) return false;
+          if (endsAt && endsAt < now) return false;
+          return r.name != null || r.name_en != null;
+        }
+      );
+      if (offerRecords.length > 0) {
+        records = offerRecords;
+        mode = "offers";
+      }
+    } catch {
+      /* offers table may not exist or may not be public */
+    }
+
+    if (records.length === 0 && catalogTableSlug) {
+      const result = await aurora.tables(catalogTableSlug).records.list({
+        limit: 48,
+        sort: "created_at",
+        order: "desc",
+      });
+      records = (result.data ?? []).filter(
+        (r: Record<string, unknown>) => r.on_sale === true || r.sale_price != null
+      );
+      if (records.length === 0) {
+        records = (result.data ?? []).slice(0, 12);
+      }
+    }
+  } catch {
+    return (
+      <div className="max-w-6xl mx-auto py-16 px-6 text-center">
+        <p className="text-aurora-muted">
+          Unable to load offers. Configure your store in Aurora Studio.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-6xl mx-auto">
+      <StoreContextBar />
+      <div className="py-12 px-4 sm:px-6">
+        <h1 className="text-2xl font-bold mb-2">Offers</h1>
+        <p className="text-aurora-muted mb-8">
+          Store-specific offers and deals.
+        </p>
+        {records.length === 0 ? (
+          <p className="text-aurora-muted py-12">
+            No offers at the moment. Add offers in Aurora Studio or products with on_sale.
+          </p>
+        ) : mode === "offers" ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {records.map((record) => {
+              const id = String(record.id ?? "");
+              const name = getDisplayName(record);
+              const desc = String(record.description_en ?? record.description ?? "").slice(0, 80);
+              const rawPrice = getPrice(record);
+              const priceCents = rawPrice != null ? (rawPrice < 100 && rawPrice > 0 ? Math.round(rawPrice * 100) : Math.round(rawPrice)) : undefined;
+              const label = String(record.label_en ?? record.type ?? "");
+
+              return (
+                <div
+                  key={id}
+                  className="p-4 rounded-component bg-aurora-surface/80 border border-aurora-border hover:border-aurora-accent/40 transition-all"
+                >
+                  <div className="aspect-square rounded-component bg-aurora-surface-hover mb-3 flex items-center justify-center text-aurora-muted text-4xl">
+                    —
+                  </div>
+                  <p className="font-semibold text-sm truncate">{name}</p>
+                  {label && (
+                    <span className="inline-block px-2 py-0.5 rounded bg-aurora-accent/20 text-aurora-accent text-xs font-medium mt-1">
+                      {label}
+                    </span>
+                  )}
+                  {desc && <p className="text-xs text-aurora-muted mt-1 line-clamp-2">{desc}</p>}
+                  {priceCents != null && (
+                    <p className="text-sm mt-1 font-bold text-aurora-accent">
+                      {formatPrice(priceCents, currency)}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {records.map((record) => {
+              const id = String(record.id ?? "");
+              const name = getDisplayName(record);
+              const sellByWeight = Boolean(record.sell_by_weight);
+              const unit = (record.unit as string) || "kg";
+              const pricePerUnit = record.price_per_unit as number | undefined;
+              const rawPrice = getPrice(record);
+              const priceCents =
+                sellByWeight && pricePerUnit != null
+                  ? Math.round(pricePerUnit * 100)
+                  : rawPrice != null
+                    ? (rawPrice < 100 && rawPrice > 0 ? Math.round(rawPrice * 100) : Math.round(rawPrice))
+                    : undefined;
+              const imageUrl = getImageUrl(record);
+              const isOnSale = record.on_sale === true;
+
+              return (
+                <div
+                  key={id}
+                  className="p-4 rounded-component bg-aurora-surface/80 border border-aurora-border hover:border-aurora-accent/40 transition-all"
+                >
+                  {isOnSale && (
+                    <span className="inline-block px-2 py-0.5 rounded bg-aurora-accent/20 text-aurora-accent text-xs font-medium mb-2">
+                      On Sale
+                    </span>
+                  )}
+                  <Link href={`/catalogue/${id}`}>
+                    <div className="aspect-square rounded-component bg-aurora-surface-hover mb-3 overflow-hidden">
+                      {imageUrl ? (
+                        <img src={imageUrl} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">
+                          —
+                        </div>
+                      )}
+                    </div>
+                    <p className="font-semibold text-sm truncate">{name}</p>
+                    {(priceCents != null || (sellByWeight && pricePerUnit != null)) && (
+                      <p className="text-sm mt-1 font-bold text-aurora-accent">
+                        {sellByWeight && pricePerUnit != null
+                          ? formatPrice(Math.round(pricePerUnit * 100), currency) + `/${unit}`
+                          : formatPrice(priceCents!, currency)}
+                      </p>
+                    )}
+                  </Link>
+                  {priceCents != null && catalogTableSlug && (
+                    <div className="mt-3">
+                      <AddToCartButton
+                        recordId={id}
+                        tableSlug={catalogTableSlug}
+                        name={name}
+                        unitAmount={priceCents}
+                        sellByWeight={sellByWeight}
+                        unit={unit}
+                        imageUrl={imageUrl}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -13,6 +13,7 @@ import {
   type CategoryItem,
   type SortOption,
 } from "@/components/CatalogueFilters";
+import { ProductCardSkeleton } from "@/components/ProductCardSkeleton";
 
 const DEFAULT_CATEGORIES: CategoryItem[] = [
   { name: "Bakery Items", slug: "bakery-items" },
@@ -52,6 +53,7 @@ function CatalogueContent() {
   const [currency, setCurrency] = useState("GBP");
   const [page, setPage] = useState(0);
   const [categories, setCategories] = useState<CategoryItem[]>(DEFAULT_CATEGORIES);
+  const [suggestedSlugs, setSuggestedSlugs] = useState<string[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const limit = 24;
 
@@ -135,6 +137,26 @@ function CatalogueContent() {
     loadProducts();
   }, [loadProducts]);
 
+  useEffect(() => {
+    let cancelled = false;
+    const fetchSuggested = () => {
+      const sid = typeof window !== "undefined" && (window as { holmes?: { getSessionId?: () => string } }).holmes?.getSessionId?.();
+      if (!sid || cancelled) return;
+      fetch(`/api/category-suggestions?sid=${encodeURIComponent(sid)}`)
+        .then((r) => (r.ok ? r.json() : { suggested: [] }))
+        .then((data) => {
+          if (!cancelled && Array.isArray(data?.suggested)) setSuggestedSlugs(data.suggested);
+        })
+        .catch(() => {});
+    };
+    fetchSuggested();
+    const t = setTimeout(fetchSuggested, 2000);
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+    };
+  }, []);
+
   const handleSortChange = useCallback((sort: SortOption) => {
     setTab(sort);
     setPage(0);
@@ -151,6 +173,7 @@ function CatalogueContent() {
           onSortChange={handleSortChange}
           storeName={store?.name}
           variant="sidebar"
+          suggestedSlugs={suggestedSlugs}
         />
 
         {/* Mobile filters bar */}
@@ -185,12 +208,17 @@ function CatalogueContent() {
                 storeName={store?.name}
                 onClose={() => setFiltersOpen(false)}
                 variant="drawer"
+                suggestedSlugs={suggestedSlugs}
               />
             </div>
           )}
 
           {loading ? (
-            <p className="text-aurora-muted py-12 text-center">Loading…</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))}
+            </div>
           ) : (
             <>
               <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">

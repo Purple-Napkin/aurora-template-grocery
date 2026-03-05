@@ -14,8 +14,23 @@ declare global {
       setProductsViewed: (ids: string[]) => void;
       setCartCount: (n: number) => void;
       setCartItems: (items: Array<{ id: string; name: string; price: number }>) => void;
+      addBundleToCart?: (
+        products: Array<{ id: string; name: string; price: number; image?: string }>,
+        tableSlug: string
+      ) => void;
     };
   }
+}
+
+/** Dispatch event for Holmes to add a bundle to cart. CartProvider listens and calls addItem. */
+export function holmesAddBundle(
+  products: Array<{ id: string; name: string; price: number; image?: string }>,
+  tableSlug: string
+): void {
+  if (typeof document === "undefined") return;
+  document.dispatchEvent(
+    new CustomEvent("holmes:addBundle", { detail: { products, tableSlug } })
+  );
 }
 
 export function holmesSearch(query: string): void {

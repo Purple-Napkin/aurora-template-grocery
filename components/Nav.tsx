@@ -43,10 +43,10 @@ export function Nav() {
                 Home
               </Link>
               <Link
-                href="/promotions"
+                href="/offers"
                 className="text-sm text-aurora-muted hover:text-white transition-colors"
               >
-                Promotions
+                Offers
               </Link>
               <Link
                 href="/about"

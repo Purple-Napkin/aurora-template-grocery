@@ -1,6 +1,6 @@
 # Aurora E-commerce Starter Template
 
-A full-featured retail storefront for Aurora Studio. Showcases Aurora capabilities: Meilisearch search, Holmes mission inference, home page personalization, delivery slots, per-store promotions, and multi-step checkout.
+A full-featured retail storefront for Aurora Studio. Showcases Aurora capabilities: Meilisearch search, Holmes mission inference, home page personalization, delivery slots, per-store offers, and multi-step checkout.
 
 **Theme:** Dark mode by default. Set `NEXT_PUBLIC_THEME=light` for a light theme.
 
@@ -25,7 +25,7 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
    ```bash
    AURORA_API_URL=https://api.yourapp.com AURORA_API_KEY=aur_xxx pnpm schema:provision
    ```
-   Or import the schema in Aurora Studio: Data Builder → Import from JSON → `init/schema.json`.
+   By default uses `init/schema-v2.json` (enterprise schema with Offers) when present; otherwise `init/schema.json`. Or import in Aurora Studio: Data Builder → Import from JSON.
 
 4. **Enable Meilisearch** (for search): Aurora Studio → Settings → Search → configure Meilisearch, then run "Sync index" for your products table.
 
@@ -47,7 +47,7 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
 | **Product Detail** | Tabs, You May Also Like (Holmes recommendations when enabled) |
 | **Basket & Checkout** | Multi-step checkout, delivery slots, ACME test payment |
 | **Holmes** | AI mission inference, bundle banner, home page personalization |
-| **Promotions** | Store-specific offers and on-sale products |
+| **Offers** | Store-specific offers (from offers table) or on-sale products |
 | **Account** | Profile, Orders, Addresses (Supabase Auth for full features) |
 
 ---
@@ -69,7 +69,7 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
 
 ### 2. Schema Provisioning
 
-The template requires: vendors, categories, products, promotions, orders, order_items, product_substitutions, addresses, hero_banners, home_sections, curated_collections.
+The template requires: vendors, categories, products, offers (or products with on_sale), orders, order_items, product_substitutions, addresses, hero_banners, home_sections, curated_collections.
 
 **Option A — Provision script:**
 ```bash
@@ -77,7 +77,7 @@ AURORA_API_URL=https://api.yourapp.com AURORA_API_KEY=aur_xxx pnpm schema:provis
 ```
 
 **Option B — Import in Aurora Studio:**  
-Data Builder → Import from JSON → use `init/schema.json`
+Data Builder → Import from JSON → use `init/schema-v2.json` (enterprise) or `init/schema.json`
 
 ### 3. Meilisearch (Search)
 
