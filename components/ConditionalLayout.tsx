@@ -16,7 +16,9 @@ export function ConditionalLayout({ children }: { children: React.ReactNode }) {
     <>
       <Nav />
       <main className="min-h-[calc(100vh-3.5rem)] flex flex-col">
-        {children}
+        <div key={pathname} className="animate-page-enter">
+          {children}
+        </div>
         <Footer />
       </main>
     </>

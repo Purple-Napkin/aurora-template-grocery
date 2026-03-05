@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import "./globals.css";
 import { CartProvider } from "@/components/CartProvider";
+import { AddToCartFlyProvider } from "@/components/AddToCartFly";
 import { ConditionalHolmesScript } from "@/components/ConditionalHolmesScript";
 import { StoreProvider } from "@/components/StoreContext";
 import { AuthProvider } from "@/components/AuthProvider";
@@ -36,7 +37,9 @@ export default function RootLayout({
         <StoreProvider>
           <AuthProvider>
         <CartProvider>
-              <ConditionalLayout>{children}</ConditionalLayout>
+          <AddToCartFlyProvider>
+            <ConditionalLayout>{children}</ConditionalLayout>
+          </AddToCartFlyProvider>
         </CartProvider>
           </AuthProvider>
         </StoreProvider>

@@ -13,7 +13,9 @@ import {
   type CategoryItem,
   type SortOption,
 } from "@/components/CatalogueFilters";
+import { SortDropdown } from "@/components/SortDropdown";
 import { ProductCardSkeleton } from "@/components/ProductCardSkeleton";
+import { CatalogueEmptyState } from "@/components/CatalogueEmptyState";
 
 const DEFAULT_CATEGORIES: CategoryItem[] = [
   { name: "Bakery Items", slug: "bakery-items" },
@@ -41,9 +43,20 @@ function getDisplayName(record: Record<string, unknown>): string {
   return String(r.name ?? r.title ?? r.snippet ?? record.id ?? "");
 }
 
+function getBrand(record: Record<string, unknown>): string | null {
+  const brand = record.brand ?? record.brand_name ?? record.vendor_name;
+  return brand ? String(brand) : null;
+}
+
+function getRating(record: Record<string, unknown>): number | null {
+  const r = record.rating ?? record.average_rating ?? record.review_rating;
+  return r != null ? Number(r) : null;
+}
+
 function CatalogueContent() {
   const searchParams = useSearchParams();
   const category = searchParams.get("category") ?? "";
+  const q = searchParams.get("q") ?? "";
   const { store } = useStore();
   const [hits, setHits] = useState<SearchHit[]>([]);
   const [total, setTotal] = useState(0);
@@ -64,30 +77,19 @@ function CatalogueContent() {
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
-      try {
-        const aurora = createAuroraClient();
-        const config = await aurora.store.config();
-        const categorySlug = (config as { categoryTableSlug?: string }).categoryTableSlug;
-        if (!cancelled && config.enabled && categorySlug) {
-          const { data } = await aurora.tables(categorySlug).records.list({ limit: 20 });
-          if (data?.length) {
-            setCategories(
-              data.map((r: Record<string, unknown>) => ({
-                name: String(r.name ?? r.slug ?? r.id ?? ""),
-                slug: String(r.slug ?? r.name ?? r.id ?? "")
-                  .toLowerCase()
-                  .replace(/\s+/g, "-"),
-              }))
-            );
-          }
+    const url = store?.id
+      ? `/api/categories?vendorId=${encodeURIComponent(store.id)}`
+      : "/api/categories";
+    fetch(url)
+      .then((r) => r.json())
+      .then((d) => {
+        if (!cancelled && d.categories?.length) {
+          setCategories(d.categories);
         }
-      } catch {
-        /* use defaults */
-      }
-    })();
+      })
+      .catch(() => {});
     return () => { cancelled = true; };
-  }, []);
+  }, [store?.id]);
 
   const prevCategoryRef = useRef(category);
   if (prevCategoryRef.current !== category) {
@@ -101,7 +103,7 @@ function CatalogueContent() {
       const sort = tab === "new" ? "created_at" : tab === "sale" ? "price" : "name";
       const order = tab === "new" ? "desc" : "asc";
       const res = await search({
-        q: "",
+        q: q.trim() || undefined,
         limit,
         offset: page * limit,
         vendorId: store?.id,
@@ -117,7 +119,7 @@ function CatalogueContent() {
     } finally {
       setLoading(false);
     }
-  }, [store?.id, category, tab, page]);
+  }, [store?.id, category, q, tab, page]);
 
   useEffect(() => {
     let cancelled = false;
@@ -226,9 +228,12 @@ function CatalogueContent() {
           </span>
         </div>
 
-        {/* Main content */}
-        <main className="flex-1 min-w-0 w-full sm:min-w-[280px]">
-          <h1 className="font-display text-xl sm:text-2xl font-bold mb-4">Products</h1>
+        {/* Main content - min-w-0 lets it shrink; flex-1 lets it grow to fill space */}
+        <main className="flex-1 min-w-0 w-full sm:min-w-[280px] flex flex-col">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+            <h1 className="font-display text-xl sm:text-2xl font-bold">Products</h1>
+            <SortDropdown value={tab} onChange={handleSortChange} />
+          </div>
 
           {/* Mobile filter drawer */}
           {filtersOpen && (
@@ -246,15 +251,30 @@ function CatalogueContent() {
             </div>
           )}
 
-          {loading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 w-full">
-              {Array.from({ length: 12 }).map((_, i) => (
+          {/* Loading/empty/grid - ensure full width so layout doesn't collapse */}
+          <div className="min-h-[400px] w-full flex-1 min-w-0 flex">
+          {loading && hits.length === 0 && store ? (
+            <div className="grid gap-4 sm:gap-5 w-full transition-opacity duration-200 flex-1 min-w-0 grid-cols-[repeat(auto-fill,minmax(160px,1fr))]">
+              {Array.from({ length: 8 }).map((_, i) => (
                 <ProductCardSkeleton key={i} />
               ))}
             </div>
+          ) : hits.length === 0 ? (
+            <div className="w-full flex-1 flex items-start justify-center">
+            <CatalogueEmptyState
+              hasCategory={!!category}
+              hasStore={!!store}
+              categories={categoriesWithProducts}
+            />
+            </div>
           ) : (
+            <div className="w-full flex-1 min-w-0">
             <>
-              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 w-full">
+              <div
+                className={`grid gap-4 sm:gap-5 w-full transition-opacity duration-200 grid-cols-[repeat(auto-fill,minmax(160px,1fr))] ${
+                  loading ? "opacity-50 pointer-events-none" : ""
+                }`}
+              >
                 {hits.map((record) => {
                   const id = (record.recordId ?? record.id) as string;
                   const name = getDisplayName(record);
@@ -269,11 +289,13 @@ function CatalogueContent() {
                         ? Math.round(rawPrice * 100)
                         : undefined;
                   const imageUrl = getImageUrl(record);
+                  const brand = getBrand(record);
+                  const rating = getRating(record);
 
                   return (
                     <div
                       key={id}
-                      className="group p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+                      className="group p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 transition-all duration-200 overflow-hidden min-w-[160px] min-h-[280px] flex flex-col"
                     >
                       <Link href={`/catalogue/${id}`} className="block">
                         <div className="aspect-square rounded-lg bg-aurora-surface-hover mb-3 overflow-hidden">
@@ -289,6 +311,9 @@ function CatalogueContent() {
                             </div>
                           )}
                         </div>
+                        {brand && (
+                          <p className="text-xs text-aurora-muted truncate mb-0.5">{brand}</p>
+                        )}
                         <p className="font-semibold text-sm sm:text-base truncate group-hover:text-aurora-primary transition-colors">
                           {name}
                         </p>
@@ -299,9 +324,15 @@ function CatalogueContent() {
                               : formatPrice(priceCents!, currency)}
                           </p>
                         )}
+                        {rating != null && rating > 0 && (
+                          <p className="text-xs text-aurora-muted mt-1 flex items-center gap-1">
+                            <span className="text-amber-500">★</span>
+                            {rating.toFixed(1)}
+                          </p>
+                        )}
                       </Link>
                       {priceCents != null && catalogSlug && (
-                        <div className="mt-3">
+                        <div className="mt-auto pt-3">
                           <AddToCartButton
                             recordId={id}
                             tableSlug={catalogSlug}
@@ -317,15 +348,6 @@ function CatalogueContent() {
                   );
                 })}
               </div>
-              {hits.length === 0 && (
-                <p className="text-center text-aurora-muted py-12 w-full">
-                  {category
-                    ? "No products in this category yet. Try another category or add products in Aurora Studio."
-                    : !store
-                      ? "Select a store to see products."
-                      : "No products yet. Add products in Aurora Studio."}
-                </p>
-              )}
               {total > limit && (
                 <div className="flex justify-center gap-2 mt-8">
                   <button
@@ -350,7 +372,9 @@ function CatalogueContent() {
                 </div>
               )}
             </>
+            </div>
           )}
+          </div>
         </main>
       </div>
     </div>

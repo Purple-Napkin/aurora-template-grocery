@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useCart } from "./CartProvider";
+import { useAddToCartFly } from "./AddToCartFly";
 
 interface AddToCartButtonProps {
   recordId: string;
@@ -27,12 +28,15 @@ export function AddToCartButton({
   className,
 }: AddToCartButtonProps) {
   const { addItem } = useCart();
+  const flyCtx = useAddToCartFly();
   const [weight, setWeight] = useState<string>("1");
 
   if (sellByWeight) {
-    const handleAdd = () => {
+    const handleAdd = (e: React.MouseEvent) => {
       const w = parseFloat(weight);
       if (!Number.isFinite(w) || w <= 0) return;
+      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+      flyCtx?.triggerFly(imageUrl ?? null, rect);
       addItem({
         recordId,
         tableSlug,
@@ -62,7 +66,7 @@ export function AddToCartButton({
           onClick={handleAdd}
           className={
             className ??
-            "px-4 py-2 rounded-lg bg-aurora-primary text-white font-semibold hover:bg-aurora-primary-dark transition-colors"
+            "h-12 px-4 rounded-xl bg-aurora-primary text-white font-semibold hover:bg-aurora-primary-dark transition-colors"
           }
         >
           Add to cart
@@ -71,13 +75,19 @@ export function AddToCartButton({
     );
   }
 
+  const handleAdd = (e: React.MouseEvent) => {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    flyCtx?.triggerFly(imageUrl ?? null, rect);
+    addItem({ recordId, tableSlug, name, unitAmount, imageUrl });
+  };
+
   return (
     <button
       type="button"
-      onClick={() => addItem({ recordId, tableSlug, name, unitAmount, imageUrl })}
+      onClick={handleAdd}
       className={
         className ??
-        "px-4 py-2 rounded-lg bg-aurora-primary text-white font-semibold hover:bg-aurora-primary-dark transition-colors"
+        "h-12 px-4 rounded-xl bg-aurora-primary text-white font-semibold hover:bg-aurora-primary-dark transition-colors"
       }
     >
       Add to cart

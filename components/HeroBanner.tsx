@@ -8,7 +8,7 @@ import { createAuroraClient } from "@/lib/aurora";
 export async function HeroBanner() {
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Store";
   const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL ?? "";
-  const defaultImage = "https://images.unsplash.com/photo-1542838132-92c53300491e?w=1600";
+  const defaultImage = "/Hippo-Hero.jpg";
 
   let banners: Array<{ title?: string; subtitle?: string; image_url?: string; link_url?: string }> = [];
 
@@ -26,8 +26,8 @@ export async function HeroBanner() {
 
   const banner = banners[0];
   const bgImage = banner?.image_url || defaultImage;
-  const title = banner?.title ?? "Fresh groceries delivered to your door";
-  const subtitle = banner?.subtitle ?? "Quality products at affordable prices, delivered when you need them.";
+  const title = banner?.title ?? "Your weekly shop in 20 minutes";
+  const subtitle = banner?.subtitle ?? "Fresh groceries from local stores delivered today.";
 
   return (
     <section className="relative py-20 sm:py-28 px-4 sm:px-6 overflow-hidden min-h-[340px]">
@@ -67,15 +67,15 @@ export async function HeroBanner() {
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={banner?.link_url ?? "/catalogue"}
-            className="inline-flex items-center justify-center px-8 py-3.5 rounded-lg bg-aurora-primary text-white font-semibold text-base hover:bg-aurora-primary-dark transition-colors duration-200 shadow-sm"
+            className="inline-flex items-center justify-center h-12 px-8 rounded-xl bg-aurora-primary text-white font-semibold text-base hover:bg-aurora-primary-dark transition-colors duration-200 shadow-sm"
           >
-            Shop Now
+            Start Shopping
           </Link>
           <Link
-            href="/offers"
-            className="inline-flex items-center justify-center px-8 py-3.5 rounded-lg border-2 border-aurora-primary text-aurora-primary font-semibold text-base hover:bg-aurora-primary/5 transition-colors duration-200"
+            href="/catalogue"
+            className="inline-flex items-center justify-center h-12 px-8 rounded-xl border-2 border-aurora-primary text-aurora-primary font-semibold text-base hover:bg-aurora-primary/5 transition-colors duration-200"
           >
-            View Offers
+            Browse Categories
           </Link>
         </div>
       </div>

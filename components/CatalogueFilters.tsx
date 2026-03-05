@@ -1,12 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { HolmesSprinkleIcon } from "./HolmesSprinkleIcon";
 
 export type CategoryItem = { name: string; slug: string };
 
 export type SortOption = "featured" | "bestsellers" | "new" | "sale";
+
+export const SORT_OPTIONS: { id: SortOption; label: string }[] = [
+  { id: "featured", label: "Featured" },
+  { id: "bestsellers", label: "Bestsellers" },
+  { id: "new", label: "New Arrivals" },
+  { id: "sale", label: "On Sale" },
+];
 
 type CatalogueFiltersProps = {
   categories: CategoryItem[];
@@ -19,6 +27,34 @@ type CatalogueFiltersProps = {
   suggestedSlugs?: string[];
 };
 
+function FilterSection({
+  title,
+  children,
+  defaultOpen = true,
+}: {
+  title: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+
+  return (
+    <section className="border-b border-aurora-border last:border-0">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex items-center justify-between w-full py-3 text-left"
+      >
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-aurora-muted">
+          {title}
+        </h3>
+        <ChevronDown className={`w-4 h-4 text-aurora-muted transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && <div className="pb-3">{children}</div>}
+    </section>
+  );
+}
+
 export function CatalogueFilters({
   categories,
   currentCategory,
@@ -29,20 +65,10 @@ export function CatalogueFilters({
   variant = "sidebar",
   suggestedSlugs = [],
 }: CatalogueFiltersProps) {
-  const sortOptions: { id: SortOption; label: string }[] = [
-    { id: "featured", label: "Featured" },
-    { id: "bestsellers", label: "Bestsellers" },
-    { id: "new", label: "New Arrivals" },
-    { id: "sale", label: "On Sale" },
-  ];
-
   const content = (
-    <div className="space-y-6">
+    <div className="space-y-0">
       {/* Categories */}
-      <section>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-aurora-muted mb-3">
-          Categories
-        </h3>
+      <FilterSection title="Categories">
         <nav className="space-y-1">
           <Link
             href="/catalogue"
@@ -50,7 +76,7 @@ export function CatalogueFilters({
             className={`block px-3 py-2 rounded-component text-sm font-medium transition-colors ${
               !currentCategory
                 ? "bg-aurora-accent/20 text-aurora-accent border border-aurora-accent/40"
-                : "text-aurora-muted hover:text-white hover:bg-aurora-surface/60 border border-transparent"
+                : "text-aurora-muted hover:text-aurora-text hover:bg-aurora-surface-hover border border-transparent"
             }`}
           >
             All categories
@@ -73,7 +99,7 @@ export function CatalogueFilters({
                 className={`flex items-center gap-2 px-3 py-2 rounded-component text-sm font-medium transition-colors ${
                   currentCategory === cat.slug
                     ? "bg-aurora-accent/20 text-aurora-accent border border-aurora-accent/40"
-                    : "text-aurora-muted hover:text-white hover:bg-aurora-surface/60 border border-transparent"
+                    : "text-aurora-muted hover:text-aurora-text hover:bg-aurora-surface-hover border border-transparent"
                 }`}
               >
                 {isSuggested && <HolmesSprinkleIcon className="shrink-0" />}
@@ -82,15 +108,12 @@ export function CatalogueFilters({
             );
           })}
         </nav>
-      </section>
+      </FilterSection>
 
-      {/* Sort / Product status */}
-      <section>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-aurora-muted mb-3">
-          Sort by
-        </h3>
+      {/* Sort */}
+      <FilterSection title="Sort by" defaultOpen={true}>
         <div className="space-y-1">
-          {sortOptions.map((opt) => (
+          {SORT_OPTIONS.map((opt) => (
             <button
               key={opt.id}
               type="button"
@@ -101,14 +124,14 @@ export function CatalogueFilters({
               className={`w-full text-left px-3 py-2 rounded-component text-sm font-medium transition-colors ${
                 currentSort === opt.id
                   ? "bg-aurora-accent/20 text-aurora-accent border border-aurora-accent/40"
-                  : "text-aurora-muted hover:text-white hover:bg-aurora-surface/60 border border-transparent"
+                  : "text-aurora-muted hover:text-aurora-text hover:bg-aurora-surface-hover border border-transparent"
               }`}
             >
               {opt.label}
             </button>
           ))}
         </div>
-      </section>
+      </FilterSection>
 
       {storeName && (
         <p className="text-xs text-aurora-muted pt-2 border-t border-aurora-border">

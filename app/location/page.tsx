@@ -24,9 +24,9 @@ const Popup = dynamic(
   { ssr: false }
 );
 
-/** Store/location pin SVG: rounded teardrop, gradient fill, clear stroke (Leaflet default often fails in Next.js). */
+/** Store/location pin SVG: rounded teardrop, green gradient to match site. */
 const DEFAULT_PIN_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 42" width="32" height="42"><defs><linearGradient id="pinGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="%23bae6fd"/><stop offset="100%" stop-color="%230ea5e9"/></linearGradient></defs><path fill="url(%23pinGrad)" stroke="%230c4a6e" stroke-width="1.25" stroke-linejoin="round" d="M16 1C10.5 1 6 5.5 6 11c0 7 10 18 10 18s10-11 10-18C26 5.5 21.5 1 16 1z"/><circle cx="16" cy="11" r="4" fill="%23fff" stroke="%230c4a6e" stroke-width="1"/></svg>';
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 42" width="32" height="42"><defs><linearGradient id="pinGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="%2347c9a0"/><stop offset="100%" stop-color="%231FA971"/></linearGradient></defs><path fill="url(%23pinGrad)" stroke="%23178C5D" stroke-width="1.25" stroke-linejoin="round" d="M16 1C10.5 1 6 5.5 6 11c0 7 10 18 10 18s10-11 10-18C26 5.5 21.5 1 16 1z"/><circle cx="16" cy="11" r="4" fill="%23fff" stroke="%23178C5D" stroke-width="1"/></svg>';
 
 function DraggableMapContent({
   position,
@@ -103,7 +103,7 @@ export default function LocationPage() {
             placeholder="Type your address here..."
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            className="w-full px-4 py-3 rounded-component bg-aurora-surface border border-aurora-border text-white placeholder:text-aurora-muted"
+            className="w-full px-4 py-3 rounded-component bg-aurora-surface border border-aurora-border text-aurora-text placeholder:text-aurora-muted"
           />
         </div>
 

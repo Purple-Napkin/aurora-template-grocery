@@ -45,10 +45,33 @@ const SCENARIOS: { id: ScenarioId; label: string; description: string }[] = [
   { id: "routine_shop", label: "Routine Shop", description: "Methodical browsing" },
 ];
 
+function getStepAnnotation(step: SimStep, idx: number, scenarioId: ScenarioId): { title: string; lookFor: string } {
+  if (step.type === "goto") {
+    const path = step.path;
+    if (path === "/catalogue") return { title: "Loading catalogue", lookFor: "Both sides start identical. Right side: Holmes is inferring your mission." };
+    if (path === "/cart") return { title: "Viewing cart", lookFor: "RIGHT: Look for Holmes bundle suggestions (e.g. 'Add these items for a quick bundle'). LEFT: None." };
+    if (path === "/checkout") return { title: "Checkout", lookFor: "RIGHT: Checkout extras may be hidden for urgency. LEFT: Standard checkout." };
+    return { title: `Navigate to ${path}`, lookFor: "" };
+  }
+  if (step.type === "wait") {
+    if (idx === 1) return { title: "Waiting for Holmes to load", lookFor: "Right side: Holmes sends signals and gets mission. Give it ~3s." };
+    return { title: `Pausing ${step.ms}ms`, lookFor: "" };
+  }
+  if (step.type === "click") {
+    if (step.text === "Add to cart") return { title: "Adding to cart", lookFor: "Both add the same item. Holmes updates its signals." };
+    if (step.selector.includes("basket-bundle")) return { title: "Clicking Holmes bundle", lookFor: "RIGHT ONLY: Holmes suggested a bundle. Adding it. LEFT: This element doesn't exist." };
+    if (step.selector.includes("catalogue/")) return { title: "Opening product page", lookFor: "RIGHT: 'You May Also Like' may show Holmes picks. LEFT: Default recommendations." };
+    return { title: "Clicking", lookFor: "" };
+  }
+  if (step.type === "type") return { title: "Typing search", lookFor: "Right: Holmes sees search intent (discovery mode)." };
+  if (step.type === "scroll") return { title: "Scrolling", lookFor: "Holmes tracks scroll depth as a signal." };
+  return { title: "Step", lookFor: "" };
+}
+
 function getStepsForScenario(scenarioId: ScenarioId): SimStep[] {
   const base = [
     { type: "goto" as const, path: "/catalogue" },
-    { type: "wait" as const, ms: 3500 },
+    { type: "wait" as const, ms: 4500 },
   ];
   switch (scenarioId) {
     case "urgent_replenishment":
@@ -122,11 +145,11 @@ function getStepsForScenario(scenarioId: ScenarioId): SimStep[] {
         { type: "click" as const, selector: "button", text: "Add to cart" },
         { type: "wait" as const, ms: 500 },
         { type: "goto" as const, path: "/cart" },
-        { type: "wait" as const, ms: 2500 },
+        { type: "wait" as const, ms: 4000 },
         { type: "click" as const, selector: '[data-holmes="basket-bundle"] button, [data-holmes="basket-bundle"] a' },
-        { type: "wait" as const, ms: 800 },
+        { type: "wait" as const, ms: 1200 },
         { type: "goto" as const, path: "/checkout" },
-        { type: "wait" as const, ms: 2000 },
+        { type: "wait" as const, ms: 4000 },
       ];
   }
 }
@@ -255,12 +278,14 @@ export default function SimulatePage() {
   const [deviceType, setDeviceType] = useState<DeviceType>("auto");
   const [referrer, setReferrer] = useState<Referrer>("auto");
   const [speed, setSpeed] = useState(1);
-  const [holmesInitMs, setHolmesInitMs] = useState(3500);
+  const [holmesInitMs, setHolmesInitMs] = useState(4500);
   const [typingDelayMs, setTypingDelayMs] = useState(80);
   const [stepPauseMs, setStepPauseMs] = useState(300);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [iframeZoom, setIframeZoom] = useState(0.8);
 
   const simulationSteps = getStepsForScenario(scenario);
+  const zoomScale = 1 / iframeZoom;
   const holmesQuery = buildHolmesQuery(scenario, { timeOfDay, season, dayOfWeek, deviceType, referrer });
 
   const runStep = useCallback(
@@ -390,6 +415,21 @@ export default function SimulatePage() {
         {settingsOpen && (
         <>
         <div className="px-4 pb-3 flex flex-wrap gap-6 items-end">
+          <label className="flex flex-col gap-1 text-sm min-w-[120px]">
+            <span className="text-slate-400">Iframe zoom: {Math.round(iframeZoom * 100)}%</span>
+            <select
+              value={iframeZoom}
+              onChange={(e) => setIframeZoom(Number(e.target.value))}
+              disabled={playing}
+              className="bg-slate-800 border border-slate-600 rounded px-2 py-1 text-sm"
+            >
+              <option value={0.6}>60%</option>
+              <option value={0.7}>70%</option>
+              <option value={0.8}>80%</option>
+              <option value={0.9}>90%</option>
+              <option value={1}>100%</option>
+            </select>
+          </label>
           <label className="flex flex-col gap-1 text-sm min-w-[140px]">
             <span className="text-slate-400">Speed: {speed}×</span>
             <input
@@ -528,14 +568,16 @@ export default function SimulatePage() {
             <span className="font-medium text-sm">Holmes OFF</span>
             <span className="text-slate-500 text-xs">No AI personalization</span>
           </div>
-          <div className="flex-1 min-h-0 p-2">
-            <iframe
-              ref={leftRef}
-              data-simulate-panel="left"
-              src={`${BASE}/catalogue?holmes_disabled=1`}
-              className="w-full h-full rounded-lg border border-slate-600 bg-white"
-              title="Holmes OFF"
-            />
+          <div className="flex-1 min-h-0 p-2 overflow-hidden relative">
+            <div className="absolute inset-0 rounded-lg border border-slate-600 overflow-hidden" style={{ width: `${zoomScale * 100}%`, height: `${zoomScale * 100}%`, transform: `scale(${iframeZoom})`, transformOrigin: "0 0" }}>
+              <iframe
+                ref={leftRef}
+                data-simulate-panel="left"
+                src={`${BASE}/catalogue?holmes_disabled=1`}
+                className="w-full h-full rounded-lg border-0 bg-white"
+                title="Holmes OFF"
+              />
+            </div>
           </div>
         </div>
         <div className="flex-1 flex flex-col">
@@ -544,31 +586,35 @@ export default function SimulatePage() {
             <span className="font-medium text-sm">Holmes ON</span>
             <span className="text-slate-500 text-xs">{SCENARIOS.find((s) => s.id === scenario)?.label ?? scenario}</span>
           </div>
-          <div className="flex-1 min-h-0 p-2">
-            <iframe
-              ref={rightRef}
-              src={`${BASE}/catalogue?${holmesQuery}`}
-              className="w-full h-full rounded-lg border border-slate-600 bg-white"
-              title="Holmes ON"
-            />
+          <div className="flex-1 min-h-0 p-2 overflow-hidden relative">
+            <div className="absolute inset-0 rounded-lg border border-slate-600 overflow-hidden" style={{ width: `${zoomScale * 100}%`, height: `${zoomScale * 100}%`, transform: `scale(${iframeZoom})`, transformOrigin: "0 0" }}>
+              <iframe
+                ref={rightRef}
+                src={`${BASE}/catalogue?${holmesQuery}`}
+                className="w-full h-full rounded-lg border-0 bg-white"
+                title="Holmes ON"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <footer className="px-4 py-2 bg-slate-800/50 border-t border-slate-700 text-xs text-slate-400">
+      <footer className="px-4 py-3 bg-slate-800/90 border-t border-slate-700 shrink-0">
         {stepIndex >= 0 ? (
-          <>
-            Step {stepIndex + 1} of {simulationSteps.length}:{" "}
-            {simulationSteps[stepIndex]?.type === "goto"
-              ? `Navigate to ${(simulationSteps[stepIndex] as { path: string }).path}`
-              : simulationSteps[stepIndex]?.type === "wait"
-                ? `Wait ${(simulationSteps[stepIndex] as { ms: number }).ms}ms`
-                : simulationSteps[stepIndex]?.type}
-          </>
+          <div className="space-y-1">
+            <div className="text-sm font-medium text-white">
+              Step {stepIndex + 1} of {simulationSteps.length} — {getStepAnnotation(simulationSteps[stepIndex]!, stepIndex, scenario).title}
+            </div>
+            {getStepAnnotation(simulationSteps[stepIndex]!, stepIndex, scenario).lookFor && (
+              <div className="text-xs text-green-300">
+                👀 {getStepAnnotation(simulationSteps[stepIndex]!, stepIndex, scenario).lookFor}
+              </div>
+            )}
+          </div>
         ) : (
-          <span className="text-slate-500">
-            {playing ? "Starting…" : "Click Play to run the simulation"}
-          </span>
+          <div className="text-sm text-slate-400">
+            {playing ? "Starting…" : "Click Play to run the simulation. Watch the right side for Holmes differences (bundles, recommendations, checkout changes)."}
+          </div>
         )}
       </footer>
     </div>

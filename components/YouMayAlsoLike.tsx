@@ -51,7 +51,7 @@ export async function YouMayAlsoLike({
 
   return (
     <div data-holmes="recommendations" data-current-product={productId}>
-      <h2 className="font-display text-xl font-bold mb-4">You May Also Like</h2>
+      <h2 className="font-display text-xl font-bold mb-4">Frequently Bought Together</h2>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {records.map((record) => {
           const id = String(record.id ?? "");

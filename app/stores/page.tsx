@@ -115,7 +115,7 @@ function StoresMap({
       ? [mapStores[0].coords.lat, mapStores[0].coords.lng]
       : [51.5074, -0.1278];
   const defaultPinSvg =
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36"><path fill="%230ea5e9" stroke="%230c4a6e" stroke-width="1" d="M12 0C7.3 0 3.5 3.8 3.5 8.5c0 5.2 8.5 15.5 8.5 15.5S20.5 13.7 20.5 8.5C20.5 3.8 16.7 0 12 0zm0 11.5a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>';
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36"><path fill="%231FA971" stroke="%23178C5D" stroke-width="1" d="M12 0C7.3 0 3.5 3.8 3.5 8.5c0 5.2 8.5 15.5 8.5 15.5S20.5 13.7 20.5 8.5C20.5 3.8 16.7 0 12 0zm0 11.5a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>';
   const markerIcon = L
     ? L.divIcon({
         html: defaultPinSvg,
@@ -128,12 +128,12 @@ function StoresMap({
   if (!markerIcon) return null;
 
   return (
-    <div className="w-full h-full min-h-[280px] rounded-component overflow-hidden border border-aurora-border [&_.leaflet-container]:!h-full [&_.leaflet-container]:!rounded-component">
+    <div className="stores-map-bw w-full h-full min-h-[320px] rounded-component overflow-hidden border border-aurora-border [&_.leaflet-container]:!h-full [&_.leaflet-container]:!rounded-component">
       <MapContainer
         center={center}
         zoom={12}
         className="w-full h-full"
-        style={{ minHeight: 280 }}
+        style={{ minHeight: 320 }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -231,7 +231,7 @@ export default function StoresPage() {
         </Link>
       </div>
 
-      <div className="flex-1 p-4">
+      <div className="flex-1 py-4 px-6 lg:px-10">
         <div className="mb-6">
           <div className="flex items-center gap-2 text-aurora-muted text-sm mb-1">
             <MapPin className="w-4 h-4 shrink-0" />
@@ -267,8 +267,8 @@ export default function StoresPage() {
         )}
 
         {!loading && !error && stores.length > 0 && (
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
-            <div className="lg:w-1/2 lg:max-w-md flex flex-col">
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+            <div className="lg:w-1/2 lg:max-w-md flex flex-col px-2 lg:px-0 lg:pr-4">
               <p className="text-aurora-muted text-sm mb-4">
                 Found {stores.length} store{stores.length !== 1 ? "s" : ""} near your location
               </p>
@@ -327,7 +327,7 @@ export default function StoresPage() {
                 })}
               </div>
             </div>
-            <div className="lg:flex-1 lg:min-h-[400px]">
+            <div className="lg:flex-1 lg:min-h-[480px] px-2 lg:px-4">
               <StoresMap
                 stores={stores}
                 userLocation={location ? { lat: location.lat, lng: location.lng } : null}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { CartLink } from "./CartLink";
 import { SearchDropdown } from "./SearchDropdown";
+import { CategoriesMegaMenu } from "./CategoriesMegaMenu";
 import { useStore } from "./StoreContext";
 import { useAuth } from "./AuthProvider";
 
@@ -16,7 +17,7 @@ export function Nav() {
   const locationDisplay = location?.address ?? store?.name ?? "Select location";
 
   return (
-    <nav className="sticky top-0 z-[100] border-b border-aurora-border bg-aurora-surface shadow-sm">
+    <nav className="sticky top-0 z-[100] border-b border-aurora-border shadow-sm supports-[backdrop-filter]:bg-aurora-surface/90 supports-[backdrop-filter]:backdrop-blur-md bg-aurora-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between gap-4 h-14">
           <div className="flex items-center gap-6 shrink-0">
@@ -35,7 +36,8 @@ export function Nav() {
                 <span className="text-xl font-bold">{siteName}</span>
               )}
             </Link>
-            <div className="hidden sm:flex items-center gap-6">
+            <div className="hidden sm:flex items-center gap-4">
+              <CategoriesMegaMenu />
               <Link
                 href="/"
                 className="text-sm text-aurora-muted hover:text-aurora-text transition-colors font-medium"
@@ -54,22 +56,10 @@ export function Nav() {
               >
                 About
               </Link>
-              <Link
-                href="/demo"
-                className="text-sm text-aurora-muted hover:text-aurora-text transition-colors font-medium"
-              >
-                Demo
-              </Link>
-              <Link
-                href="/simulate"
-                className="text-sm text-aurora-primary hover:text-aurora-primary-dark font-semibold transition-colors"
-              >
-                Simulate
-              </Link>
             </div>
           </div>
 
-          <div className="hidden md:block flex-1 max-w-md mx-4">
+          <div className="hidden md:flex flex-1 justify-center min-w-0 max-w-sm mx-4">
             {store ? (
               <SearchDropdown
                 placeholder={`Search products in ${store.name}…`}
@@ -87,16 +77,18 @@ export function Nav() {
             )}
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-4 shrink-0">
             <Link
               href={store ? "/stores" : "/location"}
               className="flex items-center gap-2 text-sm text-aurora-muted hover:text-aurora-text transition-colors min-w-0 max-w-[140px]"
               title={locationDisplay}
             >
-              <MapPin className="w-4 h-4 shrink-0" />
+              <MapPin className="w-4 h-4 shrink-0 text-aurora-primary/70" />
               <span className="truncate">{locationDisplay}</span>
             </Link>
-            <CartLink />
+            <div className="px-3 py-1.5 -mx-1 rounded-lg">
+              <CartLink />
+            </div>
             <Link
               href="/account"
               className="flex items-center gap-2 text-aurora-muted hover:text-aurora-text p-2 rounded-component hover:bg-aurora-surface-hover min-w-0"

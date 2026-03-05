@@ -20,19 +20,19 @@ export default function AccountPage() {
           </Link>
           <Link
             href="/account/orders"
-            className="flex items-center gap-3 px-4 py-3 rounded-component text-aurora-muted hover:text-white hover:bg-aurora-surface"
+            className="flex items-center gap-3 px-4 py-3 rounded-component text-aurora-muted hover:text-aurora-bg hover:bg-aurora-accent"
           >
             <Package className="w-5 h-5 shrink-0" /> Orders
           </Link>
           <Link
             href="/account/addresses"
-            className="flex items-center gap-3 px-4 py-3 rounded-component text-aurora-muted hover:text-white hover:bg-aurora-surface"
+            className="flex items-center gap-3 px-4 py-3 rounded-component text-aurora-muted hover:text-aurora-bg hover:bg-aurora-accent"
           >
             <MapPin className="w-5 h-5 shrink-0" /> Addresses
           </Link>
           <Link
             href="/account/payment-methods"
-            className="flex items-center gap-3 px-4 py-3 rounded-component text-aurora-muted hover:text-white hover:bg-aurora-surface"
+            className="flex items-center gap-3 px-4 py-3 rounded-component text-aurora-muted hover:text-aurora-bg hover:bg-aurora-accent"
           >
             <CreditCard className="w-5 h-5 shrink-0" /> Payment Methods
           </Link>
@@ -74,7 +74,7 @@ export default function AccountPage() {
                   </Link>
                   <Link
                     href="/auth/login?register=1&returnTo=/account"
-                    className="px-4 py-2 rounded-component border border-aurora-border hover:bg-aurora-surface font-medium"
+                    className="px-4 py-2 rounded-component border border-aurora-border hover:bg-aurora-accent hover:text-aurora-bg font-medium"
                   >
                     Create account
                   </Link>

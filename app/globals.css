@@ -1,19 +1,22 @@
 @import "leaflet/dist/leaflet.css";
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
 
-/* Supermarket style guide: light default, professional grocery aesthetic */
+/* Retail design system – light default, modern grocery aesthetic */
 :root,
 [data-theme="light"] {
-  --aurora-bg: #F8FAF5;
+  --aurora-bg: #F7F9F8;
   --aurora-surface: #FFFFFF;
   --aurora-surface-hover: #F1F5E8;
-  --aurora-border: #E5E7EB;
-  --aurora-muted: #64748B;
-  --aurora-text: #1C1917;
-  --aurora-primary: #15803D;
-  --aurora-primary-dark: #166534;
-  --aurora-accent: #15803D;
-  --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
+  --aurora-border: #E6ECE9;
+  --aurora-muted: #6B7280;
+  --aurora-text: #111827;
+  --aurora-primary: #1FA971;
+  --aurora-primary-dark: #178C5D;
+  --aurora-accent: #1FA971;
+  --aurora-promo: #F97316;
+  --aurora-error: #EF4444;
+  --font-display: "Manrope", "Plus Jakarta Sans", system-ui, sans-serif;
   --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
@@ -24,9 +27,9 @@
   --aurora-border: rgba(148, 163, 148, 0.2);
   --aurora-muted: rgba(248, 250, 248, 0.65);
   --aurora-text: #f1f5f1;
-  --aurora-primary: #4ade80;
-  --aurora-primary-dark: #22c55e;
-  --aurora-accent: #4ade80;
+  --aurora-primary: #34d399;
+  --aurora-primary-dark: #10b981;
+  --aurora-accent: #34d399;
 }
 
 /* Fallback pin icon: no border/background so inline SVG is the only visible part */
@@ -36,6 +39,11 @@
   border: none !important;
 }
 
+/* Stores map: grayscale tiles to fit site aesthetic, markers stay in color */
+.stores-map-bw .leaflet-tile-pane {
+  filter: grayscale(1);
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -43,6 +51,596 @@
 body {
   font-family: var(--font-body);
 }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes cart-badge-pop {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.cart-badge {
+  animation: cart-badge-pop 0.3s ease-out;
+}
+
+@keyframes add-to-cart-fly {
+  0% {
+    left: var(--fly-from-x);
+    top: var(--fly-from-y);
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    left: var(--fly-to-x);
+    top: var(--fly-to-y);
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-page-enter {
+  animation: page-enter 0.25s ease-out;
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--aurora-surface-hover) 0%,
+    var(--aurora-border) 50%,
+    var(--aurora-surface-hover) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
 .font-display {
   font-family: var(--font-display);
+}
+
+/* Holmes basket bundle — vanilla HTML from script, styled here */
+[data-holmes="basket-bundle"] {
+  font-family: var(--font-body);
+}
+[data-holmes="basket-bundle"] [data-holmes-bundle] {
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--aurora-border);
+  background: var(--aurora-surface);
+}
+[data-holmes="basket-bundle"] [data-holmes-bundle-title] {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: var(--aurora-text);
+}
+[data-holmes="basket-bundle"] [data-holmes-bundle-grid] {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+}
+[data-holmes="basket-bundle"] [data-holmes-bundle-card] {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1px solid var(--aurora-border);
+  background: var(--aurora-surface);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+[data-holmes="basket-bundle"] [data-holmes-bundle-card]:hover {
+  border-color: var(--aurora-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+[data-holmes="basket-bundle"] [data-holmes-bundle-card-image] {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--aurora-surface-hover);
+  flex-shrink: 0;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+[data-holmes="basket-bundle"] [data-holmes-bundle-card-image] img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+[data-holmes="basket-bundle"] [data-holmes-bundle-card-fallback] {
+  font-size: 0.7rem;
+  color: var(--aurora-muted);
+  text-align: center;
+  padding: 4px;
+}
+[data-holmes="basket-bundle"] [data-holmes-bundle-card-name] {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--aurora-text);
+}
+[data-holmes="basket-bundle"] [data-holmes-bundle-btn] {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 12px 16px;
+  height: 48px;
+  line-height: 24px;
+  box-sizing: border-box;
+  background: var(--aurora-primary);
+  color: #fff;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+[data-holmes="basket-bundle"] [data-holmes-bundle-btn]:hover {
+  background: var(--aurora-primary-dark);
+}
+
+/* Holmes home sections — vanilla HTML from script, matches catalogue card style */
+[data-holmes="home-sections"] [data-holmes-home-section] {
+  margin-bottom: 2rem;
+}
+[data-holmes="home-sections"] [data-holmes-home-section-title] {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  font-family: var(--font-display);
+  color: var(--aurora-text);
+}
+[data-holmes="home-sections"] [data-holmes-home-section-grid] {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+[data-holmes="home-sections"] [data-holmes-home-card] {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--aurora-border);
+  background: var(--aurora-surface);
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+  min-height: 280px;
+}
+[data-holmes="home-sections"] [data-holmes-home-card]:hover {
+  border-color: var(--aurora-primary);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  color: inherit;
+}
+[data-holmes="home-sections"] [data-holmes-home-card]:hover [data-holmes-home-card-title] {
+  color: var(--aurora-primary);
+}
+[data-holmes="home-sections"] [data-holmes-home-card-image] {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--aurora-surface-hover);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+[data-holmes="home-sections"] [data-holmes-home-card-image] img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+[data-holmes="home-sections"] [data-holmes-home-card-fallback] {
+  font-size: 0.875rem;
+  color: var(--aurora-muted);
+}
+[data-holmes="home-sections"] [data-holmes-home-card-title] {
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.25;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  display: -webkit-box;
+  flex: 1;
+  min-height: 2.5em;
+  color: var(--aurora-text);
+}
+[data-holmes="home-sections"] [data-holmes-home-card-price] {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--aurora-primary);
+  margin-top: auto;
+  padding-top: 0.25rem;
+}
+
+/* Holmes recommendations (You May Also Like) — vanilla HTML from script */
+[data-holmes="recommendations"] [data-holmes-rec-title] {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+[data-holmes="recommendations"] [data-holmes-rec-why] {
+  margin-top: 0.5rem;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid var(--aurora-primary);
+  color: var(--aurora-primary);
+  cursor: pointer;
+  background: transparent;
+}
+[data-holmes="recommendations"] [data-holmes-rec-why-tooltip] {
+  margin-top: 0.5rem;
+  padding: 12px;
+  font-size: 0.875rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid var(--aurora-border);
+  color: #f8fafc;
+}
+[data-holmes="recommendations"] [data-holmes-rec-grid] {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  [data-holmes="recommendations"] [data-holmes-rec-grid] {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+[data-holmes="recommendations"] [data-holmes-rec-card] {
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--aurora-border);
+  background: var(--aurora-surface);
+}
+[data-holmes="recommendations"] [data-holmes-rec-card] a {
+  text-decoration: none;
+  color: inherit;
+}
+[data-holmes="recommendations"] [data-holmes-rec-card-image] {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--aurora-surface-hover);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+[data-holmes="recommendations"] [data-holmes-rec-card-image] img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+[data-holmes="recommendations"] [data-holmes-rec-card-fallback] {
+  font-size: 1.5rem;
+  color: var(--aurora-muted);
+}
+[data-holmes="recommendations"] [data-holmes-rec-card-name] {
+  font-weight: 600;
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+[data-holmes="recommendations"] [data-holmes-rec-card-price] {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--aurora-primary);
+}
+
+/* Holmes floating banner (Discover more pop-up) — vanilla HTML from script */
+#holmes-root[data-holmes-banner-backdrop] {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 2147483647;
+}
+#holmes-root [data-holmes-banner] {
+  pointer-events: auto;
+  position: relative;
+  max-width: 480px;
+  width: calc(100vw - 40px);
+  padding: 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border: 1px solid rgba(31, 169, 113, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+#holmes-root [data-holmes-banner-title] {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #f8fafc;
+  margin-bottom: 4px;
+}
+#holmes-root [data-holmes-banner-subheadline] {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-bottom: 12px;
+}
+#holmes-root [data-holmes-banner-why] {
+  background: transparent;
+  border: none;
+  color: var(--aurora-primary);
+  cursor: pointer;
+  font-size: 0.75rem;
+  margin-bottom: 8px;
+  padding: 0;
+}
+#holmes-root [data-holmes-banner-reasoning][hidden] {
+  display: none;
+}
+#holmes-root [data-holmes-banner-reasoning] {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+#holmes-root [data-holmes-banner-products] {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+#holmes-root [data-holmes-banner-product] {
+  flex: 0 0 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #334155;
+}
+#holmes-root [data-holmes-banner-product] img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#holmes-root [data-holmes-banner-product-fallback] {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  text-align: center;
+  padding: 4px;
+}
+#holmes-root [data-holmes-banner-buy] {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--aurora-primary);
+  color: #0f172a;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+#holmes-root [data-holmes-banner-buy]:hover {
+  background: var(--aurora-primary-dark);
+  color: #fff;
+}
+#holmes-root [data-holmes-banner-dismiss] {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+/* Holmes offer toast — vanilla HTML from script */
+#holmes-offer-toast[data-holmes-toast] {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2147483646;
+  max-width: 360px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border: 1px solid rgba(31, 169, 113, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+#holmes-offer-toast [data-holmes-toast-header] {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #f8fafc;
+  margin-bottom: 4px;
+}
+#holmes-offer-toast [data-holmes-toast-logo] {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+#holmes-offer-toast [data-holmes-toast-message] {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+#holmes-offer-toast [data-holmes-toast-grid] {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+#holmes-offer-toast [data-holmes-toast-card] {
+  text-decoration: none;
+  color: inherit;
+}
+#holmes-offer-toast [data-holmes-toast-card-image] {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #334155;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#holmes-offer-toast [data-holmes-toast-card-image] img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#holmes-offer-toast [data-holmes-toast-card-fallback] {
+  font-size: 0.6rem;
+  color: #94a3b8;
+}
+#holmes-offer-toast [data-holmes-toast-card-name] {
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+#holmes-offer-toast [data-holmes-toast-card-price] {
+  font-size: 0.7rem;
+  color: var(--aurora-primary);
+}
+#holmes-offer-toast [data-holmes-toast-dismiss] {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+/* Holmes chat widget — vanilla HTML from script */
+#holmes-chat-root[data-holmes-chat] {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2147483646;
+}
+#holmes-chat-root [data-holmes-chat-btn] {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border: 1px solid rgba(31, 169, 113, 0.3);
+  color: var(--aurora-primary);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+#holmes-chat-root [data-holmes-chat-panel] {
+  display: none;
+  position: absolute;
+  bottom: 64px;
+  right: 0;
+  width: 320px;
+  max-height: 400px;
+  flex-direction: column;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border: 1px solid rgba(31, 169, 113, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+#holmes-chat-root [data-holmes-chat-panel]:not([hidden]) {
+  display: flex;
+}
+#holmes-chat-root [data-holmes-chat-header] {
+  padding: 12px;
+  border-bottom: 1px solid rgba(31, 169, 113, 0.2);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #f8fafc;
+}
+#holmes-chat-root [data-holmes-chat-messages] {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  max-height: 280px;
+}
+#holmes-chat-root [data-holmes-chat-footer] {
+  padding: 12px;
+  border-top: 1px solid rgba(31, 169, 113, 0.2);
+}
+#holmes-chat-root [data-holmes-chat-input] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(31, 169, 113, 0.3);
+  background: rgba(15, 23, 42, 0.8);
+  color: #f8fafc;
+  font-size: 0.875rem;
+}
+#holmes-chat-root [data-holmes-chat-send] {
+  margin-top: 8px;
+  width: 100%;
+  padding: 10px;
+  background: var(--aurora-primary);
+  color: #0f172a;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+#holmes-chat-root [data-holmes-chat-msg] {
+  margin-bottom: 8px;
+}
+#holmes-chat-root [data-holmes-chat-msg][data-holmes-chat-msg-role="agent"] {
+  color: var(--aurora-primary);
+}
+#holmes-chat-root [data-holmes-chat-msg][data-holmes-chat-msg-role="user"] {
+  color: #94a3b8;
+}
+#holmes-chat-root [data-holmes-chat-msg-label] {
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+#holmes-chat-root [data-holmes-chat-msg-avatar] {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+#holmes-chat-root [data-holmes-chat-empty] {
+  color: #64748b;
+  font-size: 0.85rem;
 }

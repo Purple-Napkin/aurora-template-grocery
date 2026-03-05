@@ -4,6 +4,7 @@ import { createAuroraClient } from "@/lib/aurora";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { HolmesProductViewTracker } from "@/components/HolmesProductViewTracker";
 import { ProductDetailTabs } from "@/components/ProductDetailTabs";
+import { ProductImageGallery } from "@/components/ProductImageGallery";
 import { YouMayAlsoLike } from "@/components/YouMayAlsoLike";
 
 function getImageUrl(record: Record<string, unknown>): string | null {
@@ -83,24 +84,16 @@ export default async function ProductPage({
     <div className="max-w-6xl mx-auto py-10 sm:py-14 px-4 sm:px-6">
       <HolmesProductViewTracker productId={id} />
       <nav className="text-sm text-aurora-muted mb-6">
-        <Link href="/" className="hover:text-white">Home</Link>
+        <Link href="/" className="hover:text-aurora-text">Home</Link>
         {" > "}
-        <Link href="/catalogue" className="hover:text-white">{String(categoryName)}</Link>
+        <Link href="/catalogue" className="hover:text-aurora-text">{String(categoryName)}</Link>
         {" > "}
-        <span className="text-white">{name}</span>
+        <span className="text-aurora-text">{name}</span>
       </nav>
 
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
         <div className="shrink-0 lg:w-2/5">
-          <div className="rounded-component overflow-hidden aspect-square bg-aurora-surface">
-            {imageUrl ? (
-              <img src={imageUrl} alt="" className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-aurora-muted text-6xl">
-                —
-              </div>
-            )}
-          </div>
+          <ProductImageGallery record={record} />
         </div>
 
         <div className="flex-1 min-w-0 space-y-6">
@@ -149,7 +142,7 @@ export default async function ProductPage({
             )}
             <button
               type="button"
-              className="px-6 py-4 rounded-component border border-aurora-border hover:bg-aurora-surface-hover"
+              className="px-6 py-4 rounded-component border border-aurora-border text-aurora-text hover:bg-aurora-surface-hover hover:border-aurora-primary/40 transition-colors"
             >
               Add to Favorites
             </button>

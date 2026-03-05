@@ -17,6 +17,7 @@ function formatPrice(cents: number): string {
 
 const SHIPPING_CENTS = 250;
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const SLOT_STORAGE_KEY = "aurora-checkout-selected-slot";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -24,7 +25,10 @@ export default function CheckoutPage() {
   const { location, store } = useStore();
   const [step, setStep] = useState(1);
   const [slots, setSlots] = useState<DeliverySlot[]>([]);
-  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
+  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return sessionStorage.getItem(SLOT_STORAGE_KEY);
+  });
   const [address, setAddress] = useState("");
   const [mobile, setMobile] = useState("");
   const [instructions, setInstructions] = useState("");
@@ -163,7 +167,7 @@ export default function CheckoutPage() {
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Or enter address manually"
-                  className="w-full px-4 py-3 rounded-component bg-aurora-surface border border-aurora-border text-white"
+                  className="w-full px-4 py-3 rounded-component bg-aurora-surface border border-aurora-border text-aurora-text placeholder:text-aurora-muted"
                 />
               </div>
               <div>
@@ -211,7 +215,7 @@ export default function CheckoutPage() {
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
                   placeholder="We'll only contact you about your delivery"
-                  className="w-full px-4 py-3 rounded-component bg-aurora-surface border border-aurora-border text-white"
+                  className="w-full px-4 py-3 rounded-component bg-aurora-surface border border-aurora-border text-aurora-text placeholder:text-aurora-muted"
                 />
               </div>
               <div data-holmes="checkout-extras">
@@ -221,7 +225,7 @@ export default function CheckoutPage() {
                   onChange={(e) => setInstructions(e.target.value)}
                   placeholder="e.g. Leave with neighbor, place at back door"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-component bg-aurora-surface border border-aurora-border text-white"
+                  className="w-full px-4 py-3 rounded-component bg-aurora-surface border border-aurora-border text-aurora-text placeholder:text-aurora-muted"
                 />
               </div>
               <label
@@ -294,7 +298,7 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setStep(step - 1)}
-                  className="flex-1 py-3.5 px-5 rounded-component border border-aurora-border bg-aurora-surface/80 text-white font-medium hover:bg-aurora-surface hover:border-aurora-muted/30 transition-colors"
+                  className="flex-1 py-3.5 px-5 rounded-component border border-aurora-border bg-aurora-surface text-aurora-text font-medium hover:bg-aurora-surface-hover hover:border-aurora-muted transition-colors"
                 >
                   Back
                 </button>

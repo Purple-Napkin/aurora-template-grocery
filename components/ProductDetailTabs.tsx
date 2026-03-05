@@ -37,8 +37,8 @@ export function ProductDetailTabs({ record }: { record: Record<string, unknown> 
             onClick={() => setActive(t.id)}
             className={`py-3 font-medium border-b-2 transition-colors -mb-[2px] ${
               active === t.id
-                ? "border-aurora-accent text-white"
-                : "border-transparent text-aurora-muted hover:text-white"
+                ? "border-aurora-accent text-aurora-accent"
+                : "border-transparent text-aurora-muted hover:text-aurora-text"
             }`}
           >
             {t.label}

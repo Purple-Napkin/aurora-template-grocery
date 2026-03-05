@@ -2,9 +2,16 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Store, Trash2 } from "lucide-react";
+import { Store, Trash2, Truck } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
 import { useStore } from "@/components/StoreContext";
+import { SmartBasketSuggest } from "@/components/SmartBasketSuggest";
+import { BuyAgainSection } from "@/components/BuyAgainSection";
+import type { DeliverySlot } from "@/lib/aurora";
+import { useState, useEffect } from "react";
+
+const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const SLOT_STORAGE_KEY = "aurora-checkout-selected-slot";
 
 function formatPrice(cents: number): string {
   return new Intl.NumberFormat("en-GB", {
@@ -18,9 +25,31 @@ const SHIPPING_CENTS = 250; // £2.50
 export default function CartPage() {
   const router = useRouter();
   const { items, removeItem, updateQuantity, total, clearCart } = useCart();
-  const { store } = useStore();
+  const { store, location } = useStore();
+  const [slots, setSlots] = useState<DeliverySlot[]>([]);
+  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return sessionStorage.getItem(SLOT_STORAGE_KEY);
+  });
   const shipping = items.length > 0 ? SHIPPING_CENTS : 0;
   const grandTotal = total + shipping;
+
+  useEffect(() => {
+    if (location) {
+      fetch(`/api/delivery-slots?lat=${location.lat}&lng=${location.lng}`)
+        .then((r) => r.json())
+        .then((data) => setSlots(data.data ?? []))
+        .catch(() => setSlots([]));
+    } else {
+      setSlots([]);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if (selectedSlotId) {
+      sessionStorage.setItem(SLOT_STORAGE_KEY, selectedSlotId);
+    }
+  }, [selectedSlotId]);
 
   const handleCheckout = () => {
     router.push("/checkout");
@@ -138,11 +167,53 @@ export default function CartPage() {
               </div>
             ))}
           </div>
+          <SmartBasketSuggest />
           <div data-holmes="basket-bundle" className="mt-6" />
         </div>
 
         <div>
-          <div className="p-4 rounded-component bg-aurora-surface border border-aurora-border sticky top-24">
+          <div className="p-4 rounded-component bg-aurora-surface border border-aurora-border sticky top-24 space-y-6">
+            {/* Delivery slot - early in flow */}
+            {items.length > 0 && (
+              <div>
+                <h2 className="font-semibold mb-3 flex items-center gap-2">
+                  <Truck className="w-4 h-4" />
+                  Delivery slot
+                </h2>
+                {!location ? (
+                  <p className="text-sm text-aurora-muted">
+                    <Link href="/location" className="text-aurora-primary hover:underline">Set your location</Link> to see available slots.
+                  </p>
+                ) : slots.length === 0 ? (
+                  <p className="text-sm text-aurora-muted">Loading slots…</p>
+                ) : (
+                  <div className="space-y-2">
+                    {slots.slice(0, 4).map((slot) => (
+                      <label
+                        key={slot.id}
+                        className={`flex items-center gap-3 p-3 rounded-component border cursor-pointer text-sm ${
+                          selectedSlotId === slot.id
+                            ? "border-aurora-primary bg-aurora-primary/10"
+                            : "border-aurora-border hover:border-aurora-muted"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="slot"
+                          checked={selectedSlotId === slot.id}
+                          onChange={() => setSelectedSlotId(slot.id)}
+                        />
+                        <span>
+                          {DAYS[slot.day_of_week]} {slot.start_time}–{slot.end_time}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div>
             <h2 className="font-semibold mb-4">Order Summary</h2>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
@@ -158,11 +229,13 @@ export default function CartPage() {
                 <span>{formatPrice(grandTotal)}</span>
               </div>
             </div>
+            <BuyAgainSection />
+
             <div className="flex gap-2 mt-4" data-holmes="cross-sell">
               <input
                 type="text"
                 placeholder="Promo code"
-                className="flex-1 px-3 py-2 rounded-component bg-aurora-bg border border-aurora-border text-white placeholder:text-aurora-muted text-sm"
+                className="flex-1 px-3 py-2 rounded-component bg-aurora-surface border border-aurora-border text-aurora-text placeholder:text-aurora-muted text-sm"
               />
               <button
                 type="button"
@@ -180,6 +253,7 @@ export default function CartPage() {
             </button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

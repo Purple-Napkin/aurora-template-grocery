@@ -13,13 +13,13 @@ export default function CheckoutSuccessPage() {
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link
           href="/account/orders"
-          className="inline-block px-6 py-3.5 rounded-xl bg-gradient-to-r from-aurora-accent to-aurora-accent/90 text-aurora-bg font-bold hover:from-aurora-accent/95 hover:to-aurora-accent/80 transition-all duration-200 shadow-lg shadow-aurora-accent/25"
+          className="inline-flex items-center justify-center h-12 px-6 rounded-xl bg-aurora-primary text-white font-semibold hover:bg-aurora-primary-dark transition-colors"
         >
           View your orders
         </Link>
         <Link
           href="/catalogue"
-          className="inline-block px-6 py-3.5 rounded-xl border border-aurora-border font-medium hover:bg-aurora-surface/50 hover:border-aurora-accent/30 transition-all duration-200"
+          className="inline-flex items-center justify-center h-12 px-6 rounded-xl border border-aurora-border bg-aurora-surface text-aurora-text font-semibold hover:bg-aurora-surface-hover transition-colors"
         >
           Continue shopping
         </Link>

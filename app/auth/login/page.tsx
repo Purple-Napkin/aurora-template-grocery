@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
+import { FloatingLabelInput } from "@/components/FloatingLabelInput";
 
 function LoginContent() {
   const searchParams = useSearchParams();
@@ -62,21 +63,53 @@ function LoginContent() {
     }
   };
 
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Hippo Grocery";
+  const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL ?? "";
+
   return (
-    <div className="max-w-md mx-auto py-16 px-6">
+    <div className="min-h-screen flex flex-col md:flex-row">
+      {/* Left: branding with hero-style background */}
+      <div className="relative hidden md:flex md:w-5/12 lg:w-1/2 flex-col items-center justify-center p-12 overflow-hidden">
+        <div
+          className="absolute inset-0 scale-105"
+          style={{
+            backgroundImage: "url(/assets/login_register.jpg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        <div className="absolute inset-0 bg-white/70" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/85 via-transparent to-transparent" />
+        <div className="relative z-10 flex flex-col items-center justify-center">
+          {logoUrl ? (
+            <img src={logoUrl} alt="" className="h-40 sm:h-48 md:h-56 w-auto mb-8 object-contain drop-shadow-sm" />
+          ) : (
+            <h1 className="text-3xl font-bold text-aurora-text mb-2">{siteName}</h1>
+          )}
+          <p className="text-xl font-medium text-aurora-text text-center max-w-sm drop-shadow-sm">
+            Fresh groceries from local stores delivered to your door.
+          </p>
+        </div>
+      </div>
+      {/* Right: form */}
+      <div className="flex-1 flex flex-col justify-center py-8 md:py-12 px-12 md:px-16 max-w-md mx-auto w-full md:max-w-none">
       <div className="flex gap-2 mb-6">
         <Link
           href={isRegister ? `/auth/login?returnTo=${encodeURIComponent(returnTo)}` : "/auth/required"}
-          className={`px-4 py-2 rounded-component text-sm font-medium ${
-            !isRegister ? "bg-aurora-surface border border-aurora-border" : "text-aurora-muted"
+          className={`inline-flex items-center justify-center h-12 px-5 rounded-xl text-sm font-semibold transition-colors ${
+            !isRegister
+              ? "bg-aurora-primary text-white hover:bg-aurora-primary-dark"
+              : "border border-aurora-border text-aurora-muted hover:bg-aurora-surface-hover hover:text-aurora-text"
           }`}
         >
           Login
         </Link>
         <Link
           href={isRegister ? "/auth/required" : `/auth/login?register=1&returnTo=${encodeURIComponent(returnTo)}`}
-          className={`px-4 py-2 rounded-component text-sm font-medium ${
-            isRegister ? "bg-aurora-surface border border-aurora-border" : "text-aurora-muted"
+          className={`inline-flex items-center justify-center h-12 px-5 rounded-xl text-sm font-semibold transition-colors ${
+            isRegister
+              ? "bg-aurora-primary text-white hover:bg-aurora-primary-dark"
+              : "border border-aurora-border text-aurora-muted hover:bg-aurora-surface-hover hover:text-aurora-text"
           }`}
         >
           Register
@@ -96,30 +129,23 @@ function LoginContent() {
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
-              Email
-            </label>
-            <input
+            <FloatingLabelInput
               id="email"
               type="email"
+              label="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@example.com"
               required
-              className="w-full px-4 py-3 rounded-component bg-aurora-bg border border-aurora-border text-white placeholder:text-aurora-muted focus:ring-2 focus:ring-aurora-accent/50"
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
-              Password
-            </label>
-            <input
+            <FloatingLabelInput
               id="password"
               type="password"
+              label="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-3 rounded-component bg-aurora-bg border border-aurora-border text-white placeholder:text-aurora-muted focus:ring-2 focus:ring-aurora-accent/50"
             />
             {!isRegister && (
               <Link href="/auth/forgot" className="text-aurora-accent text-sm mt-1 inline-block">
@@ -136,7 +162,7 @@ function LoginContent() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-component bg-aurora-accent text-aurora-bg font-semibold hover:opacity-90 disabled:opacity-50"
+            className="w-full h-12 rounded-xl bg-aurora-primary text-white font-semibold hover:bg-aurora-primary-dark disabled:opacity-50 transition-colors"
           >
             {loading ? "Please wait…" : isRegister ? "Create Account" : "Login"}
           </button>
@@ -146,18 +172,19 @@ function LoginContent() {
           <div className="flex gap-3">
             <button
               type="button"
-              className="flex-1 py-3 rounded-component border border-aurora-border hover:bg-aurora-surface-hover"
+              className="flex-1 h-12 rounded-xl border border-aurora-border bg-aurora-surface text-aurora-text font-medium hover:bg-aurora-surface-hover transition-colors"
             >
               Google
             </button>
             <button
               type="button"
-              className="flex-1 py-3 rounded-component border border-aurora-border hover:bg-aurora-surface-hover"
+              className="flex-1 h-12 rounded-xl border border-aurora-border bg-aurora-surface text-aurora-text font-medium hover:bg-aurora-surface-hover transition-colors"
             >
-              Facebook
+              Apple
             </button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
