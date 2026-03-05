@@ -3,15 +3,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
+import { formatPrice, toCents } from "@/lib/format-price";
 import { search, type SearchHit } from "@/lib/aurora";
 import { holmesSearch } from "@/lib/holmes-events";
-
-function formatPrice(cents: number, currency = "GBP"): string {
-  return new Intl.NumberFormat("en-GB", {
-    style: "currency",
-    currency,
-  }).format((cents ?? 0) / 100);
-}
 
 export function SearchDropdown({
   vendorId,
@@ -118,7 +112,7 @@ export function SearchDropdown({
                       </p>
                       {hit.price != null && (
                         <p className="text-sm text-aurora-accent">
-                          {formatPrice(hit.price)}
+                          {formatPrice(toCents(hit.price) ?? 0)}
                         </p>
                       )}
                     </div>

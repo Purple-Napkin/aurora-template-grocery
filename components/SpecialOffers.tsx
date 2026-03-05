@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createAuroraClient } from "@/lib/aurora";
+import { formatPrice, toCents } from "@/lib/format-price";
 import { AddToCartButton } from "./AddToCartButton";
 
 function getImageUrl(record: Record<string, unknown>): string | null {
@@ -7,6 +8,7 @@ function getImageUrl(record: Record<string, unknown>): string | null {
   return field ? String(record[field]) : null;
 }
 
+/** Aurora stores prices as decimal (e.g. 2.00 = £2). Returns raw value. */
 function getPrice(record: Record<string, unknown>): number | undefined {
   if (record.on_sale && record.sale_price != null) return Number(record.sale_price);
   const regular = ["price", "amount", "value"].find((f) => record[f] != null);
@@ -15,13 +17,6 @@ function getPrice(record: Record<string, unknown>): number | undefined {
 
 function getDisplayName(record: Record<string, unknown>): string {
   return String(record.name ?? record.title ?? record.id ?? "");
-}
-
-function formatPrice(cents: number, currency = "GBP"): string {
-  return new Intl.NumberFormat("en-GB", {
-    style: "currency",
-    currency,
-  }).format(cents / 100);
 }
 
 export async function SpecialOffers() {
@@ -61,7 +56,7 @@ export async function SpecialOffers() {
       {records.slice(0, 8).map((record) => {
         const id = String(record.id ?? "");
         const name = getDisplayName(record);
-        const priceCents = getPrice(record);
+        const priceCents = toCents(getPrice(record));
         const imageUrl = getImageUrl(record);
 
         return (

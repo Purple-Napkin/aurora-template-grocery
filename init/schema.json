@@ -306,6 +306,28 @@
       ]
     },
     {
+      "slug": "hero_banners",
+      "name": "Hero Banners",
+      "icon": "Image",
+      "fields": [
+        { "slug": "title", "name": "Title", "field_type": "text", "required": false },
+        { "slug": "subtitle", "name": "Subtitle", "field_type": "text", "required": false },
+        { "slug": "image_url", "name": "Image URL", "field_type": "text", "required": false },
+        { "slug": "link_url", "name": "Link URL", "field_type": "text", "required": false },
+        { "slug": "sort_order", "name": "Sort Order", "field_type": "number", "required": false }
+      ]
+    },
+    {
+      "slug": "site_images",
+      "name": "Site Images",
+      "icon": "Image",
+      "fields": [
+        { "slug": "name", "name": "Name", "field_type": "text", "required": true },
+        { "slug": "image_url", "name": "Image URL", "field_type": "text", "required": false },
+        { "slug": "usage", "name": "Usage", "field_type": "text", "required": false }
+      ]
+    },
+    {
       "slug": "orders",
       "name": "Orders",
       "icon": "ShoppingCart",

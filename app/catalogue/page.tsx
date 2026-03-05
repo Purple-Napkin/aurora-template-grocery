@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { useStore } from "@/components/StoreContext";
+import { formatPrice, toCents } from "@/lib/format-price";
 import { search, createAuroraClient } from "@/lib/aurora";
 import type { SearchHit } from "@/lib/aurora";
 
@@ -23,6 +24,7 @@ function getImageUrl(record: Record<string, unknown>): string | null {
   return url ? String(url) : null;
 }
 
+/** Aurora/Meilisearch return price as decimal (e.g. 2.00 = £2). Use toCents for display/cart. */
 function getPrice(record: Record<string, unknown>): number | undefined {
   const p = (record as SearchHit).price ?? record.price ?? record.amount ?? record.value;
   return p != null ? Number(p) : undefined;
@@ -31,13 +33,6 @@ function getPrice(record: Record<string, unknown>): number | undefined {
 function getDisplayName(record: Record<string, unknown>): string {
   const r = record as SearchHit;
   return String(r.name ?? r.title ?? r.snippet ?? record.id ?? "");
-}
-
-function formatPrice(cents: number, currency = "GBP"): string {
-  return new Intl.NumberFormat("en-GB", {
-    style: "currency",
-    currency,
-  }).format(cents / 100);
 }
 
 type TabType = "featured" | "bestsellers" | "new" | "sale";

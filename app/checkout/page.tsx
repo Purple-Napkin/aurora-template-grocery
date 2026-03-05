@@ -294,7 +294,7 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setStep(step - 1)}
-                  className="flex-1 py-3.5 px-5 rounded-xl border border-aurora-border bg-aurora-surface/50 hover:bg-aurora-surface hover:border-aurora-accent/30 font-medium transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="flex-1 py-3.5 px-5 rounded-component border border-aurora-border bg-aurora-surface/80 text-white font-medium hover:bg-aurora-surface hover:border-aurora-muted/30 transition-colors"
                 >
                   Back
                 </button>
@@ -303,7 +303,7 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setStep(step + 1)}
-                  className="flex-1 py-3.5 px-5 rounded-xl bg-gradient-to-r from-aurora-accent to-aurora-accent/90 text-aurora-bg font-bold hover:from-aurora-accent/95 hover:to-aurora-accent/80 transition-all duration-200 shadow-lg shadow-aurora-accent/25 hover:shadow-xl hover:shadow-aurora-accent/30 hover:-translate-y-0.5"
+                  className="flex-1 py-3.5 px-5 rounded-component bg-aurora-accent text-aurora-bg font-semibold hover:opacity-95 transition-opacity"
                 >
                   {step === 2 ? "Proceed to Payment" : "Continue"}
                 </button>
@@ -312,7 +312,7 @@ export default function CheckoutPage() {
                   type="button"
                   onClick={handlePayment}
                   disabled={loading}
-                  className="flex-1 py-3.5 px-5 rounded-xl bg-gradient-to-r from-aurora-accent to-aurora-accent/90 text-aurora-bg font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-aurora-accent/25 hover:shadow-xl hover:shadow-aurora-accent/30 hover:-translate-y-0.5 disabled:hover:translate-y-0 disabled:hover:shadow-lg"
+                  className="flex-1 py-3.5 px-5 rounded-component bg-aurora-accent text-aurora-bg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-95 transition-opacity"
                 >
                   {loading ? "Processing…" : "Place Order & Pay"}
                 </button>

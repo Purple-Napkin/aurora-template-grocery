@@ -121,6 +121,8 @@ export async function holmesInfer(sessionId: string): Promise<HolmesInferResult>
   return client.holmes.infer(sessionId);
 }
 
+// Holmes offers & chat: available in SDK 0.2.7+ via client.holmes.offers(), client.holmes.chat.send(), client.holmes.chat.list()
+
 /** Current user metadata and related data (e.g. addresses) when userId is provided. Uses GET /me from tenant spec. */
 export async function getMe(userId?: string): Promise<{
   tenantId: string;

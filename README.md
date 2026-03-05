@@ -2,6 +2,8 @@
 
 A full-featured retail storefront for Aurora Studio. Showcases Aurora capabilities: Meilisearch search, Holmes mission inference, delivery slots, per-store promotions, and multi-step checkout.
 
+**Theme:** This template uses **dark mode** by default. Toggle via `NEXT_PUBLIC_THEME=light` for a light theme.
+
 **Aurora** is an all-in-one, no-code platform for stores, marketplaces, CRMs, and more.
 
 ## Features
@@ -32,6 +34,7 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
 | `NEXT_PUBLIC_SITE_NAME` | No | Store name (default: "Store") |
 | `NEXT_PUBLIC_LOGO_URL` | No | Logo image URL |
 | `NEXT_PUBLIC_ACCENT_COLOR` | No | Accent colour (default: `#38bdf8`) |
+| `NEXT_PUBLIC_THEME` | No | `dark` or `light` (default: `dark`) |
 
 ## Base Schema
 
@@ -55,6 +58,13 @@ For **delivery slots**, add vendors with `location` (PostGIS), create `vendor_ca
 ## Holmes
 
 Holmes works like Google Analytics: a small script loads from the central Aurora API, sends behavioural signals, and periodically fetches AI-suggested bundles. **Scales to thousands of storefronts** — one API, one script URL, identified by `?site=tenant`.
+
+**Holmes exposure via SDK** (see `lib/aurora.ts`):
+- `holmesInfer(sessionId)` — Mission inference, bundle suggestions
+- Holmes script (embedded in layout) — Auto-captures signals, applies directives, injects bundle banner
+- **SDK 0.2.7+** also exposes: `holmes.offers(sessionId)`, `holmes.chat.send(sid, content)`, `holmes.chat.list(sid)` for custom offers and chat
+
+**Mission Deep Dive** is a Control Dashboard feature (staff only) for inspecting session signals — not exposed to the storefront.
 
 **Embed (any storefront):**
 ```html
