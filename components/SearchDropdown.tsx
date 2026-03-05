@@ -81,7 +81,7 @@ export function SearchDropdown({
         />
       </div>
       {open && query && (
-        <div className="absolute top-full left-0 right-0 mt-1 rounded-component bg-aurora-surface border border-aurora-border shadow-xl z-50 max-h-80 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-1 rounded-component bg-aurora-surface border border-aurora-border shadow-xl z-[9999] max-h-80 overflow-y-auto">
           {loading ? (
             <div className="p-4 text-aurora-muted text-sm">Searching…</div>
           ) : hits.length === 0 ? (
