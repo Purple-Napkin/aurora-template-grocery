@@ -14,7 +14,7 @@
     "test:e2e:install": "playwright install chromium"
   },
   "dependencies": {
-    "@aurora-studio/sdk": "0.2.9",
+    "@aurora-studio/sdk": "0.2.11",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.454.0",
     "next": "15.0.7",
