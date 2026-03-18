@@ -224,7 +224,7 @@ export default function CheckoutPage() {
                   className="w-full px-4 py-3 rounded-component bg-aurora-surface border border-aurora-border text-white"
                 />
               </div>
-              <div>
+              <div data-holmes="checkout-extras">
                 <label className="block font-medium mb-2">Delivery instructions (optional)</label>
                 <textarea
                   value={instructions}
@@ -234,7 +234,7 @@ export default function CheckoutPage() {
                   className="w-full px-4 py-3 rounded-component bg-aurora-surface border border-aurora-border text-white"
                 />
               </div>
-              <label className="flex items-center gap-3 cursor-pointer">
+              <label className="flex items-center gap-3 cursor-pointer" data-holmes="checkout-extras">
                 <input
                   type="checkbox"
                   checked={allowSubstitutions}
@@ -258,7 +258,7 @@ export default function CheckoutPage() {
           )}
 
           {step === 3 && (
-            <div className="p-4 rounded-component bg-aurora-surface border border-aurora-border">
+            <div data-holmes="payment" className="p-4 rounded-component bg-aurora-surface border border-aurora-border">
               <p className="text-aurora-muted">
                 You will be redirected to complete payment securely.
               </p>
@@ -312,14 +312,16 @@ export default function CheckoutPage() {
                   {step === 2 ? "Proceed to Payment" : "Continue"}
                 </button>
               ) : (
-                <button
-                  type="button"
-                  onClick={handlePayment}
-                  disabled={loading}
-                  className="flex-1 py-3 rounded-component bg-aurora-accent text-aurora-bg font-bold disabled:opacity-50"
-                >
-                  {loading ? "Processing…" : "Place Order & Pay"}
-                </button>
+                <div data-holmes="payment">
+                  <button
+                    type="button"
+                    onClick={handlePayment}
+                    disabled={loading}
+                    className="flex-1 w-full py-3 rounded-component bg-aurora-accent text-aurora-bg font-bold disabled:opacity-50"
+                  >
+                    {loading ? "Processing…" : "Place Order & Pay"}
+                  </button>
+                </div>
               )}
             </div>
           </div>

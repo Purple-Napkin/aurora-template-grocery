@@ -76,6 +76,8 @@ export default function CartPage() {
               Clear Basket
             </button>
           </div>
+          {/* Holmes injects "In a rush? We picked this for you" bundle here when mission confidence >= 0.5 and cart has items */}
+          <div data-holmes="basket-bundle" className="mb-6 min-h-[1px]" />
           <div className="space-y-4">
             {items.map((item) => (
               <div
@@ -154,13 +156,15 @@ export default function CartPage() {
                 Apply
               </button>
             </div>
-            <button
-              type="button"
-              onClick={handleCheckout}
-              className="w-full mt-4 py-4 rounded-component bg-aurora-accent text-aurora-bg font-bold hover:opacity-90"
-            >
-              Proceed to Checkout
-            </button>
+            <div data-holmes="payment">
+              <button
+                type="button"
+                onClick={handleCheckout}
+                className="w-full mt-4 py-4 rounded-component bg-aurora-accent text-aurora-bg font-bold hover:opacity-90"
+              >
+                Proceed to Checkout
+              </button>
+            </div>
           </div>
         </div>
       </div>
