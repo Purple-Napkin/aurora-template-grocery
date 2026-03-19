@@ -147,6 +147,6 @@ From Aurora Studio: Settings → Storefront → Deploy to Vercel. Uses template 
 
 ## SDK Version
 
-This template uses `@aurora-studio/sdk@0.2.20`. Holmes features (active mission, home personalization, guardrails, offers, session attribution, time-to-completion metrics) are available in SDK 0.2.7+.
+This template uses `@aurora-studio/sdk@0.2.21`. Holmes features (active mission, home personalization, guardrails, offers, session attribution, time-to-completion metrics) are available in SDK 0.2.7+.
 
 _Last build trigger: March 2026_
