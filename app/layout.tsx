@@ -5,6 +5,7 @@ import { CartProvider } from "@/components/CartProvider";
 import { AddToCartFlyProvider } from "@/components/AddToCartFly";
 import { ConditionalHolmesScript } from "@/components/ConditionalHolmesScript";
 import { StoreProvider } from "@/components/StoreContext";
+import { StoreConfigProvider } from "@/components/StoreConfigContext";
 import { AuthProvider } from "@/components/AuthProvider";
 import { ConditionalLayout } from "@/components/ConditionalLayout";
 import { AffinityToast } from "@/components/AffinityToast";
@@ -36,6 +37,7 @@ export default function RootLayout({
         }
       >
         <StoreProvider>
+          <StoreConfigProvider>
           <AuthProvider>
         <CartProvider>
           <AddToCartFlyProvider>
@@ -44,6 +46,7 @@ export default function RootLayout({
           </AddToCartFlyProvider>
         </CartProvider>
           </AuthProvider>
+          </StoreConfigProvider>
         </StoreProvider>
         <Suspense fallback={null}>
           <ConditionalHolmesScript />

@@ -4,15 +4,23 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ProductImage } from "@/components/ProductImage";
 
-/** Gradient backgrounds when no image - gives each card a distinct feel */
+/** Strong gradient presets – each category gets a stable color from slug hash */
 const CARD_GRADIENTS = [
-  "from-emerald-500/20 to-teal-600/20",
-  "from-amber-500/20 to-orange-600/20",
-  "from-rose-500/20 to-pink-600/20",
-  "from-violet-500/20 to-purple-600/20",
-  "from-sky-500/20 to-blue-600/20",
-  "from-lime-500/20 to-green-600/20",
+  "from-emerald-600/35 via-teal-500/25 to-cyan-600/30",
+  "from-amber-600/35 via-orange-500/25 to-red-500/30",
+  "from-rose-600/35 via-pink-500/25 to-fuchsia-500/30",
+  "from-violet-600/35 via-purple-500/25 to-indigo-500/30",
+  "from-sky-600/35 via-blue-500/25 to-cyan-500/30",
+  "from-lime-600/35 via-green-500/25 to-emerald-500/30",
+  "from-amber-700/30 via-yellow-500/20 to-lime-500/25",
+  "from-rose-700/30 via-red-500/20 to-orange-500/25",
 ];
+
+function gradientForSlug(slug: string): string {
+  let hash = 0;
+  for (let i = 0; i < slug.length; i++) hash = (hash << 5) - hash + slug.charCodeAt(i);
+  return CARD_GRADIENTS[Math.abs(hash) % CARD_GRADIENTS.length];
+}
 
 type Category = { name: string; slug: string; image_url?: string };
 
@@ -59,12 +67,10 @@ export function CategoryCards() {
         <Link
           key={cat.slug}
           href={`/catalogue?category=${encodeURIComponent(cat.slug)}`}
-          className="group block rounded-xl overflow-hidden bg-aurora-surface border border-aurora-border hover:border-aurora-primary/50 hover:shadow-lg hover:shadow-aurora-primary/10 transition-all duration-200"
+          className="group block rounded-2xl overflow-hidden bg-aurora-surface border-2 border-aurora-border hover:border-aurora-primary/60 hover:shadow-xl hover:shadow-aurora-primary/15 hover:scale-[1.02] active:scale-[0.99] transition-all duration-200"
         >
           <div
-            className={`aspect-[4/3] relative bg-gradient-to-br ${
-              CARD_GRADIENTS[i % CARD_GRADIENTS.length]
-            }`}
+            className={`aspect-[4/3] relative bg-gradient-to-br ${gradientForSlug(cat.slug)}`}
           >
             {cat.image_url ? (
               <div className="absolute inset-0">
@@ -75,8 +81,8 @@ export function CategoryCards() {
                 />
               </div>
             ) : null}
-            <div className="absolute inset-0 flex items-end p-3">
-              <span className="font-semibold text-sm text-aurora-text drop-shadow-sm bg-aurora-bg/60 px-2 py-0.5 rounded">
+            <div className="absolute inset-0 flex items-end p-4 bg-gradient-to-t from-black/40 via-transparent to-transparent">
+              <span className="font-bold text-sm sm:text-base text-white drop-shadow-md">
                 {cat.name}
               </span>
             </div>

@@ -5,6 +5,7 @@ import {
   resolveProductImageUrl,
   getImageUrlFromRecord,
 } from "@/lib/image-url";
+import { useStoreConfigImageBase } from "./StoreConfigContext";
 
 type ProductImageProps = {
   src?: string | null;
@@ -27,7 +28,7 @@ const DEFAULT_FALLBACK = (
 
 /**
  * Product image with onError fallback to avoid broken image icons.
- * Uses resolveProductImageUrl when baseUrl is provided.
+ * Uses imageBaseUrl from store config (or baseUrl prop) for relative URLs.
  */
 export function ProductImage({
   src,
@@ -38,9 +39,10 @@ export function ProductImage({
   record,
 }: ProductImageProps) {
   const [errored, setErrored] = useState(false);
+  const configBase = useStoreConfigImageBase();
 
   const rawUrl = record !== undefined ? getImageUrlFromRecord(record) : src;
-  const resolved = resolveProductImageUrl(rawUrl, baseUrl);
+  const resolved = resolveProductImageUrl(rawUrl, baseUrl ?? configBase);
 
   if (!resolved || errored) {
     return (

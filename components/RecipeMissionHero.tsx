@@ -15,7 +15,7 @@ export function RecipeMissionHero({ recipeTitle, recipeSlug }: RecipeMissionHero
         Making {displayTitle}?
       </h1>
       <p className="text-aurora-muted text-base sm:text-lg max-w-xl mb-6">
-        Holmes has found everything you need. View the full recipe and add ingredients to your basket in one tap.
+        We&apos;ve found everything you need. View the full recipe and add ingredients to your basket in one tap.
       </p>
       <Link
         href={`/catalogue?q=${encodeURIComponent(recipeSlug)}`}

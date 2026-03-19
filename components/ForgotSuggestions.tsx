@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
 import { useStore } from "@/components/StoreContext";
-import { search, type SearchHit } from "@/lib/aurora";
+import { search, holmesGoesWith, type SearchHit } from "@/lib/aurora";
 import { formatPrice, toCents } from "@/lib/format-price";
 import { getForgottenSuggestions } from "@/lib/cart-intelligence";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { ProductImage } from "@/components/ProductImage";
 import { getStoreConfig } from "@/lib/aurora";
 
-/** "You might have forgotten" - when cart has bread, suggest butter; cereal → milk, etc. */
+/** "You might have forgotten" - prefers Holmes goes-with, falls back to affinity search. */
 export function ForgotSuggestions() {
   const { items } = useCart();
   const { store } = useStore();
@@ -23,30 +23,56 @@ export function ForgotSuggestions() {
   const inCartIds = new Set(items.map((i) => i.recordId));
 
   useEffect(() => {
-    if (!suggestions.length || !store?.id) return;
+    if ((!suggestions.length && items.length === 0) || !store?.id) return;
     setLoading(true);
-    Promise.all(
-      suggestions.slice(0, 3).map((term) =>
-        search({ q: term, limit: 2, vendorId: store.id })
-      )
-    )
-      .then((results) => {
-        const seen = new Set<string>();
-        const merged: SearchHit[] = [];
-        for (const res of results) {
-          for (const h of res.hits ?? []) {
+
+    const firstRecordId = items[0]?.recordId;
+    const holmesPromise = firstRecordId
+      ? holmesGoesWith(firstRecordId, 8).then((r) => r.products ?? []).catch(() => [])
+      : Promise.resolve([]);
+
+    const loadProducts = () => {
+      const searchFallback = () =>
+        Promise.all(
+          suggestions.slice(0, 3).map((term) =>
+            search({ q: term, limit: 2, vendorId: store.id })
+          )
+        ).then((results) => {
+          const seen = new Set<string>();
+          const merged: SearchHit[] = [];
+          for (const res of results) {
+            for (const h of res.hits ?? []) {
+              const id = (h.recordId ?? h.id) as string;
+              if (!seen.has(id) && !inCartIds.has(id)) {
+                seen.add(id);
+                merged.push(h);
+              }
+            }
+          }
+          return merged.slice(0, 4);
+        });
+      return holmesPromise.then((holmesProducts) => {
+        const fromHolmes = (holmesProducts as SearchHit[]).filter(
+          (h) => !inCartIds.has((h.recordId ?? h.id) as string)
+        );
+        if (fromHolmes.length >= 4) return fromHolmes.slice(0, 4);
+        if (suggestions.length === 0) return fromHolmes.slice(0, 4);
+        return searchFallback().then((searchHits) => {
+          const seen = new Set(fromHolmes.map((h) => (h.recordId ?? h.id) as string));
+          const merged = [...fromHolmes];
+          for (const h of searchHits) {
             const id = (h.recordId ?? h.id) as string;
-            if (!seen.has(id) && !inCartIds.has(id)) {
+            if (!seen.has(id)) {
               seen.add(id);
               merged.push(h);
             }
           }
-        }
-        setProducts(merged.slice(0, 4));
-      })
-      .catch(() => setProducts([]))
-      .finally(() => setLoading(false));
-  }, [suggestions.join(","), store?.id, items.length]);
+          return merged.slice(0, 4);
+        });
+      }).catch(() => (suggestions.length > 0 ? searchFallback().catch(() => []) : []));
+    };
+    loadProducts().then(setProducts).catch(() => setProducts([])).finally(() => setLoading(false));
+  }, [suggestions.join(","), store?.id, items.length, items[0]?.recordId]);
 
   useEffect(() => {
     getStoreConfig().then((c) => {

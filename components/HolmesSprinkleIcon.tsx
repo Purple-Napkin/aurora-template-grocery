@@ -8,8 +8,8 @@ export function HolmesSprinkleIcon({ className }: { className?: string }) {
   return (
     <span
       className={`inline-flex items-center justify-center ${className ?? ""}`}
-      title="Holmes suggestion"
-      aria-label="Holmes suggestion"
+      title="Personalised for you"
+      aria-label="Personalised for you"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
