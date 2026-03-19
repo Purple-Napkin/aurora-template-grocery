@@ -84,7 +84,17 @@ export default function CartPage() {
                 key={item.id}
                 className="flex gap-4 p-4 rounded-component bg-aurora-surface border border-aurora-border"
               >
-                <div className="w-16 h-16 rounded-component bg-aurora-surface-hover shrink-0" />
+                <div className="w-16 h-16 rounded-component bg-aurora-surface-hover shrink-0 overflow-hidden">
+                  {item.imageUrl ? (
+                    <img
+                      src={item.imageUrl}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="w-full h-full flex items-center justify-center text-aurora-muted text-xs">—</span>
+                  )}
+                </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium">{item.name}</p>
                   <p className="text-sm text-aurora-muted">
