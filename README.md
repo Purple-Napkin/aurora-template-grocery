@@ -41,12 +41,13 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
 
 ## Features
 
+- **Intent-first entry** - "What are you trying to do?" Mission chips first, search secondary. Active mission bar when Holmes infers intent (dismiss/reset).
 - **Location & Store Selection** - Set delivery location on a map, browse nearby stores
-- **Meilisearch Search** - Live product search dropdown in header
-- **Product Catalogue** - Featured, Bestsellers, New Arrivals, On Sale tabs; category filters
+- **Meilisearch Search** - Live product search (secondary to missions on home)
+- **Product Catalogue** - Featured, Bestsellers, New Arrivals, On Sale tabs; category filters. Mission-aware narrowing: categories reordered, "For your mission" section when confidence high.
 - **Product Detail** - Tabs (Details, Nutrition, Feedback), You May Also Like
-- **Basket & Checkout** - Multi-step checkout with delivery slot selection; ACME test payment flow (`/checkout/acme`, `/checkout/success`)
-- **Holmes** - AI mission inference; one-click bundle checkout when enabled
+- **Basket & Checkout** - Multi-step checkout with delivery slot selection; ACME test payment flow (`/checkout/acme`, `/checkout/success`). Guardrail hints ("Egg noodles absorb sauce better than spaghetti").
+- **Holmes** - Mission inference, active mission bar, catalogue narrowing, guardrail rules. One-click bundle checkout when enabled.
 - **Promotions** - Store-specific offers and on-sale products
 - **Account** - Profile, Orders, Addresses (integrate Supabase Auth for full features)
 
@@ -89,9 +90,14 @@ For **delivery slots**, add vendors with `location` (PostGIS), create `vendor_ca
 
 ## Holmes
 
-Holmes is auto-injected when `NEXT_PUBLIC_AURORA_API_URL` and `NEXT_PUBLIC_TENANT_SLUG` are set. It captures behavioural signals and surfaces a mission-based product bundle when confidence is high. Enable Holmes in your tenant commerce config.
+Holmes is auto-injected when `NEXT_PUBLIC_AURORA_API_URL` and `NEXT_PUBLIC_TENANT_SLUG` are set. It captures behavioural signals and adapts the experience:
 
-For standalone deployment, set `NEXT_PUBLIC_APP_URL` on the Aurora API to your storefront URL so Holmes redirects correctly after one-click checkout.
+- **Active mission bar** – Shows inferred mission (e.g. "Travel essentials", "Cook dinner") with confidence band. Dismiss or reset.
+- **Mission-first command surface** – "What are you trying to do?" with Start here chips; search is secondary.
+- **Catalogue narrowing** – When confidence is high, categories reorder by mission and a "For your mission" section appears. Dismissing the mission bar restores full categories.
+- **Guardrail rules** – Contextual hints with micro-learning (e.g. "Egg noodles absorb sauce better than spaghetti" when cart has stir-fry ingredients + spaghetti).
+
+Enable Holmes in your tenant commerce config. For standalone deployment, set `NEXT_PUBLIC_APP_URL` on the Aurora API to your storefront URL so Holmes redirects correctly after one-click checkout.
 
 ## How to Use
 
@@ -104,10 +110,10 @@ For standalone deployment, set `NEXT_PUBLIC_APP_URL` on the Aurora API to your s
 
 ### Shopping flow
 
-- **Home** – Search, quick actions (Dinner in 20 mins, etc.), mission entry points. Holmes personalizes sections when it infers intent.
-- **Catalogue** – Browse by category, filter. Holmes can reorder categories and surface "Recommended for you" when it has session context.
+- **Home** – "What are you trying to do?" Mission chips first (Start here), search secondary. Active mission bar when Holmes infers intent. Holmes personalizes sections when it infers intent.
+- **Catalogue** – Browse by category, filter. When mission bar is active and confidence high: categories reorder by mission, "For your mission" section at top. Holmes can surface "Recommended for you" when it has session context.
 - **Product page** – Details, nutrition, feedback. "You May Also Like" and Holmes tidbits adapt to mission.
-- **Cart** – Bundle suggestions ("Often bought together"), contextual hints ("Planning a sandwich? Add butter…"). Substitute button on items.
+- **Cart** – Bundle suggestions ("Often bought together"), guardrail hints ("Egg noodles absorb sauce better than spaghetti" when stir-fry + spaghetti). Substitute button on items.
 - **Checkout** – Multi-step flow. Holmes compresses checkout (hides extras) when it infers urgency. ACME test payment when Stripe not configured.
 
 ### Holmes behaviour
@@ -141,6 +147,6 @@ From Aurora Studio: Settings → Storefront → Deploy to Vercel. Uses template 
 
 ## SDK Version
 
-This template uses `@aurora-studio/sdk@0.2.14`. Holmes features (offers, chat, home personalization, session attribution, time-to-completion metrics) are available in SDK 0.2.7+.
+This template uses `@aurora-studio/sdk@0.2.20`. Holmes features (active mission, home personalization, guardrails, offers, session attribution, time-to-completion metrics) are available in SDK 0.2.7+.
 
 _Last build trigger: March 2026_
