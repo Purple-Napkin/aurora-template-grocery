@@ -38,7 +38,7 @@ export async function SpecialOffers() {
     catalogTableSlug = config.catalogTableSlug ?? null;
     currency = (config as { currency?: string }).currency ?? "GBP";
 
-    /* Offers are checkout-only discounts, not products — show only catalog products on sale. */
+    /* Offers are checkout-only discounts, not products - show only catalog products on sale. */
     if (catalogTableSlug) {
       const result = await aurora.tables(catalogTableSlug).records.list({
         limit: 24,

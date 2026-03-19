@@ -1,12 +1,12 @@
 # Holmes in the Store
 
-Holmes adapts the storefront to each shopper's intent—recommendations, checkout flow, and discovery surfaces change based on inferred mission (urgent replenishment, browsing, discovery, etc.).
+Holmes adapts the storefront to each shopper's intent - recommendations, checkout flow, and discovery surfaces change based on inferred mission (urgent replenishment, browsing, discovery, etc.).
 
 ## Quick Start
 
 1. Ensure Aurora API is running (`pnpm dev` in aurora-studio) and Aurora has provisioned products.
 2. Run the ecom storefront: `pnpm dev` (port 3001).
-3. Shop normally—home, catalogue, product pages, cart, checkout. Holmes infers from behaviour and adapts.
+3. Shop normally - home, catalogue, product pages, cart, checkout. Holmes infers from behaviour and adapts.
 
 ## Holmes Targets
 

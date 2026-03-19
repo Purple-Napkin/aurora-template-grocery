@@ -77,7 +77,7 @@ export type {
   HomePersonalizationResult,
 };
 
-/** Exclude offers from search — offers are checkout-only discounts, not products. */
+/** Exclude offers from search - offers are checkout-only discounts, not products. */
 function excludeOffersFromSearch<T extends { hits?: unknown[] }>(result: T): T {
   const hits = result.hits ?? [];
   const filtered = hits.filter(

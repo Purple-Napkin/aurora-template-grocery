@@ -1,6 +1,6 @@
 # Holmes Intent Alignment
 
-> **North Star:** Holmes is an **observational intent detector**. It watches behaviour, infers what the user wants, and adapts the experience. The UI expresses Holmes—it does not replace it.
+> **North Star:** Holmes is an **observational intent detector**. It watches behaviour, infers what the user wants, and adapts the experience. The UI expresses Holmes - it does not replace it.
 
 ---
 
@@ -83,4 +83,4 @@ These are **raw materials**. Holmes decides *when* and *what* to show based on i
 
 The command surface, missions, and feed are **expression layers**. Holmes is the **brain**.
 
-When we add static options, they are **cold-start defaults**. As soon as Holmes has inference, it should drive what appears. The UI should feel like Holmes "figured it out"—not like the user navigated a fixed menu.
+When we add static options, they are **cold-start defaults**. As soon as Holmes has inference, it should drive what appears. The UI should feel like Holmes "figured it out" - not like the user navigated a fixed menu.

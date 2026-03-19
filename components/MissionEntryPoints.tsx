@@ -38,7 +38,7 @@ export function MissionEntryPoints() {
   return (
     <section className="py-8">
       <h2 className="text-xs font-semibold text-aurora-muted uppercase tracking-widest mb-4">
-        Start with a mission
+        Start here
       </h2>
       <div className="flex flex-wrap gap-3">
         {missions.map((m) => {

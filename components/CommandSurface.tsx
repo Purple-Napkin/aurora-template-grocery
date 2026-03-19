@@ -74,7 +74,7 @@ export function CommandSurface({ heroImageUrl }: { heroImageUrl?: string | null 
         What are you shopping for today?
       </h1>
       <p className="text-aurora-muted/90 text-center text-base sm:text-lg mb-8 font-medium">
-        Search or type an intent — we&apos;ll help you get there fast
+        Let&apos;s get you there fast
       </p>
 
       {/* Command bar - search + intent (z-20 so dropdown appears above Quick starts) */}
