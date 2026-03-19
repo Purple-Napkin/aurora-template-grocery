@@ -8,6 +8,7 @@ import { StoreConfigProvider } from "@/components/StoreConfigContext";
 import { AuthProvider } from "@/components/AuthProvider";
 import { ConditionalLayout } from "@/components/ConditionalLayout";
 import { AffinityToast } from "@/components/AffinityToast";
+import { HolmesDevTools } from "@/components/HolmesDevTools";
 
 const siteName =
   process.env.NEXT_PUBLIC_SITE_NAME ?? "Hippo Ecom";
@@ -26,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme={theme}>
       <body
-        className="min-h-screen bg-aurora-bg"
+        className={`min-h-screen bg-aurora-bg ${process.env.NODE_ENV === "development" ? "pb-12" : ""}`}
         style={
           {
             "--aurora-accent":
@@ -42,6 +43,7 @@ export default function RootLayout({
           <AddToCartFlyProvider>
             <ConditionalLayout>{children}</ConditionalLayout>
             <AffinityToast />
+            <HolmesDevTools />
           </AddToCartFlyProvider>
         </CartProvider>
           </AuthProvider>
