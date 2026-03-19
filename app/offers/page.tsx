@@ -29,13 +29,10 @@ function formatPrice(cents: number, currency = "GBP"): string {
   }).format(cents / 100);
 }
 
-type ContentMode = "offers" | "products";
-
 export default async function OffersPage() {
   let records: Record<string, unknown>[] = [];
   let catalogTableSlug: string | null = null;
   let currency = "GBP";
-  let mode: ContentMode = "products";
 
   try {
     const aurora = createAuroraClient();
@@ -51,31 +48,8 @@ export default async function OffersPage() {
     catalogTableSlug = config.catalogTableSlug ?? null;
     currency = (config as { currency?: string }).currency ?? "GBP";
 
-    try {
-      const offersResult = await aurora.tables("offers").records.list({
-        limit: 48,
-        sort: "created_at",
-        order: "desc",
-      });
-      const offerRecords = (offersResult.data ?? []).filter(
-        (r: Record<string, unknown>) => {
-          const startsAt = r.starts_at as string | null | undefined;
-          const endsAt = r.ends_at as string | null | undefined;
-          const now = new Date().toISOString();
-          if (startsAt && startsAt > now) return false;
-          if (endsAt && endsAt < now) return false;
-          return r.name != null || r.name_en != null;
-        }
-      );
-      if (offerRecords.length > 0) {
-        records = offerRecords;
-        mode = "offers";
-      }
-    } catch {
-      /* offers table may not exist or may not be public */
-    }
-
-    if (records.length === 0 && catalogTableSlug) {
+    /* Offers are checkout-only discounts, not products — never show them as browseable items. */
+    if (catalogTableSlug) {
       const result = await aurora.tables(catalogTableSlug).records.list({
         limit: 48,
         sort: "created_at",
@@ -104,46 +78,12 @@ export default async function OffersPage() {
       <div className="py-12 px-4 sm:px-6">
         <h1 className="text-2xl font-bold mb-2">Offers</h1>
         <p className="text-aurora-muted mb-8">
-          Store-specific offers and deals.
+          Products on sale. Discounts apply automatically at checkout.
         </p>
         {records.length === 0 ? (
           <p className="text-aurora-muted py-12">
-            No offers at the moment. Add offers in Aurora Studio or products with on_sale.
+            No offers at the moment. Add products with on_sale in Aurora Studio.
           </p>
-        ) : mode === "offers" ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {records.map((record) => {
-              const id = String(record.id ?? "");
-              const name = getDisplayName(record);
-              const desc = String(record.description_en ?? record.description ?? "").slice(0, 80);
-              const rawPrice = getPrice(record);
-              const priceCents = rawPrice != null ? (rawPrice < 100 && rawPrice > 0 ? Math.round(rawPrice * 100) : Math.round(rawPrice)) : undefined;
-              const label = String(record.label_en ?? record.type ?? "");
-
-              return (
-                <div
-                  key={id}
-                  className="p-4 rounded-component bg-aurora-surface/80 border border-aurora-border hover:border-aurora-accent/40 transition-all"
-                >
-                  <div className="aspect-square rounded-component bg-aurora-surface-hover mb-3 flex items-center justify-center text-aurora-muted text-4xl">
-                     - 
-                  </div>
-                  <p className="font-semibold text-sm truncate">{name}</p>
-                  {label && (
-                    <span className="inline-block px-2 py-0.5 rounded bg-aurora-accent/20 text-aurora-accent text-xs font-medium mt-1">
-                      {label}
-                    </span>
-                  )}
-                  {desc && <p className="text-xs text-aurora-muted mt-1 line-clamp-2">{desc}</p>}
-                  {priceCents != null && (
-                    <p className="text-sm mt-1 font-bold text-aurora-accent">
-                      {formatPrice(priceCents, currency)}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {records.map((record) => {

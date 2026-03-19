@@ -77,8 +77,18 @@ export type {
   HomePersonalizationResult,
 };
 
+/** Exclude offers from search — offers are checkout-only discounts, not products. */
+function excludeOffersFromSearch<T extends { hits?: unknown[] }>(result: T): T {
+  const hits = result.hits ?? [];
+  const filtered = hits.filter(
+    (h) => (h as Record<string, unknown>).tableSlug !== "offers"
+  ) as SearchResult["hits"];
+  return { ...result, hits: filtered } as T;
+}
+
 /** Meilisearch-powered product search. Uses API route from client (keeps API key server-side). */
 export async function search(params: SearchParams): Promise<SearchResult> {
+  let result: SearchResult;
   if (typeof window !== "undefined") {
     const qs = new URLSearchParams();
     if (params.q != null && params.q !== "") qs.set("q", params.q);
@@ -93,10 +103,12 @@ export async function search(params: SearchParams): Promise<SearchResult> {
       const err = (await res.json().catch(() => ({}))) as { error?: string };
       throw new Error(err.error ?? "Search failed");
     }
-    return res.json() as Promise<SearchResult>;
+    result = (await res.json()) as SearchResult;
+  } else {
+    const client = createAuroraClient();
+    result = await client.site.search(params);
   }
-  const client = createAuroraClient();
-  return client.site.search(params);
+  return excludeOffersFromSearch(result);
 }
 
 /** Fetch delivery slots for a location */
