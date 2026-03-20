@@ -103,17 +103,40 @@ export function MissionAwareHomeProvider({
     fetchData();
     const onReady = () => fetchData();
     document.addEventListener("holmes:ready", onReady);
+
+    let debounce: ReturnType<typeof setTimeout> | null = null;
+    const scheduleRefetch = () => {
+      if (debounce) clearTimeout(debounce);
+      debounce = setTimeout(() => {
+        debounce = null;
+        fetchRef.current();
+      }, 350);
+    };
+    const holmesEvents = [
+      "holmes:search",
+      "holmes:cartUpdate",
+      "holmes:refreshHome",
+      "holmes:productView",
+      "holmes:recipeView",
+      "holmes:missionBarReset",
+    ] as const;
+    holmesEvents.forEach((ev) => document.addEventListener(ev, scheduleRefetch));
+
     return () => {
       cancelled = true;
       document.removeEventListener("holmes:ready", onReady);
+      holmesEvents.forEach((ev) => document.removeEventListener(ev, scheduleRefetch));
+      if (debounce) clearTimeout(debounce);
     };
   }, []);
 
   const pathname = usePathname();
   useEffect(() => {
-    if (pathname === "/cart" || pathname === "/checkout" || pathname?.startsWith("/checkout/")) {
-      fetchRef.current();
-    }
+    let debounce: ReturnType<typeof setTimeout> | null = null;
+    debounce = setTimeout(() => fetchRef.current(), 200);
+    return () => {
+      if (debounce) clearTimeout(debounce);
+    };
   }, [pathname]);
 
   const value: MissionAwareContextValue =

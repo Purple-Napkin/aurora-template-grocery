@@ -47,7 +47,7 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
 - **Product Catalogue** - Featured, Bestsellers, New Arrivals, On Sale tabs; category filters. Mission-aware narrowing: categories reordered, "For your mission" section when confidence high.
 - **Product Detail** - Tabs (Details, Nutrition, Feedback), You May Also Like
 - **Basket & Checkout** - Multi-step checkout with delivery slot selection; ACME test payment flow (`/checkout/acme`, `/checkout/success`). Guardrail hints ("Egg noodles absorb sauce better than spaghetti").
-- **Holmes** - Mission inference, active mission bar, catalogue narrowing, guardrail rules. One-click bundle checkout when enabled.
+- **Holmes** - Mission inference, active mission bar, catalogue narrowing, guardrail rules. Cart **combo** discovery (`holmesCombosForCart`), selected combo on session, contextual “bundle for your cart” hints. One-click bundle checkout when enabled.
 - **Promotions** - Store-specific offers and on-sale products
 - **Account** - Profile, Orders, Addresses (integrate Supabase Auth for full features)
 
@@ -120,7 +120,7 @@ Enable Holmes in your tenant commerce config. For standalone deployment, set `NE
 
 - Holmes infers mission from search, cart, browsing, time of day. Add `?holmes_disabled=1` to any URL to disable for testing.
 - **Dev tools** – In development, a Holmes toolbar appears: reset session, toggle Holmes off.
-- **Recipes** – Search for "paella" or "curry"; Holmes may infer a recipe mission and transform the home to recipe-focused layout with ingredient products.
+- **Combos & recipes** – Search for "paella" or "curry"; Holmes may infer a recipe mission and transform the home. Multi-option **recipe/combo picker** from cart when the API returns bundles.
 - **Control Dashboard** – In Aurora Studio → Holmes Control, view live inferences and mission distribution.
 
 ### Deploying
@@ -147,6 +147,6 @@ From Aurora Studio: Settings → Storefront → Deploy to Vercel. Uses template 
 
 ## SDK Version
 
-This template uses `@aurora-studio/sdk@0.2.21`. Holmes features (active mission, home personalization, guardrails, offers, session attribution, time-to-completion metrics) are available in SDK 0.2.7+.
+This template uses `@aurora-studio/sdk@0.2.22`. Holmes features (active mission, home personalization, guardrails, offers, session attribution, time-to-completion metrics) are available in SDK 0.2.7+; **cart combos, `holmesSelectCombo`, contextual `hasCombo`** require **0.2.22+**.
 
 _Last build trigger: March 2026_

@@ -1,5 +1,19 @@
 # Holmes Recipe Guidance – UX Improvement Plan
 
+## Status (March 2026)
+
+| Item | Status |
+|------|--------|
+| Proactive notification (`hasCombo` / `comboTitle` on contextual hint; cart IDs) | **Shipped** – API + `HolmesContextualWell` / mission surfaces |
+| Recipe collages / ingredient fallback | **Partial** – `holmes-recipe-expand`, product resolution ongoing where Meilisearch is thin |
+| Earlier guidance (home / catalogue / cart banners, basket-bundle ranker) | **Shipped** – `next-step-ranker`, storefront placeholders |
+| Multi-combo API + picker + `holmesSelectCombo` | **Shipped** – `combos-for-cart`, `RecipePicker` pattern in ecom template |
+| Category restriction to selected combo (`restrictCategoriesToCombo`) | **Planned** – see template + `home-personalization` follow-up |
+
+**Next product slice:** [Holmes mission mode vs signal-priority](../../aurora-studio/docs/holmes-next-steps-mission-mode.md) – dismiss full mission UX while keeping inference-driven prioritisation, hints, and bundles.
+
+---
+
 Feedback from user testing (March 2026):
 
 1. **No proactive notification** – Holmes never informed the user that it had recipes for their cart or was "thinking about options."

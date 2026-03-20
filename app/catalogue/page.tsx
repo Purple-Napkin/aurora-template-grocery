@@ -302,8 +302,8 @@ function CatalogueContent() {
   const recipeTitle = getRecipeTitle(q);
 
   useEffect(() => {
-    if (q.trim() && recipeTitle) holmesSearch(q.trim());
-  }, [q, recipeTitle]);
+    if (q.trim()) holmesSearch(q.trim());
+  }, [q]);
   const addAllToCart = useCallback(() => {
     if (!catalogSlug) return;
     for (const hit of hits) {

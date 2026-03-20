@@ -31,11 +31,16 @@ export function HolmesDevTools() {
 
   const handleResetSession = () => {
     clearCart();
-    if (typeof sessionStorage !== "undefined") {
-      sessionStorage.clear();
-    }
     if (typeof localStorage !== "undefined") {
       localStorage.removeItem(CART_KEY);
+    }
+    if (typeof sessionStorage !== "undefined") {
+      sessionStorage.clear();
+      const id =
+        typeof crypto !== "undefined" && crypto.randomUUID
+          ? "h_reset_" + crypto.randomUUID().replace(/-/g, "").slice(0, 20)
+          : "h_reset_" + String(Date.now()) + "_" + Math.random().toString(36).slice(2, 10);
+      sessionStorage.setItem("holmes_sid_override", id);
     }
     window.location.reload();
   };
