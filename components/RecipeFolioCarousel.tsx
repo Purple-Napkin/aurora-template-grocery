@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Carrot, Apple } from "lucide-react";
+import { Carrot, Apple, Check } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
 import { holmesCombosForCart, holmesRecentRecipes, holmesRecipe, holmesRecipeProducts, getStoreConfig } from "@/lib/aurora";
 import { getMealToComplete } from "@/lib/cart-intelligence";
@@ -213,6 +213,15 @@ export function RecipeFolioCarousel() {
 
   const totalCents = recipe?.products.reduce((s, p) => s + (toCents(p.price) ?? 0), 0) ?? 0;
 
+  const recipeProductIds = new Set(
+    recipe?.products
+      .filter((p) => toCents(p.price) != null && toCents(p.price)! > 0)
+      .map((p) => `${recipe!.catalogSlug}:${(p.recordId ?? p.id) as string}`) ?? []
+  );
+  const inCartProductIds = new Set(items.filter((i) => recipeProductIds.has(i.id)).map((i) => i.id));
+  const totalAddable = recipeProductIds.size;
+  const allAdded = totalAddable > 0 && inCartProductIds.size >= totalAddable;
+
   if (items.length < 2) {
     return (
       <div className="max-w-2xl mx-auto py-16 px-6 text-center">
@@ -362,11 +371,21 @@ export function RecipeFolioCarousel() {
                   <button
                     type="button"
                     onClick={addAllToCart}
-                    className="px-6 py-3 rounded-lg bg-aurora-primary text-white font-semibold text-xl hover:bg-aurora-primary-dark transition-colors"
+                    disabled={allAdded}
+                    className="px-6 py-3 rounded-lg bg-aurora-primary text-white font-semibold text-xl hover:bg-aurora-primary-dark transition-colors disabled:opacity-90 disabled:cursor-default inline-flex items-center gap-2"
                     style={{ fontFamily: "Caveat, cursive" }}
                   >
-                    Add all to cart
-                    {totalCents > 0 && ` – ${formatPrice(totalCents, currency)}`}
+                    {allAdded ? (
+                      <>
+                        <Check className="w-5 h-5 shrink-0" aria-hidden />
+                        All added
+                      </>
+                    ) : (
+                      <>
+                        Add all to cart
+                        {totalCents > 0 && ` – ${formatPrice(totalCents, currency)}`}
+                      </>
+                    )}
                   </button>
                 </section>
               )}

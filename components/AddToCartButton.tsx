@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Check } from "lucide-react";
 import { useCart } from "./CartProvider";
 import { useAddToCartFly } from "./AddToCartFly";
 
@@ -27,9 +28,11 @@ export function AddToCartButton({
   imageUrl,
   className,
 }: AddToCartButtonProps) {
-  const { addItem } = useCart();
+  const { items, addItem } = useCart();
   const flyCtx = useAddToCartFly();
   const [weight, setWeight] = useState<string>("1");
+  const cartId = `${tableSlug}:${recordId}`;
+  const inCart = items.some((i) => i.id === cartId);
 
   if (sellByWeight) {
     const handleAdd = (e: React.MouseEvent) => {
@@ -64,12 +67,22 @@ export function AddToCartButton({
         <button
           type="button"
           onClick={handleAdd}
+          disabled={inCart}
           className={
-            className ??
-            "h-12 px-4 rounded-xl bg-aurora-primary text-white font-semibold hover:bg-aurora-primary-dark transition-colors"
+            inCart
+              ? `inline-flex items-center gap-1.5 text-aurora-primary font-medium cursor-default ${className ?? ""}`.trim()
+              : className ??
+                "h-12 px-4 rounded-xl bg-aurora-primary text-white font-semibold hover:bg-aurora-primary-dark transition-colors"
           }
         >
-          Add to cart
+          {inCart ? (
+            <>
+              <Check className="w-4 h-4 shrink-0" aria-hidden />
+              Added
+            </>
+          ) : (
+            "Add to cart"
+          )}
         </button>
       </div>
     );
@@ -81,16 +94,29 @@ export function AddToCartButton({
     addItem({ recordId, tableSlug, name, unitAmount, imageUrl });
   };
 
+  const baseClass =
+    className ??
+    "h-12 px-4 rounded-xl bg-aurora-primary text-white font-semibold hover:bg-aurora-primary-dark transition-colors";
+
   return (
     <button
       type="button"
       onClick={handleAdd}
+      disabled={inCart}
       className={
-        className ??
-        "h-12 px-4 rounded-xl bg-aurora-primary text-white font-semibold hover:bg-aurora-primary-dark transition-colors"
+        inCart
+          ? `inline-flex items-center gap-1.5 text-aurora-primary font-medium cursor-default ${className ?? ""}`.trim()
+          : baseClass
       }
     >
-      Add to cart
+      {inCart ? (
+        <>
+          <Check className="w-4 h-4 shrink-0" aria-hidden />
+          Added
+        </>
+      ) : (
+        "Add to cart"
+      )}
     </button>
   );
 }
