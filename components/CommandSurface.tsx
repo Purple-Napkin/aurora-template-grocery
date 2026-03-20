@@ -86,7 +86,7 @@ export function CommandSurface({ logoUrl }: { logoUrl?: string | null }) {
         </div>
       )}
       <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-aurora-text mb-3">
-        {isRecipeMission ? "Or something else?" : "What are you trying to do?"}
+        {isRecipeMission ? "Or something else?" : `How can we assist you this ${timeOfDay}?`}
       </h1>
       <p className="text-aurora-muted text-base sm:text-lg mb-6 font-medium">
         {isRecipeMission ? "Let's get you there fast" : "Pick a mission or search below"}
