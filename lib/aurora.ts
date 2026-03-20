@@ -176,17 +176,22 @@ export async function holmesRecipeProducts(
   return client.store.holmesRecipeProducts(recipe, limit);
 }
 
-/** Holmes recent recipes from cache. Ordered by most recently updated. */
-export async function holmesRecentRecipes(limit = 8): Promise<{
+/** Holmes recent recipes from cache. Ordered by most recently updated. Optional timeOfDay filters by morning/afternoon/evening. */
+export async function holmesRecentRecipes(
+  limit = 8,
+  timeOfDay?: "morning" | "afternoon" | "evening"
+): Promise<{
   recipes: Array<{ id: string; slug: string; title: string; description: string | null }>;
 }> {
   if (typeof window !== "undefined") {
-    const res = await fetch(`/api/holmes/recipes?limit=${encodeURIComponent(limit)}`);
+    const qs = new URLSearchParams({ limit: String(limit) });
+    if (timeOfDay) qs.set("time_of_day", timeOfDay);
+    const res = await fetch(`/api/holmes/recipes?${qs.toString()}`);
     if (!res.ok) return { recipes: [] };
     return res.json();
   }
   const client = createAuroraClient();
-  return client.store.holmesRecentRecipes(limit);
+  return client.store.holmesRecentRecipes(limit, timeOfDay);
 }
 
 /** Holmes cached recipe. Fetches via AI on cache miss. */

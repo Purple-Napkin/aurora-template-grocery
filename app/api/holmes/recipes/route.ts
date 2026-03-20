@@ -8,9 +8,14 @@ import { createAuroraClient } from "@/lib/aurora";
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const limit = Math.min(20, Math.max(1, parseInt(searchParams.get("limit") || "8", 10)));
+    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") || "8", 10)));
+    const timeOfDayParam = searchParams.get("time_of_day")?.toLowerCase();
+    const timeOfDay =
+      timeOfDayParam && ["morning", "afternoon", "evening"].includes(timeOfDayParam)
+        ? (timeOfDayParam as "morning" | "afternoon" | "evening")
+        : undefined;
     const client = createAuroraClient();
-    const result = await client.store.holmesRecentRecipes(limit);
+    const result = await client.store.holmesRecentRecipes(limit, timeOfDay);
     return NextResponse.json(result);
   } catch {
     return NextResponse.json({ recipes: [] });

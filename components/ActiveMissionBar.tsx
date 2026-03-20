@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { X, RotateCcw, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
 import { useMissionAware } from "./MissionAwareHome";
 import { useCart } from "@/components/CartProvider";
@@ -34,12 +33,6 @@ function setDismissed(value: boolean) {
     /* ignore */
   }
 }
-
-const BAND_LABELS: Record<string, string> = {
-  low: "Just browsing",
-  medium: "We think you might like…",
-  high: "We've got ideas for you!",
-};
 
 export function ActiveMissionBar() {
   const missionData = useMissionAware();
@@ -87,8 +80,6 @@ export function ActiveMissionBar() {
     window.dispatchEvent(new CustomEvent("holmes:missionBarReset"));
   };
 
-  const bandLabel = BAND_LABELS[activeMission!.band] ?? activeMission!.band;
-
   // Collapsed: small floating indicator tab
   if (collapsed) {
     return (
@@ -124,35 +115,32 @@ export function ActiveMissionBar() {
               <Sparkles className="w-4 h-4 text-aurora-primary" aria-hidden />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-aurora-muted mb-0.5">
-                Shopping insight
+              <p className="text-sm font-semibold text-aurora-text">
+                {activeMission!.summary && /ideas|for your/i.test(activeMission!.summary)
+                  ? activeMission!.summary.replace(/\.$/, "").replace(/your meal/i, "your cart")
+                  : `${activeMission!.label} for your cart`}
               </p>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-sm font-semibold text-aurora-text">
-                  {activeMission!.label}
-                </span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-aurora-primary/10 text-aurora-primary font-medium">
-                  {bandLabel}
-                </span>
-              </div>
-              {activeMission!.summary && (
-                <p className="text-sm text-aurora-muted mt-1">
-                  {activeMission!.summary}
-                </p>
-              )}
               {(isBundleMission && hasCartItems) || activeMission!.band !== "low" ? (
-                <Link
-                  href={isBundleMission && hasCartItems ? "/for-you#recipe-picker" : "/for-you"}
-                  className="inline-flex items-center gap-1 text-xs text-aurora-primary hover:underline mt-2 font-medium"
+                <a
+                  href={
+                    isBundleMission && hasCartItems
+                      ? ["recipe_mission", "combo_mission", "cook_dinner", "cook_dinner_tonight"].includes(
+                          activeMission!.key
+                        )
+                        ? "/for-you/recipes"
+                        : "/for-you#recipe-picker"
+                      : "/for-you"
+                  }
+                  className="inline-flex items-center gap-1 text-xs text-aurora-primary hover:underline mt-1.5 font-medium"
                 >
                   {isBundleMission && hasCartItems
                     ? ["recipe_mission", "combo_mission", "cook_dinner", "cook_dinner_tonight"].includes(
                         activeMission!.key
                       )
-                      ? "Recipes for your cart →"
-                      : "Bundle ideas for your cart →"
+                      ? "View recipes →"
+                      : "View bundles →"
                     : "View ideas →"}
-                </Link>
+                </a>
               ) : null}
             </div>
           </div>

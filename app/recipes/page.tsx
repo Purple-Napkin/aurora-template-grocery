@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { holmesRecentRecipes, holmesRecipeProducts } from "@/lib/aurora";
+import { getTimeOfDay } from "@/lib/utils";
 import { RecipeProductCollage } from "@/components/RecipeProductCollage";
 import { Sparkles, ArrowLeft } from "lucide-react";
 
@@ -10,7 +11,7 @@ export const dynamic = "force-dynamic";
  * Linked from the "Recipe ideas" quick start on the hero.
  */
 export default async function RecipesInterstitialPage() {
-  const { recipes } = await holmesRecentRecipes(24);
+  const { recipes } = await holmesRecentRecipes(24, getTimeOfDay());
 
   const recipesWithProducts = await Promise.all(
     recipes.map(async (r) => {

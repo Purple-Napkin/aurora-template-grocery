@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getHomePersonalization, holmesRecentRecipes, holmesRecipeProducts } from "@/lib/aurora";
 import { getStoreConfig } from "@/lib/aurora";
+import { getTimeOfDay } from "@/lib/utils";
 import { ProductImage } from "@/components/ProductImage";
 import { ChefHat } from "lucide-react";
 import { AdaptiveFeed } from "./AdaptiveFeed";
@@ -18,7 +19,7 @@ export async function HomeSections() {
   const [homeData, config, recipesResult] = await Promise.all([
     getHomePersonalization(),
     getStoreConfig(),
-    holmesRecentRecipes(8),
+    holmesRecentRecipes(8, getTimeOfDay()),
   ]);
 
   const currency =

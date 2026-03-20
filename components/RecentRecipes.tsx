@@ -8,8 +8,8 @@ import { ChefHat } from "lucide-react";
  * Links to /recipes/[slug] for each recipe.
  */
 export async function RecentRecipes() {
-  const { recipes } = await holmesRecentRecipes(8);
   const timeOfDay = getTimeOfDay();
+  const { recipes } = await holmesRecentRecipes(8, timeOfDay);
 
   if (!recipes?.length) return null;
 

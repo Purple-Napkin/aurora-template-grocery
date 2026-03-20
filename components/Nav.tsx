@@ -37,6 +37,12 @@ export function Nav() {
             </Link>
             <div className="hidden sm:flex items-center gap-4">
               <Link
+                href="/"
+                className="text-sm text-aurora-muted hover:text-aurora-text transition-colors font-medium"
+              >
+                Home
+              </Link>
+              <Link
                 href="/catalogue"
                 className="text-sm text-aurora-muted hover:text-aurora-text transition-colors font-medium"
               >
@@ -47,12 +53,6 @@ export function Nav() {
                 className="text-sm text-aurora-muted hover:text-aurora-text transition-colors font-medium"
               >
                 For You
-              </Link>
-              <Link
-                href="/"
-                className="text-sm text-aurora-muted hover:text-aurora-text transition-colors font-medium"
-              >
-                Home
               </Link>
               <Link
                 href="/about"
