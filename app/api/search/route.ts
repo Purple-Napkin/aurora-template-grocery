@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { search } from "@/lib/aurora";
+import { search } from "aurora-starter-core";
 
 /**
  * Proxy search request (API key stays server-side).

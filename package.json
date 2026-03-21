@@ -1,5 +1,5 @@
 {
-  "name": "@aurora-studio/free-template-ecom",
+  "name": "@aurora-studio/hippo-grocery",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,10 +10,8 @@
     "typecheck": "tsc --noEmit",
     "schema:provision": "node scripts/provision-schema.mjs"
   },
-  "exports": {
-    "./aurora/pages/VendorPickwalkPage": "./aurora/pages/VendorPickwalkPage.tsx"
-  },
   "dependencies": {
+    "aurora-starter-core": "file:../aurora-starter-core",
     "@aurora-studio/sdk": "^0.2.27",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.454.0",

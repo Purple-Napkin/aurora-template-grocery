@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { UtensilsCrossed, Cookie, Sparkles, Salad, Wine, MapPin } from "lucide-react";
 import { useMissionAware } from "./MissionAwareHome";
-import { holmesMissionLockCombo } from "@/lib/holmes-events";
+import { holmesMissionLockCombo } from "aurora-starter-core";
 import { shouldLockRecipeMissionForMissionPill } from "@/lib/holmes-mission-lock";
 
 const DEFAULT_MISSIONS = [

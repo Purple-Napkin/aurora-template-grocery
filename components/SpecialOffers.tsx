@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { createAuroraClient } from "@/lib/aurora";
-import { formatPrice, toCents } from "@/lib/format-price";
-import { AddToCartButton } from "./AddToCartButton";
-import { ProductImage } from "./ProductImage";
+import { createAuroraClient } from "aurora-starter-core";
+import { formatPrice, toCents } from "aurora-starter-core";
+import { AddToCartButton } from "aurora-starter-core";
+import { ProductImage } from "aurora-starter-core";
 
 function getImageUrl(record: Record<string, unknown>): string | null {
   const field = ["image_url", "image", "thumbnail", "photo"].find((f) => record[f]);

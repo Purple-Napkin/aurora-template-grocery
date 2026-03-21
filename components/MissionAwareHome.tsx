@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import { usePathname } from "next/navigation";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
 import { RecipeIngredientsSection } from "./RecipeIngredientsSection";
-import { getStoreConfig } from "@/lib/aurora";
+import { getStoreConfig } from "aurora-starter-core";
 export type QuickAction = { label: string; href: string };
 export type Mission = { label: string; href: string };
 export type ShoppingListTemplate = { slug: string; label: string; description?: string; searchTerms: string[] };

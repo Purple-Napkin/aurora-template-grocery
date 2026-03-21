@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAuroraClient } from "@/lib/aurora";
+import { createAuroraClient } from "aurora-starter-core";
 
 /**
  * Proxy category suggestions from Aurora (Holmes-driven).

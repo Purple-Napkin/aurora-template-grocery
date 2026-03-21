@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getStores } from "@/lib/aurora";
+import { getStores } from "aurora-starter-core";
 
 export async function GET() {
   try {

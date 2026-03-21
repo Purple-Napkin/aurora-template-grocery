@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useCart } from "@/components/CartProvider";
+import { useCart } from "aurora-starter-core";
 import { useDietaryExclusions } from "@/components/DietaryExclusionsContext";
-import { ProductImage } from "@/components/ProductImage";
+import { ProductImage } from "aurora-starter-core";
 
 type Props = {
   /** Pass when on product detail page */

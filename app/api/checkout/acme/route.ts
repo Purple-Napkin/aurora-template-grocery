@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAcmeSession } from "@/lib/aurora";
+import { getAcmeSession } from "aurora-starter-core";
 
 /**
  * Fetch ACME session via SDK (API key stays server-side).

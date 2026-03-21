@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createCheckoutSession } from "@/lib/aurora";
+import { createCheckoutSession } from "aurora-starter-core";
 
 /**
  * Create checkout session via SDK (API key stays server-side).

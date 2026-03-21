@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAuroraClient } from "@/lib/aurora";
+import { createAuroraClient } from "aurora-starter-core";
 
 /** App user sign in via SDK (API key server-side). Returns session with access_token. */
 export async function POST(req: NextRequest) {

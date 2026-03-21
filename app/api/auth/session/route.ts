@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAuroraClient } from "@/lib/aurora";
+import { createAuroraClient } from "aurora-starter-core";
 
 /** Validate Bearer token and return current app user. No API key; token from Authorization header. */
 export async function GET(req: NextRequest) {

@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCart } from "@/components/CartProvider";
-import { useStore } from "@/components/StoreContext";
+import { useCart } from "aurora-starter-core";
+import { useStore } from "aurora-starter-core";
 import { BasketBundlePlaceholder } from "@/components/BasketBundlePlaceholder";
 import { HolmesContextualWell } from "@/components/HolmesContextualWell";
 import { RecipePicker } from "@/components/RecipePicker";
-import { HolmesTidbits } from "@/components/HolmesTidbits";
-import { ProductImage } from "@/components/ProductImage";
+import { HolmesTidbits } from "aurora-starter-core";
+import { ProductImage } from "aurora-starter-core";
 import { SubstituteButton } from "@/components/SubstituteButton";
 import { CompleteYourMeal } from "@/components/CompleteYourMeal";
 import { ForgotSuggestions } from "@/components/ForgotSuggestions";

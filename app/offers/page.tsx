@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { createAuroraClient } from "@/lib/aurora";
-import { AddToCartButton } from "@/components/AddToCartButton";
-import { ProductImage } from "@/components/ProductImage";
-import { StoreContextBar } from "@/components/StoreContextBar";
+import { createAuroraClient } from "aurora-starter-core";
+import { AddToCartButton } from "aurora-starter-core";
+import { ProductImage } from "aurora-starter-core";
+import { StoreContextBar } from "aurora-starter-core";
 
 export const dynamic = "force-dynamic";
 

@@ -2,11 +2,11 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Replace } from "lucide-react";
-import { useCart } from "./CartProvider";
+import { useCart } from "aurora-starter-core";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
-import { holmesSimilarProducts, type SearchHit } from "@/lib/aurora";
-import { formatPrice, toCents } from "@/lib/format-price";
-import { ProductImage } from "./ProductImage";
+import { holmesSimilarProducts, type SearchHit } from "aurora-starter-core";
+import { formatPrice, toCents } from "aurora-starter-core";
+import { ProductImage } from "aurora-starter-core";
 
 interface SubstituteButtonProps {
   /** Cart item to substitute */

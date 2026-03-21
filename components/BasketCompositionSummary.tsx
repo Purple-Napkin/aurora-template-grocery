@@ -1,7 +1,7 @@
 "use client";
 
 import { getBasketCompositionSummary } from "@/lib/cart-intelligence";
-import type { CartItem } from "@/components/CartProvider";
+import type { CartItem } from "aurora-starter-core";
 import { useMissionAware } from "@/components/MissionAwareHome";
 
 const RECIPE_BAR_MISSIONS = new Set([

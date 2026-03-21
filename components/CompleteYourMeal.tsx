@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useCart } from "@/components/CartProvider";
-import { useStore } from "@/components/StoreContext";
+import { useCart } from "aurora-starter-core";
+import { useStore } from "aurora-starter-core";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
-import { holmesRecipeProducts, search, type SearchHit } from "@/lib/aurora";
-import { formatPrice, toCents } from "@/lib/format-price";
+import { holmesRecipeProducts, search, type SearchHit } from "aurora-starter-core";
+import { formatPrice, toCents } from "aurora-starter-core";
 import { getMealToComplete } from "@/lib/cart-intelligence";
-import { AddToCartButton } from "@/components/AddToCartButton";
-import { ProductImage } from "@/components/ProductImage";
-import { getStoreConfig } from "@/lib/aurora";
+import { AddToCartButton } from "aurora-starter-core";
+import { ProductImage } from "aurora-starter-core";
+import { getStoreConfig } from "aurora-starter-core";
 
 /** When cart has meal triggers (curry paste, pasta sauce), show "Complete your X" with complementary products. */
 export function CompleteYourMeal() {

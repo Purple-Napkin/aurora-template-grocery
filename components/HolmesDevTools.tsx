@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useCart } from "./CartProvider";
+import { useCart } from "aurora-starter-core";
 
 const CART_KEY = "aurora-cart";
 const HOLMES_HOLDOUT = "holmes_holdout";

@@ -1,6 +1,6 @@
 import { RecipePageView } from "@/components/RecipePageView";
-import { getStoreConfig } from "@/lib/aurora";
-import { holmesRecipe } from "@/lib/aurora";
+import { getStoreConfig } from "aurora-starter-core";
+import { holmesRecipe } from "aurora-starter-core";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";

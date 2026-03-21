@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { CreditCard } from "lucide-react";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "aurora-starter-core";
 
 export default function PaymentMethodsPage() {
   const { user, loading } = useAuth();

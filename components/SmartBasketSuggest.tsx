@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { AddToCartButton } from "./AddToCartButton";
-import { ProductImage } from "./ProductImage";
-import { useCart } from "./CartProvider";
-import { useStore } from "./StoreContext";
+import { AddToCartButton } from "aurora-starter-core";
+import { ProductImage } from "aurora-starter-core";
+import { useCart } from "aurora-starter-core";
+import { useStore } from "aurora-starter-core";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
-import { formatPrice } from "@/lib/format-price";
-import { holmesGoesWith, search, type SearchHit } from "@/lib/aurora";
-import { toCents } from "@/lib/format-price";
+import { formatPrice } from "aurora-starter-core";
+import { holmesGoesWith, search, type SearchHit } from "aurora-starter-core";
+import { toCents } from "aurora-starter-core";
 
 function getImageUrl(hit: SearchHit): string | null {
   return hit.image_url ?? null;

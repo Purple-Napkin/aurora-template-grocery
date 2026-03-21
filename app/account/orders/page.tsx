@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Package } from "lucide-react";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "aurora-starter-core";
 
 interface OrderRecord {
   id: string;

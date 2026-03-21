@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { holmesRecentRecipes } from "@/lib/aurora";
-import { getTimeOfDay } from "@/lib/utils";
+import { holmesRecentRecipes } from "aurora-starter-core";
+import { getTimeOfDay } from "aurora-starter-core";
 import { getDietaryFromCookie } from "@/lib/dietary-server";
 import { ChefHat } from "lucide-react";
 

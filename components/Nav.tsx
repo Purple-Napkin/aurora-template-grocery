@@ -2,17 +2,22 @@
 
 import Link from "next/link";
 import { MapPin } from "lucide-react";
-import { CartLink } from "./CartLink";
+import {
+  CartLink,
+  SearchDropdown,
+  useStore,
+  useAuth,
+} from "aurora-starter-core";
 import { DietaryNeedsDropdown } from "./DietaryNeedsDropdown";
-import { SearchDropdown } from "./SearchDropdown";
-import { useStore } from "./StoreContext";
-import { useAuth } from "./AuthProvider";
+import { useDietaryExclusions } from "./DietaryExclusionsContext";
+import { getRecipeSuggestion } from "@/lib/cart-intelligence";
 
 export function Nav() {
-  const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Hippo Ecom";
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Hippo Grocery";
   const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL ?? "https://vnawbscpsiwkqniibyya.supabase.co/storage/v1/object/public/placeholders/hippo-ecom.png";
   const { location, store } = useStore();
   const { user, loading } = useAuth();
+  const { excludeDietary } = useDietaryExclusions();
 
   const locationDisplay = location?.address ?? store?.name ?? "Select location";
 
@@ -69,6 +74,8 @@ export function Nav() {
               <SearchDropdown
                 placeholder={`Search products in ${store.name}…`}
                 vendorId={store.id}
+                excludeDietary={excludeDietary}
+                getRecipeSuggestion={getRecipeSuggestion}
               />
             ) : (
               <Link href="/stores" className="block cursor-pointer">
@@ -76,6 +83,8 @@ export function Nav() {
                   <SearchDropdown
                     placeholder="Select a store to search products…"
                     vendorId={undefined}
+                    excludeDietary={excludeDietary}
+                    getRecipeSuggestion={getRecipeSuggestion}
                   />
                 </span>
               </Link>

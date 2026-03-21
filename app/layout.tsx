@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CartProvider } from "@/components/CartProvider";
-import { AddToCartFlyProvider } from "@/components/AddToCartFly";
-import { ConditionalHolmesScript } from "@/components/ConditionalHolmesScript";
-import { StoreProvider } from "@/components/StoreContext";
-import { StoreConfigProvider } from "@/components/StoreConfigContext";
-import { AuthProvider } from "@/components/AuthProvider";
+import { CartProvider } from "aurora-starter-core";
+import { AddToCartFlyProvider } from "aurora-starter-core";
+import { ConditionalHolmesScript } from "aurora-starter-core";
+import { StoreProvider } from "aurora-starter-core";
+import { StoreConfigProvider } from "aurora-starter-core";
+import { AuthProvider } from "aurora-starter-core";
 import { ConditionalLayout } from "@/components/ConditionalLayout";
 import { DietaryExclusionsProvider } from "@/components/DietaryExclusionsContext";
 import { MissionAwareHomeProvider } from "@/components/MissionAwareHome";
@@ -14,7 +14,7 @@ import { HolmesDevTools } from "@/components/HolmesDevTools";
 import { VeggieBuddy } from "@/components/VeggieBuddy";
 
 const siteName =
-  process.env.NEXT_PUBLIC_SITE_NAME ?? "Hippo Ecom";
+  process.env.NEXT_PUBLIC_SITE_NAME ?? "Hippo Grocery";
 
 export const metadata: Metadata = {
   title: siteName,

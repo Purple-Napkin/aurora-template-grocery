@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDeliverySlots } from "@/lib/aurora";
+import { getDeliverySlots } from "aurora-starter-core";
 
 /**
  * Proxy delivery slots request (API key stays server-side).

@@ -3,15 +3,15 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Carrot, Apple, Check } from "lucide-react";
-import { useCart } from "@/components/CartProvider";
-import { holmesCombosForCart, holmesRecentRecipes, holmesRecipe, holmesRecipeProducts, getStoreConfig } from "@/lib/aurora";
+import { useCart } from "aurora-starter-core";
+import { holmesCombosForCart, holmesRecentRecipes, holmesRecipe, holmesRecipeProducts, getStoreConfig } from "aurora-starter-core";
 import { useDietaryExclusions } from "@/components/DietaryExclusionsContext";
 import { getMealToComplete } from "@/lib/cart-intelligence";
-import { getTimeOfDay } from "@/lib/utils";
-import { AddToCartButton } from "@/components/AddToCartButton";
-import { ProductImage } from "@/components/ProductImage";
-import { formatPrice, toCents } from "@/lib/format-price";
-import type { SearchHit } from "@/lib/aurora";
+import { getTimeOfDay } from "aurora-starter-core";
+import { AddToCartButton } from "aurora-starter-core";
+import { ProductImage } from "aurora-starter-core";
+import { formatPrice, toCents } from "aurora-starter-core";
+import type { SearchHit } from "aurora-starter-core";
 
 type Combo = { slug: string; title: string; productImageUrls?: string[] };
 

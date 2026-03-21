@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { createAuroraClient } from "@/lib/aurora";
-import { AddToCartButton } from "@/components/AddToCartButton";
-import { HolmesProductViewTracker } from "@/components/HolmesProductViewTracker";
-import { ProductDetailTabs } from "@/components/ProductDetailTabs";
-import { ProductImageGallery } from "@/components/ProductImageGallery";
+import { createAuroraClient } from "aurora-starter-core";
+import { AddToCartButton } from "aurora-starter-core";
+import { HolmesProductViewTracker } from "aurora-starter-core";
+import { ProductDetailTabs } from "aurora-starter-core";
+import { ProductImageGallery } from "aurora-starter-core";
 import { YouMayAlsoLike } from "@/components/YouMayAlsoLike";
 import { HolmesContextualWell } from "@/components/HolmesContextualWell";
-import { HolmesTidbits } from "@/components/HolmesTidbits";
+import { HolmesTidbits } from "aurora-starter-core";
 
 function getImageUrl(record: Record<string, unknown>): string | null {
   const field = ["image_url", "image", "thumbnail", "photo"].find((f) => record[f]);

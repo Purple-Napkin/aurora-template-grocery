@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAuroraClient } from "@/lib/aurora";
-import { search } from "@/lib/aurora";
+import { createAuroraClient } from "aurora-starter-core";
+import { search } from "aurora-starter-core";
 
 const DEFAULT_CATEGORIES: { name: string; slug: string; image_url?: string }[] = [
   { name: "Bakery Items", slug: "bakery-items" },

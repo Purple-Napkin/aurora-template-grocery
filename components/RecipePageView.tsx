@@ -2,18 +2,18 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { holmesRecipe, holmesRecipeProducts } from "@/lib/aurora";
-import { holmesRecipeView } from "@/lib/holmes-events";
-import { HolmesTidbits } from "@/components/HolmesTidbits";
-import { AddToCartButton } from "@/components/AddToCartButton";
-import { ProductImage } from "@/components/ProductImage";
-import { formatPrice, toCents } from "@/lib/format-price";
-import { useCart } from "@/components/CartProvider";
-import { useStore } from "@/components/StoreContext";
+import { holmesRecipe, holmesRecipeProducts } from "aurora-starter-core";
+import { holmesRecipeView } from "aurora-starter-core";
+import { HolmesTidbits } from "aurora-starter-core";
+import { AddToCartButton } from "aurora-starter-core";
+import { ProductImage } from "aurora-starter-core";
+import { formatPrice, toCents } from "aurora-starter-core";
+import { useCart } from "aurora-starter-core";
+import { useStore } from "aurora-starter-core";
 import { useDietaryExclusions } from "@/components/DietaryExclusionsContext";
-import { getStoreConfig } from "@/lib/aurora";
-import type { SearchHit } from "@/lib/aurora";
-import { getTimeOfDay } from "@/lib/utils";
+import { getStoreConfig } from "aurora-starter-core";
+import type { SearchHit } from "aurora-starter-core";
+import { getTimeOfDay } from "aurora-starter-core";
 
 interface RecipePageViewProps {
   recipeSlug: string;

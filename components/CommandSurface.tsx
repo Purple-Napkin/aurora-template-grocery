@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { Search, UtensilsCrossed, RotateCcw, Apple, PiggyBank, Sparkles } from "lucide-react";
-import { SearchDropdown } from "./SearchDropdown";
-import { useStore } from "./StoreContext";
-import { useAuth } from "./AuthProvider";
+import { SearchDropdown, useStore, useAuth } from "aurora-starter-core";
+import { useDietaryExclusions } from "./DietaryExclusionsContext";
+import { getRecipeSuggestion } from "@/lib/cart-intelligence";
 import { useMissionAware } from "./MissionAwareHome";
 import { RecipeMissionHero } from "./RecipeMissionHero";
-import { getTimeOfDay } from "@/lib/utils";
-import { holmesMissionLockCombo } from "@/lib/holmes-events";
+import { getTimeOfDay } from "aurora-starter-core";
+import { holmesMissionLockCombo } from "aurora-starter-core";
 import { shouldLockRecipeMissionForMissionPill } from "@/lib/holmes-mission-lock";
 
 const ICON_MAP: Record<string, typeof UtensilsCrossed> = {
@@ -57,6 +57,7 @@ function getDefaultQuickActions(timeOfDay: string) {
 export function CommandSurface({ logoUrl }: { logoUrl?: string | null }) {
   const { store } = useStore();
   const { user } = useAuth();
+  const { excludeDietary } = useDietaryExclusions();
   const homeData = useMissionAware();
   const timeOfDay = getTimeOfDay();
 
@@ -142,6 +143,8 @@ export function CommandSurface({ logoUrl }: { logoUrl?: string | null }) {
               placeholder="milk, pasta, bananas…"
               vendorId={store.id}
               fullWidth
+              excludeDietary={excludeDietary}
+              getRecipeSuggestion={getRecipeSuggestion}
             />
           </div>
         ) : (

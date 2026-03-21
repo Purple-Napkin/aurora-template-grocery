@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { createAuroraClient, getStoreConfig } from "@/lib/aurora";
+import { createAuroraClient, getStoreConfig } from "aurora-starter-core";
 
 function getTimeOfDayOverrides(hour: number): { title?: string; cta?: string } | null {
   if (hour >= 5 && hour < 11) return { title: "Start the day right", cta: "Shop breakfast" };

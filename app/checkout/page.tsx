@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useCart } from "@/components/CartProvider";
-import { useStore } from "@/components/StoreContext";
+import { useCart } from "aurora-starter-core";
+import { useStore } from "aurora-starter-core";
 import {
   createCheckoutSession,
   getDeliverySlots,
   type DeliverySlot,
-} from "@/lib/aurora";
+} from "aurora-starter-core";
 
 function formatPrice(cents: number): string {
   return new Intl.NumberFormat("en-GB", {

@@ -1,4 +1,4 @@
-# Aurora E-commerce Showcase Template
+# Hippo Grocery (Aurora storefront template)
 
 A full-featured retail storefront for Aurora Studio. Showcases Aurora capabilities: Meilisearch search, Holmes mission inference, delivery slots, per-store promotions, and multi-step checkout.
 
@@ -9,11 +9,11 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
 ## Quick Start
 
 1. **Create or clone:**
-   - **Option A - From Studio:** Sign up at [Aurora](https://aurora.mandeville.digital), create a workspace from the "Hippo Ecom" template (`free-ecom`). Studio provisions the base schema; the storefront adds the full schema on first run.
+   - **Option A - From Studio:** Sign up at [Aurora](https://aurora.mandeville.digital), create a workspace from **Hippo Grocery** (`hippo-grocery`). Studio provisions the base schema; the storefront adds the full schema on first run.
    - **Option B - Clone:**
    ```bash
-   git clone https://github.com/marceldupr/aurora-starter-ecom.git
-   cd aurora-starter-ecom
+   git clone https://github.com/Purple-Napkin/aurora-hippo-grocery.git
+   cd aurora-hippo-grocery
    pnpm install
    ```
 
@@ -141,7 +141,7 @@ The API redirects to `/checkout/acme` when the success path starts with `/checko
 
 ## Deploy to Vercel
 
-From Aurora Studio: Settings → Storefront → Deploy to Vercel. Uses template `free-ecom` from the Template Registry. Environment variables are injected automatically.
+From Aurora Studio: Settings → Apps → deploy. Uses template `hippo-grocery` from the Template Registry. Environment variables are injected when you generate deploy credentials.
 
 ---
 
