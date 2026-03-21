@@ -331,7 +331,7 @@ function CatalogueContent() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 sm:py-10 px-4 sm:px-6">
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col md:flex-row gap-6">
         {/* Sidebar filters (desktop) */}
         <CatalogueFilters
           categories={categoriesWithProducts}
@@ -345,7 +345,7 @@ function CatalogueContent() {
         />
 
         {/* Mobile filters bar */}
-        <div className="lg:hidden flex items-center gap-3">
+        <div className="md:hidden flex items-center gap-3">
           <button
             type="button"
             onClick={() => setFiltersOpen((o) => !o)}
@@ -460,7 +460,7 @@ function CatalogueContent() {
 
           {/* Mobile filter drawer */}
           {filtersOpen && (
-            <div className="lg:hidden mb-6 rounded-lg border border-aurora-border overflow-hidden">
+            <div className="md:hidden mb-6 rounded-lg border border-aurora-border overflow-hidden">
               <CatalogueFilters
                 categories={categoriesWithProducts}
                 currentCategory={category}
