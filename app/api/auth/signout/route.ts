@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAuroraClient } from "aurora-starter-core";
+import { createAuroraClient } from "@aurora-studio/starter-core";
 
 /** Sign out app user. Send Bearer token; client should discard tokens after calling. */
 export async function POST(req: NextRequest) {

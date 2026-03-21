@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { Search, UtensilsCrossed, RotateCcw, Apple, PiggyBank, Sparkles } from "lucide-react";
-import { SearchDropdown, useStore, useAuth } from "aurora-starter-core";
+import { SearchDropdown, useStore, useAuth } from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
 import { getRecipeSuggestion } from "@/lib/cart-intelligence";
 import { useMissionAware } from "./MissionAwareHome";
 import { RecipeMissionHero } from "./RecipeMissionHero";
-import { getTimeOfDay } from "aurora-starter-core";
-import { holmesMissionLockCombo } from "aurora-starter-core";
+import { getTimeOfDay } from "@aurora-studio/starter-core";
+import { holmesMissionLockCombo } from "@aurora-studio/starter-core";
 import { shouldLockRecipeMissionForMissionPill } from "@/lib/holmes-mission-lock";
 
 const ICON_MAP: Record<string, typeof UtensilsCrossed> = {

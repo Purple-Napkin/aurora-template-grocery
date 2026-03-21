@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "aurora-starter-core";
+import { useAuth } from "@aurora-studio/starter-core";
 
 /**
  * Email confirmation callback. User lands here from the link in the confirmation email:

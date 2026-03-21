@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { createAuroraClient } from "aurora-starter-core";
+import { createAuroraClient } from "@aurora-studio/starter-core";
 
 const DEFAULT_CATEGORIES = [
   { name: "Bakery Items", slug: "bakery-items" },

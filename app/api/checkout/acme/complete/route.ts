@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { completeAcmeCheckout } from "aurora-starter-core";
+import { completeAcmeCheckout } from "@aurora-studio/starter-core";
 
 /**
  * Complete ACME checkout via SDK (API key stays server-side).

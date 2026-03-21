@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CartProvider } from "aurora-starter-core";
-import { AddToCartFlyProvider } from "aurora-starter-core";
-import { ConditionalHolmesScript } from "aurora-starter-core";
-import { StoreProvider } from "aurora-starter-core";
-import { StoreConfigProvider } from "aurora-starter-core";
-import { AuthProvider } from "aurora-starter-core";
+import { CartProvider } from "@aurora-studio/starter-core";
+import { AddToCartFlyProvider } from "@aurora-studio/starter-core";
+import { ConditionalHolmesScript } from "@aurora-studio/starter-core";
+import { StoreProvider } from "@aurora-studio/starter-core";
+import { StoreConfigProvider } from "@aurora-studio/starter-core";
+import { AuthProvider } from "@aurora-studio/starter-core";
 import { ConditionalLayout } from "@/components/ConditionalLayout";
 import { DietaryExclusionsProvider } from "@/components/DietaryExclusionsContext";
 import { MissionAwareHomeProvider } from "@/components/MissionAwareHome";

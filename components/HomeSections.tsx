@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { getHomePersonalization, holmesRecentRecipes, holmesRecipeProducts } from "aurora-starter-core";
-import { getStoreConfig } from "aurora-starter-core";
-import { getTimeOfDay } from "aurora-starter-core";
+import { getHomePersonalization, holmesRecentRecipes, holmesRecipeProducts } from "@aurora-studio/starter-core";
+import { getStoreConfig } from "@aurora-studio/starter-core";
+import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { getDietaryFromCookie } from "@/lib/dietary-server";
-import { ProductImage } from "aurora-starter-core";
+import { ProductImage } from "@aurora-studio/starter-core";
 import { ChefHat } from "lucide-react";
 import { AdaptiveFeed } from "./AdaptiveFeed";
 import { RecipeProductCollage } from "./RecipeProductCollage";

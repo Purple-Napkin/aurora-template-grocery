@@ -1,6 +1,6 @@
 "use client";
 
-import { ProductImage } from "aurora-starter-core";
+import { ProductImage } from "@aurora-studio/starter-core";
 import { ChefHat } from "lucide-react";
 
 /** Collage of 2 or 4 product images for recipe cards. Falls back to chef hat when empty. */

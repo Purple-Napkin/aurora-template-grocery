@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAuroraClient } from "aurora-starter-core";
+import { createAuroraClient } from "@aurora-studio/starter-core";
 
 /**
  * Proxy Holmes similar products from Aurora.

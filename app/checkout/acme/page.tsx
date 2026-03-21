@@ -3,7 +3,7 @@
 import { Suspense, useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import type { AcmeSession } from "aurora-starter-core";
+import type { AcmeSession } from "@aurora-studio/starter-core";
 
 function formatPrice(cents: number, currency = "GBP"): string {
   return new Intl.NumberFormat("en-GB", {

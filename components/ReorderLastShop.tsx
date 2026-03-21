@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "aurora-starter-core";
-import { useCart } from "aurora-starter-core";
-import { getStoreConfig } from "aurora-starter-core";
+import { useAuth } from "@aurora-studio/starter-core";
+import { useCart } from "@aurora-studio/starter-core";
+import { getStoreConfig } from "@aurora-studio/starter-core";
 
 interface OrderItem {
   product_id?: string;

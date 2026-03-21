@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAuroraClient } from "aurora-starter-core";
+import { createAuroraClient } from "@aurora-studio/starter-core";
 
 /** App user sign up via SDK (API key server-side). Returns session or user + message when email confirmation required. */
 export async function POST(req: NextRequest) {

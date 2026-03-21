@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCart } from "aurora-starter-core";
+import { useCart } from "@aurora-studio/starter-core";
 import { HolmesContextualWell } from "@/components/HolmesContextualWell";
 import { RecipePicker } from "@/components/RecipePicker";
 import { BasketBundlePlaceholder } from "@/components/BasketBundlePlaceholder";

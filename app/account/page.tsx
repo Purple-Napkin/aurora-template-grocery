@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { User, Package, MapPin, CreditCard, LogOut } from "lucide-react";
-import { useAuth } from "aurora-starter-core";
+import { useAuth } from "@aurora-studio/starter-core";
 
 export default function AccountPage() {
   const { user, loading, signOut } = useAuth();

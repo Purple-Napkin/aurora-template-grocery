@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { RotateCcw } from "lucide-react";
-import { useAuth } from "aurora-starter-core";
-import { useCart } from "aurora-starter-core";
+import { useAuth } from "@aurora-studio/starter-core";
+import { useCart } from "@aurora-studio/starter-core";
 
 interface OrderItem {
   product_id?: string;

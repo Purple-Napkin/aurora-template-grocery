@@ -7,7 +7,7 @@ import {
   SearchDropdown,
   useStore,
   useAuth,
-} from "aurora-starter-core";
+} from "@aurora-studio/starter-core";
 import { DietaryNeedsDropdown } from "./DietaryNeedsDropdown";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
 import { getRecipeSuggestion } from "@/lib/cart-intelligence";

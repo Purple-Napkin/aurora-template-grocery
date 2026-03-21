@@ -1,6 +1,6 @@
 "use client";
 
-import { useCart } from "aurora-starter-core";
+import { useCart } from "@aurora-studio/starter-core";
 import { getBasketSaverTip } from "@/lib/easter-eggs";
 import Link from "next/link";
 import { PiggyBank, Sparkles } from "lucide-react";

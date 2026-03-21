@@ -11,7 +11,7 @@
     "schema:provision": "node scripts/provision-schema.mjs"
   },
   "dependencies": {
-    "aurora-starter-core": "file:../aurora-starter-core",
+    "@aurora-studio/starter-core": "^0.1.1",
     "@aurora-studio/sdk": "^0.2.27",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.454.0",

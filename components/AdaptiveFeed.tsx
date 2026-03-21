@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ProductImage } from "aurora-starter-core";
+import { ProductImage } from "@aurora-studio/starter-core";
 import { ChefHat } from "lucide-react";
-import { getTimeOfDay } from "aurora-starter-core";
-import { useStore } from "aurora-starter-core";
+import { getTimeOfDay } from "@aurora-studio/starter-core";
+import { useStore } from "@aurora-studio/starter-core";
 import { RecipeProductCollage } from "./RecipeProductCollage";
 
 const CURRENCY_SYMBOLS: Record<string, string> = {

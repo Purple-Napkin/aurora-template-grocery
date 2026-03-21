@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useCart } from "aurora-starter-core";
-import { useStore } from "aurora-starter-core";
+import { useCart } from "@aurora-studio/starter-core";
+import { useStore } from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
-import { search, holmesGoesWith, type SearchHit } from "aurora-starter-core";
-import { formatPrice, toCents } from "aurora-starter-core";
+import { search, holmesGoesWith, type SearchHit } from "@aurora-studio/starter-core";
+import { formatPrice, toCents } from "@aurora-studio/starter-core";
 import { getForgottenSuggestions } from "@/lib/cart-intelligence";
-import { AddToCartButton } from "aurora-starter-core";
-import { ProductImage } from "aurora-starter-core";
-import { getStoreConfig } from "aurora-starter-core";
+import { AddToCartButton } from "@aurora-studio/starter-core";
+import { ProductImage } from "@aurora-studio/starter-core";
+import { getStoreConfig } from "@aurora-studio/starter-core";
 
 /** "You might have forgotten" - prefers Holmes goes-with, falls back to affinity search. */
 export function ForgotSuggestions() {

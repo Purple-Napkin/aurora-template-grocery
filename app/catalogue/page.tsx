@@ -3,28 +3,28 @@
 import { useCallback, useEffect, useRef, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import { AddToCartButton } from "aurora-starter-core";
-import { useStore } from "aurora-starter-core";
+import { AddToCartButton } from "@aurora-studio/starter-core";
+import { useStore } from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "@/components/DietaryExclusionsContext";
-import { useCart } from "aurora-starter-core";
+import { useCart } from "@aurora-studio/starter-core";
 import { useMissionAware } from "@/components/MissionAwareHome";
-import { formatPrice, toCents } from "aurora-starter-core";
-import { search, getStoreConfig } from "aurora-starter-core";
+import { formatPrice, toCents } from "@aurora-studio/starter-core";
+import { search, getStoreConfig } from "@aurora-studio/starter-core";
 import { getRecipeTitle, expandRecipeSearchQuery } from "@/lib/cart-intelligence";
-import { holmesSearch } from "aurora-starter-core";
-import { getTimeOfDay } from "aurora-starter-core";
+import { holmesSearch } from "@aurora-studio/starter-core";
+import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { isMissionBarDismissed } from "@/lib/mission-bar";
 import { MISSION_CATEGORY_PRIORITY, MISSION_FOCUS_QUERY } from "@/lib/mission-catalogue-config";
-import type { SearchHit } from "aurora-starter-core";
+import type { SearchHit } from "@aurora-studio/starter-core";
 import {
   CatalogueFilters,
   type CategoryItem,
   type SortOption,
-} from "aurora-starter-core";
-import { ProductImage } from "aurora-starter-core";
-import { SortDropdown } from "aurora-starter-core";
-import { ProductCardSkeleton } from "aurora-starter-core";
-import { CatalogueEmptyState } from "aurora-starter-core";
+} from "@aurora-studio/starter-core";
+import { ProductImage } from "@aurora-studio/starter-core";
+import { SortDropdown } from "@aurora-studio/starter-core";
+import { ProductCardSkeleton } from "@aurora-studio/starter-core";
+import { CatalogueEmptyState } from "@aurora-studio/starter-core";
 import { RecipePageView } from "@/components/RecipePageView";
 
 const DEFAULT_CATEGORIES: CategoryItem[] = [

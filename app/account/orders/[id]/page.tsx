@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Package, ArrowLeft } from "lucide-react";
-import { useAuth } from "aurora-starter-core";
+import { useAuth } from "@aurora-studio/starter-core";
 
 function formatPrice(cents: number): string {
   return new Intl.NumberFormat("en-GB", {

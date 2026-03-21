@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useStore } from "aurora-starter-core";
-import { getTimeOfDay } from "aurora-starter-core";
+import { useStore } from "@aurora-studio/starter-core";
+import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { TrendingUp } from "lucide-react";
 
 /** Live adapting UI signals - creates perceived intelligence before intent system kicks in */

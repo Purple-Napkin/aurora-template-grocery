@@ -3,14 +3,14 @@
 import { useState, useEffect } from "react";
 import { X, RotateCcw, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
 import { useMissionAware } from "./MissionAwareHome";
-import { useCart } from "aurora-starter-core";
+import { useCart } from "@aurora-studio/starter-core";
 import {
   MISSION_BAR_DISMISS_KEY,
   isMissionBarDismissed,
   isMissionBarCollapsed,
   setMissionBarCollapsed,
 } from "@/lib/mission-bar";
-import { holmesMissionLockClear } from "aurora-starter-core";
+import { holmesMissionLockClear } from "@aurora-studio/starter-core";
 
 const BUNDLE_MISSION_KEYS = new Set([
   "recipe_mission",

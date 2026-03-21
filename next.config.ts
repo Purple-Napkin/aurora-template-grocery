@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@aurora-studio/sdk", "aurora-starter-core"],
+  transpilePackages: ["@aurora-studio/sdk", "@aurora-studio/starter-core"],
   eslint: { ignoreDuringBuilds: true },
   webpack: (config, { isServer }) => {
     if (isServer) {

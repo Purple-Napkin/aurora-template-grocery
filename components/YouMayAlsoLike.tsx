@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { createAuroraClient, holmesGoesWith } from "aurora-starter-core";
-import { formatPrice, toCents } from "aurora-starter-core";
-import { AddToCartButton } from "aurora-starter-core";
-import { ProductImage } from "aurora-starter-core";
-import { getImageUrlFromRecord } from "aurora-starter-core";
+import { createAuroraClient, holmesGoesWith } from "@aurora-studio/starter-core";
+import { formatPrice, toCents } from "@aurora-studio/starter-core";
+import { AddToCartButton } from "@aurora-studio/starter-core";
+import { ProductImage } from "@aurora-studio/starter-core";
+import { getImageUrlFromRecord } from "@aurora-studio/starter-core";
 
 /** Aurora stores prices as decimal. Use toCents for display/cart. */
 function getPrice(record: Record<string, unknown>): number | undefined {

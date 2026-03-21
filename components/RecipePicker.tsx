@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useCart } from "aurora-starter-core";
+import { useCart } from "@aurora-studio/starter-core";
 import { useMissionAware } from "@/components/MissionAwareHome";
-import { holmesCombosForCart, holmesSelectCombo } from "aurora-starter-core";
+import { holmesCombosForCart, holmesSelectCombo } from "@aurora-studio/starter-core";
 import { RecipeProductCollage } from "./RecipeProductCollage";
 
 /**

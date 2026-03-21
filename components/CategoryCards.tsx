@@ -18,7 +18,7 @@ import {
   UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react";
-import { ProductImage } from "aurora-starter-core";
+import { ProductImage } from "@aurora-studio/starter-core";
 
 /** Map category slug to icon when no image provided */
 function getCategoryIcon(slug: string): LucideIcon {

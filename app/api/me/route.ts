@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getMe } from "aurora-starter-core";
+import { getMe } from "@aurora-studio/starter-core";
 
 /** Current user metadata and related data (e.g. addresses). Uses SDK getMe(userId); API key server-side. */
 export async function GET(req: NextRequest) {

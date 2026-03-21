@@ -4,8 +4,8 @@ import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { MapPin, Home } from "lucide-react";
-import { useStore } from "aurora-starter-core";
-import type { StoreItem } from "aurora-starter-core";
+import { useStore } from "@aurora-studio/starter-core";
+import type { StoreItem } from "@aurora-studio/starter-core";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),

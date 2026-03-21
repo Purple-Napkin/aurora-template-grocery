@@ -1,11 +1,11 @@
-import { StoreContextBar } from "aurora-starter-core";
+import { StoreContextBar } from "@aurora-studio/starter-core";
 import { HeroCommandSurface } from "@/components/HeroCommandSurface";
 import { HolmesContextualWell } from "@/components/HolmesContextualWell";
 import { MissionEntryPoints } from "@/components/MissionEntryPoints";
 import { ShoppingListTemplates } from "@/components/ShoppingListTemplates";
-import { HolmesHomeRefresher } from "aurora-starter-core";
+import { HolmesHomeRefresher } from "@aurora-studio/starter-core";
 import { HomeSections } from "@/components/HomeSections";
-import { SmartCartPanel } from "aurora-starter-core";
+import { SmartCartPanel } from "@aurora-studio/starter-core";
 import { LiveSignalsRow } from "@/components/LiveSignalsRow";
 import {
   MissionAwareHero,
