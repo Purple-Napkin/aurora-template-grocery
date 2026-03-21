@@ -267,7 +267,7 @@ export function RecipeFolioCarousel() {
           type="button"
           onClick={goPrev}
           disabled={animating}
-          className="absolute left-2 sm:left-4 top-[28%] -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 shadow-lg border border-aurora-border flex items-center justify-center text-aurora-muted hover:text-aurora-primary hover:bg-white disabled:opacity-50 transition-all"
+          className="absolute left-2 sm:left-4 top-[28%] -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-aurora-surface/95 backdrop-blur-sm shadow-lg border border-aurora-border flex items-center justify-center text-aurora-muted hover:text-aurora-primary hover:bg-aurora-surface disabled:opacity-50 transition-all"
           aria-label="Previous recipe"
         >
           <Carrot className="w-6 h-6" />
@@ -345,7 +345,7 @@ export function RecipeFolioCarousel() {
                       return (
                         <div
                           key={id}
-                          className="flex items-center gap-2 p-2 rounded-lg bg-white/60 border border-aurora-border/60"
+                          className="flex items-center gap-2 p-2 rounded-lg bg-aurora-surface/90 border border-aurora-border"
                         >
                           <div className="w-10 h-10 rounded overflow-hidden shrink-0 bg-aurora-surface-hover">
                             <ProductImage
@@ -355,7 +355,10 @@ export function RecipeFolioCarousel() {
                               fallback={<span className="text-aurora-muted text-sm">-</span>}
                             />
                           </div>
-                          <span className="text-lg truncate max-w-[120px]" style={{ fontFamily: "Caveat, cursive" }}>
+                          <span
+                            className="text-lg truncate max-w-[120px] text-aurora-text"
+                            style={{ fontFamily: "Caveat, cursive" }}
+                          >
                             {name}
                           </span>
                           {priceCents != null && (
@@ -413,7 +416,7 @@ export function RecipeFolioCarousel() {
           type="button"
           onClick={goNext}
           disabled={animating}
-          className="absolute right-2 sm:right-4 top-[28%] -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 shadow-lg border border-aurora-border flex items-center justify-center text-aurora-muted hover:text-aurora-primary hover:bg-white disabled:opacity-50 transition-all"
+          className="absolute right-2 sm:right-4 top-[28%] -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-aurora-surface/95 backdrop-blur-sm shadow-lg border border-aurora-border flex items-center justify-center text-aurora-muted hover:text-aurora-primary hover:bg-aurora-surface disabled:opacity-50 transition-all"
           aria-label="Next recipe"
         >
           <Apple className="w-6 h-6" />

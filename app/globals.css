@@ -96,6 +96,20 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
   pointer-events: none;
 }
+
+/* Folio carousel: dark “stationery” so Caveat + aurora-text stay legible */
+[data-theme="dark"] .folio-paper {
+  background: linear-gradient(145deg, rgba(26, 42, 32, 0.98) 0%, rgba(18, 34, 26, 1) 50%, rgba(14, 28, 22, 1) 100%);
+  box-shadow:
+    inset 0 0 100px rgba(0, 0, 0, 0.45),
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(148, 163, 148, 0.22);
+}
+[data-theme="dark"] .folio-paper::before {
+  opacity: 0.7;
+}
+
 @keyframes page-turn-next {
   from { transform: perspective(1200px) rotateY(0deg); opacity: 1; }
   to { transform: perspective(1200px) rotateY(-90deg); opacity: 0.3; }
@@ -124,6 +138,16 @@
 
 body {
   font-family: var(--font-body);
+}
+
+/* Home command surface: short green band, then page bg (dark mode reads cleaner as near-black) */
+[data-theme="dark"] .command-surface-hero {
+  background-image: linear-gradient(
+    180deg,
+    var(--aurora-surface) 0%,
+    var(--aurora-bg) 12%,
+    var(--aurora-bg) 100%
+  ) !important;
 }
 
 @keyframes shimmer {
