@@ -331,7 +331,7 @@ function CatalogueContent() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 sm:py-10 px-4 sm:px-6">
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-row gap-6">
         {/* Sidebar filters (desktop) */}
         <CatalogueFilters
           categories={categoriesWithProducts}
@@ -344,8 +344,8 @@ function CatalogueContent() {
           missionPrioritySlugs={missionPrioritySlugs}
         />
 
-        {/* Mobile filters bar */}
-        <div className="md:hidden flex items-center gap-3">
+        {/* Mobile filters bar - only on very small screens where sidebar stacks */}
+        <div className="flex sm:hidden items-center gap-3">
           <button
             type="button"
             onClick={() => setFiltersOpen((o) => !o)}
@@ -397,7 +397,7 @@ function CatalogueContent() {
               <h2 className="text-sm font-semibold text-aurora-muted uppercase tracking-widest mb-4">
                 For your mission: {activeMission.label}
               </h2>
-              <div className="grid gap-4 sm:gap-5 grid-cols-[repeat(auto-fill,minmax(160px,1fr))]">
+              <div className="grid gap-4 sm:gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {missionFocusHits.map((record) => {
                   const id = (record.recordId ?? record.id) as string;
                   const name = getDisplayName(record);
@@ -460,7 +460,7 @@ function CatalogueContent() {
 
           {/* Mobile filter drawer */}
           {filtersOpen && (
-            <div className="md:hidden mb-6 rounded-lg border border-aurora-border overflow-hidden">
+            <div className="sm:hidden mb-6 rounded-lg border border-aurora-border overflow-hidden">
               <CatalogueFilters
                 categories={categoriesWithProducts}
                 currentCategory={category}
@@ -478,7 +478,7 @@ function CatalogueContent() {
           {/* Loading/empty/grid - ensure full width so layout doesn't collapse */}
           <div className="min-h-[400px] w-full flex-1 min-w-0 flex">
           {loading && hits.length === 0 && store ? (
-            <div className="grid gap-4 sm:gap-5 w-full transition-opacity duration-200 flex-1 min-w-0 grid-cols-[repeat(auto-fill,minmax(160px,1fr))]">
+            <div className="grid gap-4 sm:gap-5 w-full transition-opacity duration-200 flex-1 min-w-0 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {Array.from({ length: 8 }).map((_, i) => (
                 <ProductCardSkeleton key={i} />
               ))}
@@ -503,7 +503,7 @@ function CatalogueContent() {
             <div className="w-full flex-1 min-w-0">
             <>
               <div
-                className={`grid gap-4 sm:gap-5 w-full transition-opacity duration-200 grid-cols-[repeat(auto-fill,minmax(160px,1fr))] ${
+                className={`grid gap-4 sm:gap-5 w-full transition-opacity duration-200 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 ${
                   loading ? "opacity-50 pointer-events-none" : ""
                 }`}
               >
