@@ -1,7 +1,6 @@
 import { CommandSurface } from "./CommandSurface";
 
-const DEFAULT_LOGO =
-  "https://vnawbscpsiwkqniibyya.supabase.co/storage/v1/object/public/placeholders/hippo-ecom.png";
+const DEFAULT_LOGO = "/hippo-logo.png";
 
 /** Hero with logo + shopping form. Logo from env or default. */
 export function HeroCommandSurface() {

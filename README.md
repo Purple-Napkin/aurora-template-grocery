@@ -66,7 +66,7 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
 | `AURORA_API_KEY` | Yes | API key from Aurora Studio → Settings → API Keys |
 | `NEXT_PUBLIC_TENANT_SLUG` | Yes | Your tenant slug (e.g. `acme`) |
 | `NEXT_PUBLIC_SITE_NAME` | No | Store name (default: "Store") |
-| `NEXT_PUBLIC_LOGO_URL` | No | Logo image URL |
+| `NEXT_PUBLIC_LOGO_URL` | No | Logo image URL (default: bundled `/hippo-logo.png`) |
 | `NEXT_PUBLIC_ACCENT_COLOR` | No | Accent colour (default: `#38bdf8`) |
 
 ## Base Schema

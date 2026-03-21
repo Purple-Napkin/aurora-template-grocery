@@ -64,7 +64,7 @@ function LoginContent() {
   };
 
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Hippo Grocery";
-  const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL ?? "";
+  const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL ?? "/hippo-logo.png";
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">

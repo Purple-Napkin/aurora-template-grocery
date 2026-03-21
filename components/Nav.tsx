@@ -14,7 +14,7 @@ import { getRecipeSuggestion } from "@/lib/cart-intelligence";
 
 export function Nav() {
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Hippo Grocery";
-  const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL ?? "https://vnawbscpsiwkqniibyya.supabase.co/storage/v1/object/public/placeholders/hippo-ecom.png";
+  const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL ?? "/hippo-logo.png";
   const { location, store } = useStore();
   const { user, loading } = useAuth();
   const { excludeDietary } = useDietaryExclusions();
