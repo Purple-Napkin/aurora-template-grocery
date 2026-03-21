@@ -31,7 +31,6 @@ export function RecipeProductCollage({
         <ProductImage
           src={urls[0]}
           className="w-full h-full"
-          objectFit="contain"
           thumbnail
           fallback={
             <div className="w-full h-full flex items-center justify-center">
@@ -53,7 +52,6 @@ export function RecipeProductCollage({
             <ProductImage
               src={url}
               className="absolute inset-0 w-full h-full"
-              objectFit="contain"
               thumbnail
               fallback={
                 <div className="w-full h-full flex items-center justify-center">
@@ -77,7 +75,6 @@ export function RecipeProductCollage({
           <ProductImage
             src={url}
             className="absolute inset-0 w-full h-full"
-            objectFit="contain"
             thumbnail
             fallback={
               <div className="w-full h-full flex items-center justify-center">

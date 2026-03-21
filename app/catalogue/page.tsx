@@ -331,7 +331,7 @@ function CatalogueContent() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 sm:py-10 px-4 sm:px-6">
-      <div className="flex flex-row gap-6">
+      <div className="flex flex-col md:flex-row gap-6">
         {/* Sidebar filters (desktop) */}
         <CatalogueFilters
           categories={categoriesWithProducts}
@@ -344,8 +344,8 @@ function CatalogueContent() {
           missionPrioritySlugs={missionPrioritySlugs}
         />
 
-        {/* Mobile filters bar - only on very small screens where sidebar stacks */}
-        <div className="flex sm:hidden items-center gap-3">
+        {/* Mobile filters bar — sidebar hidden below md */}
+        <div className="flex md:hidden items-center gap-3">
           <button
             type="button"
             onClick={() => setFiltersOpen((o) => !o)}
@@ -363,15 +363,21 @@ function CatalogueContent() {
 
         {/* Main content - min-w-0 lets it shrink; flex-1 lets it grow to fill space */}
         <main className="flex-1 min-w-0 w-full sm:min-w-[280px] flex flex-col">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <div
+            className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${recipeTitle ? "mb-4" : "mb-3"}`}
+          >
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="font-display text-xl sm:text-2xl font-bold">
-                {recipeTitle
-                  ? getTimeOfDay() === "evening"
+              {recipeTitle ? (
+                <h1 className="font-display text-xl sm:text-2xl font-bold">
+                  {getTimeOfDay() === "evening"
                     ? `Make tonight: ${recipeTitle}`
-                    : `Make: ${recipeTitle}`
-                  : "Products"}
-              </h1>
+                    : `Make: ${recipeTitle}`}
+                </h1>
+              ) : (
+                <h1 className="sr-only">
+                  {store?.name ? `Product catalogue · ${store.name}` : "Product catalogue"}
+                </h1>
+              )}
               {recipeTitle && hits.length > 0 && catalogSlug && (
                 <button
                   type="button"
@@ -422,7 +428,6 @@ function CatalogueContent() {
                           <ProductImage
                             src={imageUrl}
                             className="w-full h-full"
-                            objectFit="contain"
                             thumbnail
                             fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
                           />
@@ -460,7 +465,7 @@ function CatalogueContent() {
 
           {/* Mobile filter drawer */}
           {filtersOpen && (
-            <div className="sm:hidden mb-6 rounded-lg border border-aurora-border overflow-hidden">
+            <div className="md:hidden mb-6 rounded-lg border border-aurora-border overflow-hidden">
               <CatalogueFilters
                 categories={categoriesWithProducts}
                 currentCategory={category}
@@ -534,7 +539,6 @@ function CatalogueContent() {
                           <ProductImage
                             src={imageUrl}
                             className="w-full h-full"
-                            objectFit="contain"
                             thumbnail
                             fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
                           />

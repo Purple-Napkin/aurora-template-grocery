@@ -92,7 +92,6 @@ export async function YouMayAlsoLike({
                   <ProductImage
                     src={imageUrl}
                     className="absolute inset-0 w-full h-full object-center"
-                    objectFit="contain"
                     thumbnail
                     fallback={<div className="absolute inset-0 flex items-center justify-center text-aurora-muted text-2xl">-</div>}
                   />

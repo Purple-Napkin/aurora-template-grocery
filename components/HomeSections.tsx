@@ -140,7 +140,6 @@ export async function HomeSections() {
                         <ProductImage
                           src={card.imageUrl}
                           className="w-full h-full"
-                          objectFit="contain"
                           thumbnail
                           fallback={
                             <span
@@ -196,7 +195,6 @@ export async function HomeSections() {
                         src={prod.image_url}
                         baseUrl={process.env.NEXT_PUBLIC_APP_URL}
                         className="w-full h-full"
-                        objectFit="contain"
                         thumbnail
                         fallback={
                           <span
@@ -246,7 +244,6 @@ export async function HomeSections() {
                       <ProductImage
                         src={card.imageUrl}
                         className="w-full h-full"
-                        objectFit="contain"
                         thumbnail
                         fallback={
                           <span

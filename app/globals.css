@@ -20,6 +20,9 @@
   --aurora-error: #EF4444;
   --font-display: "Fraunces", "Manrope", "Plus Jakarta Sans", system-ui, serif;
   --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+  /* Light pattern wells (must live here — a later bare :root would override [data-theme="dark"]). */
+  --pattern-cream: rgba(250, 246, 238, 0.78);
+  --pattern-warm: rgba(232, 226, 214, 0.5);
 }
 
 [data-theme="dark"] {
@@ -32,6 +35,9 @@
   --aurora-primary: #34d399;
   --aurora-primary-dark: #10b981;
   --aurora-accent: #34d399;
+  /* Pattern wells + Holmes blocks: dark wash so light text stays legible (was cream + white text). */
+  --pattern-cream: rgba(18, 34, 24, 0.94);
+  --pattern-warm: rgba(12, 26, 18, 0.55);
 }
 
 /* Fallback pin icon: no border/background so inline SVG is the only visible part */
@@ -44,12 +50,6 @@
 /* Stores map: grayscale tiles to fit site aesthetic, markers stay in color */
 .stores-map-bw .leaflet-tile-pane {
   filter: grayscale(1);
-}
-
-/* Pattern colors: soft cream + warm beige – bakery / fresh produce feel */
-:root {
-  --pattern-cream: rgba(250, 246, 238, 0.78);   /* #FAF6EE – slightly more opaque = pattern less visible */
-  --pattern-warm: rgba(232, 226, 214, 0.5);     /* #E8E2D6 */
 }
 
 /* Logo well: subtle anchor with grocery pattern + warm cream tint */
@@ -247,6 +247,13 @@ button.checkout-btn:active {
   box-shadow: none !important;
 }
 
+/* Holmes .holmes-highlight uses a rectangular outline (ignores border-radius); drop it on payment CTAs */
+[data-holmes="payment"].holmes-highlight,
+[data-holmes="checkout-summary"].holmes-highlight {
+  outline: none !important;
+  outline-offset: 0 !important;
+}
+
 /* Holmes basket bundle - vanilla HTML from script, styled here */
 [data-holmes="basket-bundle"] {
   font-family: var(--font-body);
@@ -310,7 +317,7 @@ button.checkout-btn:active {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   display: block;
 }
@@ -424,7 +431,7 @@ button.checkout-btn:active {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   display: block;
 }
@@ -526,7 +533,7 @@ button.checkout-btn:active {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   display: block;
 }
@@ -602,7 +609,7 @@ button.checkout-btn:active {
 [data-holmes="catalogue-list"] [data-holmes-catalogue-card-image] img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   display: block;
 }
@@ -695,7 +702,7 @@ button.checkout-btn:active {
 #holmes-root [data-holmes-banner-product] img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 #holmes-root [data-holmes-banner-product-fallback] {
   font-size: 0.7rem;
@@ -785,7 +792,7 @@ button.checkout-btn:active {
 #holmes-offer-toast [data-holmes-toast-card-image] img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 #holmes-offer-toast [data-holmes-toast-card-fallback] {
   font-size: 0.6rem;

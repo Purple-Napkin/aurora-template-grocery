@@ -90,7 +90,7 @@ export function ActiveMissionBar() {
         <button
           type="button"
           onClick={handleExpand}
-          className="flex items-center gap-2 px-3 py-2 rounded-full shadow-lg border border-aurora-border/60 bg-white/95 backdrop-blur-sm hover:shadow-md hover:scale-[1.02] transition-all text-aurora-text"
+          className="flex items-center gap-2 px-3 py-2 rounded-full shadow-lg border border-aurora-border/60 bg-aurora-surface/95 backdrop-blur-sm hover:shadow-md hover:scale-[1.02] transition-all text-aurora-text"
           aria-label="Show shopping insight"
           title="Show shopping insight"
         >
@@ -108,7 +108,7 @@ export function ActiveMissionBar() {
       className="fixed top-20 right-4 z-40 w-[min(100%-2rem,24rem)]"
       data-holmes="active-mission-bar"
     >
-      <div className="rounded-2xl border border-aurora-border/80 bg-white/95 backdrop-blur-md shadow-lg shadow-aurora-primary/5 overflow-hidden">
+      <div className="rounded-2xl border border-aurora-border/80 bg-aurora-surface/95 backdrop-blur-md shadow-lg shadow-aurora-primary/5 overflow-hidden">
         <div className="px-4 py-3 flex items-start sm:items-center justify-between gap-3">
           <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
             <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-aurora-primary/10 shrink-0">

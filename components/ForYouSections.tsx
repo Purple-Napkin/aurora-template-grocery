@@ -138,7 +138,6 @@ export async function ForYouSections() {
                         <ProductImage
                           src={card.imageUrl}
                           className="w-full h-full"
-                          objectFit="contain"
                           thumbnail
                           fallback={
                             <span className="w-full h-full flex items-center justify-center text-aurora-muted text-sm text-center px-2">
@@ -174,7 +173,6 @@ export async function ForYouSections() {
                         src={prod.image_url}
                         baseUrl={process.env.NEXT_PUBLIC_APP_URL}
                         className="w-full h-full"
-                        objectFit="contain"
                         thumbnail
                         fallback={
                           <span className="w-full h-full flex items-center justify-center text-aurora-muted text-2xl">

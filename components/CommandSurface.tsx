@@ -109,9 +109,9 @@ export function CommandSurface({ logoUrl }: { logoUrl?: string | null }) {
                 onClick={() => {
                   if (shouldLockRecipeMissionForMissionPill(action.label, href)) holmesMissionLockCombo();
                 }}
-                className="inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-aurora-surface border border-aurora-border shadow-sm hover:border-aurora-primary/40 hover:shadow-md transition-all text-sm font-semibold text-aurora-text"
+                className="inline-flex min-h-[2.75rem] items-center gap-2.5 px-5 py-3 rounded-2xl bg-aurora-surface border border-aurora-border shadow-sm hover:border-aurora-primary/40 hover:shadow-md transition-all text-sm font-semibold text-aurora-text"
               >
-                <Icon className="w-4 h-4 text-aurora-primary" />
+                <Icon className="h-4 w-4 shrink-0 text-aurora-primary" />
                 {action.label}
               </Link>
             );
@@ -120,9 +120,9 @@ export function CommandSurface({ logoUrl }: { logoUrl?: string | null }) {
             <Link
               href="/recipes"
               onClick={() => holmesMissionLockCombo()}
-              className="inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-aurora-surface border border-aurora-border shadow-sm hover:border-aurora-primary/40 hover:shadow-md transition-all text-sm font-semibold text-aurora-text"
+              className="inline-flex min-h-[2.75rem] items-center gap-2.5 px-5 py-3 rounded-2xl bg-aurora-surface border border-aurora-border shadow-sm hover:border-aurora-primary/40 hover:shadow-md transition-all text-sm font-semibold text-aurora-text"
             >
-              <Sparkles className="w-4 h-4 text-aurora-primary" />
+              <Sparkles className="h-4 w-4 shrink-0 text-aurora-primary" />
               Recipe ideas
             </Link>
           )}
@@ -136,13 +136,14 @@ export function CommandSurface({ logoUrl }: { logoUrl?: string | null }) {
         </p>
         {store ? (
           <div
-            className="rounded-xl border border-aurora-border/80 bg-aurora-surface/80 focus-within:border-aurora-primary/50 focus-within:ring-1 focus-within:ring-aurora-primary/20 transition-all max-w-md"
+            className="rounded-xl border border-aurora-border bg-aurora-surface shadow-sm focus-within:border-aurora-primary/60 focus-within:ring-1 focus-within:ring-aurora-primary/25 transition-all max-w-md overflow-hidden"
             data-command-search
           >
             <SearchDropdown
               placeholder="milk, pasta, bananas…"
               vendorId={store.id}
               fullWidth
+              variant="embedded"
               excludeDietary={excludeDietary}
               getRecipeSuggestion={getRecipeSuggestion}
             />

@@ -72,7 +72,7 @@ export function Nav() {
           <div className="hidden md:flex flex-1 justify-center min-w-0 max-w-sm mx-4">
             {store ? (
               <SearchDropdown
-                placeholder={`Search products in ${store.name}…`}
+                placeholder="Search products"
                 vendorId={store.id}
                 excludeDietary={excludeDietary}
                 getRecipeSuggestion={getRecipeSuggestion}

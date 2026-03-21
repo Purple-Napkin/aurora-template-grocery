@@ -104,7 +104,6 @@ export default function CartPage() {
                   <ProductImage
                     src={item.imageUrl}
                     className="w-full h-full"
-                    objectFit="contain"
                     thumbnail
                     fallback={<span className="w-full h-full flex items-center justify-center text-aurora-muted text-xs">-</span>}
                   />

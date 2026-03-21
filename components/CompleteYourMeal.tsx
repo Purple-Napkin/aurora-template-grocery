@@ -133,7 +133,6 @@ export function CompleteYourMeal() {
                     <ProductImage
                       src={p.image_url}
                       className="w-full h-full"
-                      objectFit="contain"
                       thumbnail
                       fallback={<span className="w-full h-full flex items-center justify-center text-aurora-muted text-lg">-</span>}
                     />

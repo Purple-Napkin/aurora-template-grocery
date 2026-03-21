@@ -1,17 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CartProvider } from "@aurora-studio/starter-core";
-import { AddToCartFlyProvider } from "@aurora-studio/starter-core";
 import { ConditionalHolmesScript } from "@aurora-studio/starter-core";
-import { StoreProvider } from "@aurora-studio/starter-core";
-import { StoreConfigProvider } from "@aurora-studio/starter-core";
-import { AuthProvider } from "@aurora-studio/starter-core";
-import { ConditionalLayout } from "@/components/ConditionalLayout";
-import { DietaryExclusionsProvider } from "@/components/DietaryExclusionsContext";
-import { MissionAwareHomeProvider } from "@/components/MissionAwareHome";
-import { AffinityToast } from "@/components/AffinityToast";
-import { HolmesDevTools } from "@/components/HolmesDevTools";
-import { VeggieBuddy } from "@/components/VeggieBuddy";
+import { ClientProviders } from "@/components/ClientProviders";
 
 const siteName =
   process.env.NEXT_PUBLIC_SITE_NAME ?? "Hippo Grocery";
@@ -39,24 +29,7 @@ export default function RootLayout({
           } as React.CSSProperties
         }
       >
-        <StoreProvider>
-          <DietaryExclusionsProvider>
-          <StoreConfigProvider>
-          <AuthProvider>
-        <CartProvider>
-          <AddToCartFlyProvider>
-            <MissionAwareHomeProvider>
-              <ConditionalLayout>{children}</ConditionalLayout>
-            </MissionAwareHomeProvider>
-            <AffinityToast />
-            <VeggieBuddy />
-            <HolmesDevTools />
-          </AddToCartFlyProvider>
-        </CartProvider>
-          </AuthProvider>
-          </StoreConfigProvider>
-          </DietaryExclusionsProvider>
-        </StoreProvider>
+        <ClientProviders>{children}</ClientProviders>
         <ConditionalHolmesScript />
       </body>
     </html>

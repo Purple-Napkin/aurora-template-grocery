@@ -351,7 +351,6 @@ export function RecipeFolioCarousel() {
                             <ProductImage
                               src={hit.image_url}
                               className="w-full h-full"
-                              objectFit="contain"
                               thumbnail
                               fallback={<span className="text-aurora-muted text-sm">-</span>}
                             />

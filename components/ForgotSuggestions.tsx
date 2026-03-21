@@ -113,14 +113,13 @@ export function ForgotSuggestions() {
             return (
               <div
                 key={id}
-                className="flex items-center gap-3 p-2 rounded-lg bg-white border border-aurora-border w-full"
+                className="flex items-center gap-3 p-2 rounded-lg bg-aurora-surface border border-aurora-border w-full"
               >
                 <Link href={`/catalogue/${id}`} className="flex items-center gap-3 flex-1 min-w-0">
                   <div className="w-12 h-12 rounded-lg bg-aurora-surface overflow-hidden shrink-0">
                     <ProductImage
                       src={p.image_url}
                       className="w-full h-full"
-                      objectFit="contain"
                       thumbnail
                       fallback={<span className="w-full h-full flex items-center justify-center text-aurora-muted text-sm">-</span>}
                     />
