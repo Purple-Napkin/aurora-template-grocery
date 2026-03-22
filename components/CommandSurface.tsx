@@ -74,7 +74,7 @@ function getDefaultQuickActions(timeOfDay: string): LocalQuickAction[] {
   return base;
 }
 
-const GROCERY_SPLIT_HERO_LINK_BASE = `inline-flex flex-col items-center justify-center self-start h-fit w-fit max-w-full transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-aurora-primary/50 rounded-xl overflow-hidden bg-white dark:bg-aurora-surface ${CONTENT_BLOCK_CARD_SHELL}`;
+const GROCERY_SPLIT_HERO_LINK_BASE = `logo-well inline-flex flex-col items-center justify-center self-start h-fit w-fit max-w-full transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-aurora-primary/50 rounded-xl overflow-hidden border border-aurora-border/60 ${CONTENT_BLOCK_CARD_SHELL}`;
 
 function HeroImageLink({
   href,

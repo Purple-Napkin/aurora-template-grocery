@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "@aurora-studio/starter-core/template-logo.css";
 import "./globals.css";
 import { ConditionalHolmesScript } from "@aurora-studio/starter-core";
 import { ClientProviders } from "@/components/ClientProviders";
