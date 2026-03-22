@@ -45,7 +45,9 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
 
 ## Features
 
-- **Intent-first entry** - "What are you trying to do?" Mission chips first, search secondary. Active mission bar when Holmes infers intent (dismiss/reset).
+- **Intent-first entry** - "What are you trying to do?" Mission chips first, search secondary. Active mission bar when Holmes infers intent (dismiss/reset). **Intent bands** (low / medium / high) gate recipe takeover, assistance copy, and cart upsell ordering.
+- **Intent-aware home hero** - The large hero image and headline **change with Holmes mission + confidence** (neutral, cooking, top-up, travel). Low confidence always shows a **neutral** hero—no “finished dish” or “trip ready” art on weak signals. Logic lives in `lib/hero-intent.ts`; UI in `components/intent/IntentHeroPanel.tsx` and `components/CommandSurface.tsx` (hero copy and the right-hand card stay **in sync**). Bundled photos: `public/images/hero/` (`fresh-produce.jpg`, `ingredients.jpg`, `finished-dish.jpg`, `pantry.jpg`, `travel-essentials.jpg`, `travel-packing.jpg`). Deeper UX notes: [`docs/grocery-intent/`](docs/grocery-intent/) (concept board, platform gaps).
+- **Product & rail cards** - White card shells with a **5:3 top image band**: full-width `object-cover`, cropped from the **top** (`CONTENT_BLOCK_IMAGE_WELL` in `components/ContentBlockProductCard.tsx`). Shared across home CMS grids, catalogue, offers, recipes, and merchandising widgets.
 - **Location & Store Selection** - Set delivery location on a map, browse nearby stores
 - **Meilisearch Search** - Live product search (secondary to missions on home)
 - **Product Catalogue** - Featured, Bestsellers, New Arrivals, On Sale tabs; category filters. Mission-aware narrowing: categories reordered, "For your mission" section when confidence high.
@@ -100,7 +102,7 @@ For **delivery slots**, add vendors with `location` (PostGIS), create `vendor_ca
 Holmes is a rules-based intent engine. It uses deterministic and heuristic algorithms with configurable business rules. It does not use generative AI. Holmes is auto-injected when `NEXT_PUBLIC_AURORA_API_URL` and `NEXT_PUBLIC_TENANT_SLUG` are set. It captures behavioural signals and adapts the experience:
 
 - **Active mission bar** – Shows inferred mission (e.g. "Travel essentials", "Cook dinner") with confidence band. Dismiss or reset.
-- **Mission-first command surface** – "What are you trying to do?" with Start here chips; search is secondary.
+- **Mission-first command surface** – "What are you trying to do?" with Start here chips; search is secondary. **Hero + right panel** reflect the same resolved hero state from `resolveHeroFromMission(activeMission.key, activeMission.band)` (see `lib/hero-intent.ts`, `lib/intent-mission.ts`).
 - **Catalogue narrowing** – When confidence is high, categories reorder by mission and a "For your mission" section appears. Dismissing the mission bar restores full categories.
 - **Guardrail rules** – Contextual hints with micro-learning (e.g. "Egg noodles absorb sauce better than spaghetti" when cart has stir-fry ingredients + spaghetti).
 
@@ -164,6 +166,6 @@ Defined in `app/globals.css` (`:root` / `[data-theme="dark"]`). Precedence: **`N
 
 ## SDK Version
 
-Pinned versions are in `package.json` (currently **`@aurora-studio/sdk@^0.2.33`**, **`@aurora-studio/starter-core@^0.1.15`**). Holmes features (active mission, home personalization, guardrails, offers, session attribution, time-to-completion metrics) are available in SDK 0.2.7+; **cart combos, `holmesSelectCombo`, contextual `hasCombo`** require **0.2.22+**.
+Declared ranges are in `package.json` (currently **`@aurora-studio/sdk@^0.2.37`**, **`@aurora-studio/starter-core@^0.1.28`**). Holmes features (active mission, home personalization, guardrails, offers, session attribution, time-to-completion metrics) are available in SDK 0.2.7+; **cart combos, `holmesSelectCombo`, contextual `hasCombo`** require **0.2.22+**.
 
-_Last build trigger: March 2026_
+_Last README refresh: March 2026_
