@@ -1,8 +1,8 @@
-# Store content blocks (Hippo templates)
+# Store content blocks (marketplace templates)
 
-All four Hippo storefront templates use the same **`store_content_blocks`** pipeline, schema shape, UI components, and Holmes proxy behavior.
+All four Aurora marketplace storefront templates use the same **`store_content_blocks`** pipeline, schema shape, UI components, and Holmes proxy behavior.
 
-## What shipped (all four Hippo storefront templates)
+## What shipped (all four marketplace storefront templates)
 
 - **Schema:** `home_sections` and `curated_collections` removed from each template’s `init/schema.json` and `init/schema-v2.json`. New table **`store_content_blocks`** with `page`, `region`, `block_kind`, scheduling, `width` (`full` / `half`), and product / search / blurb fields. Existing tenants: re-provision or add the table in Studio.
 - **API (shared Aurora API):** `computeHomePersonalization` resolves CMS blocks from **`store_content_blocks`** (not the old tables). It filters by **`page`** and **`region`** in the datastore query with a generous limit so narrow regions (e.g. `home_main_feed`) are not dropped when many other rows exist. Query params: **`page`**, **`region`**, **`categorySlug`** (optional, for catalogue-scoped blocks).
@@ -32,10 +32,10 @@ Seed slugs use a **template-specific prefix** so one tenant can run multiple tem
 
 Copy in each vertical is tuned to retail, travel, or hotels; structure (pages / regions) matches the shared CMS plan.
 
-### Apply `init/seed.sql` (any Hippo app)
+### Apply `init/seed.sql` (any template app)
 
 1. Ensure the tenant schema and tables exist (`pnpm schema:provision` in the app, or Studio).
-2. **Apply seed (no manual UUID/schema):** from **`aurora-hippo-grocery`**, **`-hotels`**, **`-store`**, or **`-travel`**, with **`AURORA_API_URL`** / **`AURORA_API_KEY`** (typically **`.env.local`**):
+2. **Apply seed (no manual UUID/schema):** from **`aurora-template-grocery`**, **`-hotels`**, **`-store`**, or **`-travel`**, with **`AURORA_API_URL`** / **`AURORA_API_KEY`** (typically **`.env.local`**):
 
    ```bash
    pnpm seed:apply
@@ -52,7 +52,7 @@ Copy in each vertical is tuned to retail, travel, or hotels; structure (pages / 
 
 The SQL file is idempotent: it deletes prior seed rows for that vertical’s SKUs/slugs, then inserts vendors → zones → categories → products → `store_content_blocks`.
 
-**Regenerating SQL for hotels / store / travel** lives in the full Aurora repository: from that repo’s root, with **`PEXELS_API_KEY`** in `.env` if you want live Pexels URLs (otherwise picsum fallbacks), run `scripts/hippo-seed/emit-seed-sql.mjs` (targets: `hotels`, `store`, `travel`, or `all`). Source modules live under `scripts/hippo-seed/` (`hippo-vertical-catalog.mjs`, `hippo-vertical-content-blocks.mjs`, `hippo-vertical-ids.mjs`).
+**Regenerating SQL for hotels / store / travel** lives in the full Aurora repository: from that repo’s root, with **`PEXELS_API_KEY`** in `.env` if you want live Pexels URLs (otherwise picsum fallbacks), run `scripts/template-seed/emit-seed-sql.mjs` (targets: `hotels`, `store`, `travel`, or `all`). Source modules live under `scripts/template-seed/` (`template-vertical-catalog.mjs`, `template-vertical-content-blocks.mjs`, `template-vertical-ids.mjs`).
 
 **Grocery** does not use the emit script; maintain **`init/seed.sql`** in this repo when copy or demo products change.
 
@@ -60,7 +60,7 @@ The SQL file is idempotent: it deletes prior seed rows for that vertical’s SKU
 
 | Where | Used for |
 |-------|-----------|
-| **Aurora monorepo root `.env`** — `PEXELS_API_KEY` | **Regenerating** hotels/store/travel **`init/seed.sql`** via `scripts/hippo-seed/emit-seed-sql.mjs` (only when you have that repo checked out). |
+| **Aurora monorepo root `.env`** — `PEXELS_API_KEY` | **Regenerating** hotels/store/travel **`init/seed.sql`** via `scripts/template-seed/emit-seed-sql.mjs` (only when you have that repo checked out). |
 | **Aurora Studio API `.env`** — `PEXELS_API_KEY` | **Runtime** hero fallbacks and tenant Pexels image routes. Copy the key from Studio’s env documentation into the API process env for live storefronts. |
 
 ## Studio setup (minimal)

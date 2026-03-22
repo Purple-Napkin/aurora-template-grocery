@@ -1,5 +1,5 @@
 /**
- * Load env for Hippo template scripts without a monorepo `scripts/hippo-seed` dependency.
+ * Load env for template scripts without a monorepo `scripts/template-seed` dependency.
  * 1) Parent-of-template `../..` `.env` (optional monorepo root) when keys unset.
  * 2) Template root `.env.local` / `.env` (first file found).
  */
@@ -37,7 +37,7 @@ export function loadTemplateRootEnv(scriptUrl) {
   }
 }
 
-/** Optional monorepo root `.env` at `template/../../.env` (aurora/ when layout is aurora/hippo-grocery). */
+/** Optional monorepo root `.env` at `template/../../.env` (aurora/ when layout is aurora/aurora-template-grocery). */
 export function loadMonorepoRootEnv(scriptUrl) {
   const scriptDir = dirname(fileURLToPath(scriptUrl));
   const rootEnv = join(scriptDir, "..", "..", ".env");

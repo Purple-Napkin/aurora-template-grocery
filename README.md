@@ -1,4 +1,4 @@
-# Hippo Grocery (Aurora storefront template)
+# Aurora template — Grocery
 
 A full-featured retail storefront for Aurora Studio. Showcases Aurora capabilities: Meilisearch search, Holmes mission inference, delivery slots, per-store promotions, and multi-step checkout.
 
@@ -9,11 +9,11 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
 ## Quick Start
 
 1. **Create or clone:**
-   - **Option A - From Studio:** Sign up at [Aurora](https://aurora.mandeville.digital), create a workspace from **Hippo Grocery** (`hippo-grocery`). Studio provisions the base schema; the storefront adds the full schema on first run.
+   - **Option A - From Studio:** Sign up at [Aurora](https://aurora.mandeville.digital), create a workspace from **Grocery (example template)** (`aurora-template-grocery`). Studio provisions the base schema; the storefront adds the full schema on first run.
    - **Option B - Clone:**
    ```bash
-   git clone https://github.com/Purple-Napkin/aurora-hippo-grocery.git
-   cd aurora-hippo-grocery
+   git clone https://github.com/Purple-Napkin/aurora-template-grocery.git
+   cd aurora-template-grocery
    pnpm install
    ```
 
@@ -29,7 +29,7 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
    ```
    By default uses `init/schema-v2.json` (enterprise schema with Offers) when present; otherwise `init/schema.json`. Or import in Aurora Studio: Data Builder → Import from JSON.
 
-4. **Demo catalog + content blocks** (optional — empty tenants only): checked-in **`init/seed.sql`** posts to the API via **`pnpm seed:apply`**. Use **`pnpm seed:apply -- --dry-run`** to validate without writing. See [`docs/CONTENT-BLOCKS-HIPPO.md`](docs/CONTENT-BLOCKS-HIPPO.md).
+4. **Demo catalog + content blocks** (optional — empty tenants only): checked-in **`init/seed.sql`** posts to the API via **`pnpm seed:apply`**. Use **`pnpm seed:apply -- --dry-run`** to validate without writing. See [`docs/CONTENT-BLOCKS.md`](docs/CONTENT-BLOCKS.md).
 
 5. **Enable Meilisearch** (for search): Aurora Studio → Settings → Search → configure Meilisearch, then run "Sync index" for your products table.
 
@@ -68,7 +68,7 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
 | `AURORA_API_KEY` | Yes | API key from Aurora Studio → Settings → API Keys |
 | `NEXT_PUBLIC_TENANT_SLUG` | Yes | Your tenant slug (e.g. `acme`) |
 | `NEXT_PUBLIC_SITE_NAME` | No | Store name (default: "Store") |
-| `NEXT_PUBLIC_LOGO_URL` | No | Logo image URL (default: bundled `/hippo-logo.png`) |
+| `NEXT_PUBLIC_LOGO_URL` | No | Logo image URL (default: bundled `/template-logo.png`) |
 | `NEXT_PUBLIC_ACCENT_COLOR` | No | Accent colour (default: `#38bdf8`) |
 
 ## Base Schema
@@ -105,7 +105,7 @@ Enable Holmes in your tenant commerce config. For standalone deployment, set `NE
 
 ### First-time setup
 
-1. **Create a workspace** in [Aurora Studio](https://aurora.mandeville.digital) from the "Hippo Ecom" template, or clone this repo and provision schema manually.
+1. **Create a workspace** in [Aurora Studio](https://aurora.mandeville.digital) from the **Grocery (example template)** entry, or clone this repo and provision schema manually.
 2. **Configure `.env.local`** with `NEXT_PUBLIC_AURORA_API_URL`, `AURORA_API_KEY`, and `NEXT_PUBLIC_TENANT_SLUG` (from Studio → Settings).
 3. **Enable Meilisearch** in Studio → Settings → Search, then run "Sync index" for products.
 4. Run `pnpm dev` and open [http://localhost:3001](http://localhost:3001).
@@ -143,12 +143,12 @@ The API redirects to `/checkout/acme` when the success path starts with `/checko
 
 ## Deploy to Vercel
 
-From Aurora Studio: Settings → Apps → deploy. Uses template `hippo-grocery` from the Template Registry. Environment variables are injected when you generate deploy credentials.
+From Aurora Studio: Settings → Apps → deploy. Uses template `aurora-template-grocery` from the Template Registry. Environment variables are injected when you generate deploy credentials.
 
 ---
 
 ## SDK Version
 
-Pinned versions are in `package.json` (currently **`@aurora-studio/sdk@^0.2.31`**, **`@aurora-studio/starter-core@^0.1.11`**). Holmes features (active mission, home personalization, guardrails, offers, session attribution, time-to-completion metrics) are available in SDK 0.2.7+; **cart combos, `holmesSelectCombo`, contextual `hasCombo`** require **0.2.22+**.
+Pinned versions are in `package.json` (currently **`@aurora-studio/sdk@^0.2.33`**, **`@aurora-studio/starter-core@^0.1.15`**). Holmes features (active mission, home personalization, guardrails, offers, session attribution, time-to-completion metrics) are available in SDK 0.2.7+; **cart combos, `holmesSelectCombo`, contextual `hasCombo`** require **0.2.22+**.
 
 _Last build trigger: March 2026_

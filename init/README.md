@@ -2,7 +2,7 @@
 
 This folder holds everything that runs **once** when your app starts, so the Aurora tenant has the right schema without manual setup.
 
-**Template ID:** `hippo-grocery` (registered in Aurora Studio Template Registry). When deploying via Studio → Deploy to Vercel, the tenant may already be provisioned from onboarding; schema provision is idempotent and adds any missing tables.
+**Template ID:** `aurora-template-grocery` (registered in Aurora Studio Template Registry). When deploying via Studio → Deploy to Vercel, the tenant may already be provisioned from onboarding; schema provision is idempotent and adds any missing tables.
 
 ## What’s here
 
@@ -20,7 +20,7 @@ This folder holds everything that runs **once** when your app starts, so the Aur
 
 ## Provision flows
 
-1. **Studio onboarding** - User creates workspace from **Hippo Grocery** (`hippo-grocery`). Studio calls `POST /api/tenants/:slug/provision` with `templateId: "hippo-grocery"`.
+1. **Studio onboarding** - User creates workspace from **Grocery (example template)** (`aurora-template-grocery`). Studio calls `POST /api/tenants/:slug/provision` with `templateId: "aurora-template-grocery"`.
 2. **Storefront first run** - This init runs `provisionSchema` via `register.ts` or `schema:provision`. Adds full schema; idempotent with Studio-provisioned tables.
 
 ## Env vars

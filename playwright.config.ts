@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 /**
  * Demo scenario E2E tests for Holmes adaptive storefront.
- * Requires: aurora-hippo-grocery running (pnpm dev) and NEXT_PUBLIC_AURORA_API_URL pointing to a running Aurora API.
+ * Requires: aurora-template-grocery running (pnpm dev) and NEXT_PUBLIC_AURORA_API_URL pointing to a running Aurora API.
  *
  * Run: pnpm test:e2e
  */

@@ -29,6 +29,15 @@ export function HolmesDevTools() {
     setHolmesDisabledState(isHolmesDisabled());
   }, []);
 
+  useEffect(() => {
+    const el = document.body;
+    const prev = el.style.paddingBottom;
+    el.style.paddingBottom = "calc(3.25rem + env(safe-area-inset-bottom, 0px))";
+    return () => {
+      el.style.paddingBottom = prev;
+    };
+  }, []);
+
   const handleResetSession = () => {
     clearCart();
     if (typeof localStorage !== "undefined") {

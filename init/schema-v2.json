@@ -1007,7 +1007,7 @@
       "display_field": "title",
       "display_expression": null,
       "icon": "Layout",
-      "description": "Editorial rails per page and region (Hippo grocery). Holmes injects separately via template mounts.",
+      "description": "Editorial rails per page and region (marketplace storefront). Holmes injects separately via template mounts.",
       "fields": [
         {
           "slug": "slug",

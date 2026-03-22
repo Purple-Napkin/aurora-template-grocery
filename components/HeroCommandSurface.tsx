@@ -1,7 +1,7 @@
 import { getStoreConfig } from "@aurora-studio/starter-core";
 import { CommandSurface } from "./CommandSurface";
 
-const DEFAULT_LOGO = "/hippo-logo.png";
+const DEFAULT_LOGO = "/template-logo.png";
 
 type StoreConfig = {
   branding?: { logo_url?: string | null } | null;

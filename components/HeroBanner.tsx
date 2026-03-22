@@ -28,8 +28,8 @@ function getHourInTimezone(timezone: string): number {
  */
 export async function HeroBanner() {
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Store";
-  const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL ?? "/hippo-logo.png";
-  const defaultImage = "/Hippo-Hero.jpg";
+  const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL ?? "/template-logo.png";
+  const defaultImage = "/template-hero.jpg";
   const config = await getStoreConfig();
   const timezone = (config as { timezone?: string })?.timezone ?? "Europe/London";
   const hour = getHourInTimezone(timezone);

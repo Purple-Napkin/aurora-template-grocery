@@ -1,5 +1,5 @@
 {
-  "name": "@aurora-studio/hippo-grocery",
+  "name": "@aurora-studio/template-grocery",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,8 +12,8 @@
     "seed:apply": "node scripts/apply-seed.mjs"
   },
   "dependencies": {
-    "@aurora-studio/sdk": "^0.2.32",
-    "@aurora-studio/starter-core": "^0.1.14",
+    "@aurora-studio/sdk": "^0.2.33",
+    "@aurora-studio/starter-core": "^0.1.15",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.454.0",
     "next": "15.0.7",

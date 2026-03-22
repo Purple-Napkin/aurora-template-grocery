@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Hippo Ecom";
-const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL ?? "/hippo-logo.png";
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Example Grocery";
+const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL ?? "/template-logo.png";
 
 export function Footer() {
   return (

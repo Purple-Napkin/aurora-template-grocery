@@ -69,7 +69,7 @@ function getDefaultQuickActions(timeOfDay: string): LocalQuickAction[] {
   return base;
 }
 
-const GROCERY_SPLIT_HERO_LINK_BASE = `block w-full transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-aurora-primary/50 rounded-xl overflow-hidden bg-white dark:bg-aurora-surface ${CONTENT_BLOCK_CARD_SHELL}`;
+const GROCERY_SPLIT_HERO_LINK_BASE = `inline-flex flex-col items-center justify-center self-start h-fit w-fit max-w-full transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-aurora-primary/50 rounded-xl overflow-hidden bg-white dark:bg-aurora-surface ${CONTENT_BLOCK_CARD_SHELL}`;
 
 function HeroImageLink({
   href,
@@ -115,7 +115,7 @@ function HeroImageLink({
         <img
           src={heroImageUrl}
           alt=""
-          className={`w-full h-auto object-contain drop-shadow-sm ${splitClampClass}`}
+          className={`w-auto max-w-full h-auto object-contain mx-auto drop-shadow-sm ${splitClampClass}`}
         />
       ) : (
         <span className={splitHeroFallbackTitleClass(heroSize)}>
@@ -277,9 +277,9 @@ export function CommandSurface({
       className={`command-surface-hero px-4 sm:px-6 bg-gradient-to-b from-aurora-surface to-aurora-bg ${splitHeroSectionPaddingClass(heroSize)}`}
     >
       <div
-        className={`max-w-6xl mx-auto flex flex-col lg:flex-row items-center ${splitHeroRowGapClass(heroSize)}`}
+        className={`max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-center lg:items-start ${splitHeroRowGapClass(heroSize)}`}
       >
-        <div className="flex-1 min-w-0 order-2 lg:order-1 flex justify-center lg:justify-start w-full lg:min-w-[280px]">
+        <div className="min-w-0 order-2 lg:order-1 flex justify-center lg:justify-start items-start w-full lg:min-w-[280px] justify-self-center lg:justify-self-start">
           <HeroImageLink
             href="/"
             heroImageUrl={displayUrl}
@@ -289,7 +289,7 @@ export function CommandSurface({
           />
         </div>
 
-        <div className="flex-1 min-w-0 order-1 lg:order-2 flex justify-center lg:justify-end w-full lg:min-w-[320px]">
+        <div className="min-w-0 order-1 lg:order-2 flex justify-center lg:justify-end w-full lg:min-w-[320px] justify-self-center lg:justify-self-end">
           {formContent}
         </div>
       </div>
