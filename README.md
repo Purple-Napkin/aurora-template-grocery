@@ -75,16 +75,19 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
 
 Provision the required tables before using the template:
 
-**Option A - Import in Aurora Studio**  
-Data Builder → Import from JSON → use `schema/base-store-schema-import.json`
-
-**Option B - Provision script** (requires tenant admin API key)
+**Option A - Provision script** (recommended; uses `init/schema-v2.json`)
 ```bash
-AURORA_API_URL=https://api.yourapp.com AURORA_API_KEY=aur_xxx TENANT_SLUG=your-tenant pnpm schema:provision
+AURORA_API_URL=https://api.yourapp.com AURORA_API_KEY=aur_xxx pnpm schema:provision
 ```
-If you get 401/403, use Option A instead.
 
-**Tables created:** vendors, categories, products, promotions, orders, order_items, product_substitutions, addresses
+**Option B - Import in Aurora Studio**  
+Data Builder → Import from JSON → use `schema/base-store-schema-import.json` (subset aligned with v2 products; full marketplace schema is in `init/schema-v2.json`).
+
+If you get 401/403 on Option A, use Option B instead.
+
+**After DB migration `20260322140000_template_schema_cleanup`:** call `POST /v1/run-schema-migration` per tenant (API key) to recreate `catalog_product_listing`, then reindex Meilisearch.
+
+**Tables created (v2 provision):** vendors, vendor_products, categories, products, zones, orders, order_items, product_substitutions, addresses, hero_banners, site_images, store_content_blocks (see `init/schema-v2.json`)
 
 For **Meilisearch** search to work, enable Meilisearch in Aurora Settings and run an index sync for your products table.
 

@@ -117,291 +117,23 @@
       "description": null,
       "fields": [
         {
-          "slug": "gtin",
-          "name": "gtin",
-          "field_type": "number",
-          "required": false,
+          "slug": "name",
+          "name": "Name",
+          "field_type": "text",
+          "required": true,
           "validation": {}
         },
         {
-          "slug": "name",
-          "name": "name",
+          "slug": "description",
+          "name": "Description",
           "field_type": "text",
           "required": false,
           "validation": {}
         },
         {
           "slug": "brand",
-          "name": "brand",
+          "name": "Brand",
           "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "country_of_origin",
-          "name": "country_of_origin",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "cdt_category_leaf",
-          "name": "cdt_category_leaf",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "vanilla_cdt_id",
-          "name": "vanilla_cdt_id",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "picking_category",
-          "name": "picking_category",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "net_content",
-          "name": "net_content",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "net_content_unit",
-          "name": "net_content_unit",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "sold_by",
-          "name": "sold_by",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "priced_by",
-          "name": "priced_by",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "picked_by",
-          "name": "picked_by",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "is_variable_unit",
-          "name": "is_variable_unit",
-          "field_type": "boolean",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "unit_price_muc",
-          "name": "unit_price_muc",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "variabletradeitemtypecode",
-          "name": "variableTradeItemTypeCode",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "functional_name",
-          "name": "functional_name",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "variant_name",
-          "name": "variant_name",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "attributes",
-          "name": "attributes",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "price",
-          "name": "price",
-          "field_type": "currency",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "price_wo_vat",
-          "name": "price_wo_vat",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "price2",
-          "name": "price2",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "price2_wo_vat",
-          "name": "price2_wo_vat",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "price_vat_percent",
-          "name": "price_vat_percent",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "deposit",
-          "name": "deposit",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "deposit_wo_vat",
-          "name": "deposit_wo_vat",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "deposit_vat_percent",
-          "name": "deposit_vat_percent",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "image_url",
-          "name": "image_url",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "image2",
-          "name": "image2",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "source_url",
-          "name": "source_url",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "field",
-          "name": "field",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "subcategory",
-          "name": "Subcategory",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "vendor_id",
-          "name": "Vendor",
-          "field_type": "relation",
-          "required": false,
-          "relation_table_slug": "vendors",
-          "relation_type": "belongs_to",
-          "validation": {}
-        },
-        {
-          "slug": "on_sale",
-          "name": "On Sale",
-          "field_type": "boolean",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "sku",
-          "name": "SKU",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "unit",
-          "name": "Unit",
-          "field_type": "select",
-          "required": false,
-          "validation": {
-            "options": [
-              "kg",
-              "lb",
-              "g",
-              "oz"
-            ]
-          }
-        },
-        {
-          "slug": "stock_quantity",
-          "name": "Stock",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "sale_price",
-          "name": "Sale Price",
-          "field_type": "currency",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "features",
-          "name": "Features (JSON array)",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "tags",
-          "name": "Tags (comma-separated)",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "price_per_unit",
-          "name": "Price per unit",
-          "field_type": "currency",
           "required": false,
           "validation": {}
         },
@@ -413,6 +145,125 @@
           "validation": {}
         },
         {
+          "slug": "sku",
+          "name": "SKU",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "trade_category_leaf",
+          "name": "Trade category",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "country_of_origin",
+          "name": "Country of origin",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "net_content",
+          "name": "Net content",
+          "field_type": "number",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "net_content_unit",
+          "name": "Net content unit",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "sold_by",
+          "name": "Sold by",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "priced_by",
+          "name": "Priced by",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "picked_by",
+          "name": "Picked by",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "is_variable_unit",
+          "name": "Variable unit item",
+          "field_type": "boolean",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "variable_trade_item_type_code",
+          "name": "Variable trade item type code",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "unit_price_display",
+          "name": "Unit price display",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "functional_name",
+          "name": "Functional name",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "variant_name",
+          "name": "Variant name",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "attributes",
+          "name": "Specification attributes",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "price",
+          "name": "Price",
+          "field_type": "currency",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "sale_price",
+          "name": "Sale price",
+          "field_type": "currency",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "on_sale",
+          "name": "On sale",
+          "field_type": "boolean",
+          "required": false,
+          "validation": {}
+        },
+        {
           "slug": "sell_by_weight",
           "name": "Sell by weight",
           "field_type": "boolean",
@@ -420,15 +271,45 @@
           "validation": {}
         },
         {
-          "slug": "description",
-          "name": "Description",
+          "slug": "unit",
+          "name": "Unit",
+          "field_type": "select",
+          "required": false,
+          "validation": {
+            "options": ["kg", "lb", "g", "oz"]
+          }
+        },
+        {
+          "slug": "price_per_unit",
+          "name": "Price per unit",
+          "field_type": "currency",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "image_url",
+          "name": "Image URL",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "stock_quantity",
+          "name": "Stock",
+          "field_type": "number",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "subcategory",
+          "name": "Subcategory",
           "field_type": "text",
           "required": false,
           "validation": {}
         },
         {
           "slug": "storage_instructions",
-          "name": "Storage Instructions",
+          "name": "Storage instructions",
           "field_type": "text",
           "required": false,
           "validation": {}
@@ -441,6 +322,29 @@
           "validation": {}
         },
         {
+          "slug": "tags",
+          "name": "Tags (comma-separated)",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "features",
+          "name": "Features (JSON array)",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "dietary_tags",
+          "name": "Dietary tags",
+          "field_type": "multi_select",
+          "required": false,
+          "validation": {
+            "options": ["meat", "dairy", "alcohol", "animal_products"]
+          }
+        },
+        {
           "slug": "category_id",
           "name": "Category",
           "field_type": "relation",
@@ -448,141 +352,14 @@
           "relation_table_slug": "categories",
           "relation_type": "belongs_to",
           "validation": {}
-        }
-      ]
-    },
-    {
-      "slug": "offers",
-      "name": "Offers",
-      "display_field": null,
-      "display_expression": null,
-      "icon": "Tag",
-      "description": null,
-      "fields": [
-        {
-          "slug": "gtin",
-          "name": "gtin",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
         },
         {
-          "slug": "name",
-          "name": "name",
-          "field_type": "text",
+          "slug": "vendor_id",
+          "name": "Vendor",
+          "field_type": "relation",
           "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "type",
-          "name": "type",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "ext_id",
-          "name": "ext_id",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "display_priority",
-          "name": "display_priority",
-          "field_type": "boolean",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "name_en",
-          "name": "name_en",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "description_en",
-          "name": "description_en",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "label_en",
-          "name": "label_en",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "place_reference",
-          "name": "place_(reference)",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "starts_at",
-          "name": "starts_at",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "ends_at",
-          "name": "ends_at",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "reduced_price",
-          "name": "reduced_price",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "reduced_price_wo_vat",
-          "name": "reduced_price_wo_vat",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "price_vat_percent",
-          "name": "price_vat_percent",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "deposit",
-          "name": "deposit",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "deposit_wo_vat",
-          "name": "deposit_wo_vat",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "deposit_vat_percent",
-          "name": "deposit_vat_percent",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "field",
-          "name": "field",
-          "field_type": "text",
-          "required": false,
+          "relation_table_slug": "vendors",
+          "relation_type": "belongs_to",
           "validation": {}
         }
       ]
