@@ -18,13 +18,6 @@ import {
   type StoreContentSection,
 } from "./storeContentBlocksUi";
 
-const CURRENCY_SYMBOLS: Record<string, string> = {
-  gbp: "£",
-  usd: "$",
-  eur: "€",
-  aud: "A$",
-};
-
 type Section = {
   type?: string;
   title: string;
@@ -94,7 +87,7 @@ export function AdaptiveFeed({
   const { store } = useStore();
   const clientTimeOfDay = getTimeOfDay();
   const timeOfDay = holmesData?.timeOfDay ?? clientTimeOfDay;
-  const symbol = CURRENCY_SYMBOLS[currency] ?? "£";
+  const currencyCode = currency.length >= 3 ? currency.toUpperCase() : "GBP";
 
   useEffect(() => {
     const el = ref.current;
@@ -197,7 +190,7 @@ export function AdaptiveFeed({
               <ContentBlockProductCard
                 key={prod.id}
                 prod={prod}
-                symbol={symbol}
+                currency={currencyCode}
                 withHolmesMarkers={false}
               />
             ))}

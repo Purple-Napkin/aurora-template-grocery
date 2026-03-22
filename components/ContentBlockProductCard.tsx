@@ -7,6 +7,8 @@ import {
   getThumbnailImageUrl,
   resolveProductImageUrl,
   useStoreConfigImageBase,
+  formatPrice,
+  toCents,
 } from "@aurora-studio/starter-core";
 
 export type ContentBlockProduct = {
@@ -111,14 +113,16 @@ function relatedSearchQuery(prod: ContentBlockProduct): string {
 
 function TitlePrice({
   prod,
-  symbol,
+  currency = "GBP",
   titleClassName = "text-aurora-text",
 }: {
   prod: ContentBlockProduct;
-  symbol: string;
+  /** ISO 4217 — same as PDP / cart (`formatPrice` + `toCents`). */
+  currency?: string;
   titleClassName?: string;
 }) {
-  const hasPrice = prod.price != null && Number(prod.price) > 0;
+  const cents = prod.price != null ? toCents(Number(prod.price)) : undefined;
+  const showPrice = cents != null && cents > 0;
   return (
     <>
       <p
@@ -127,10 +131,9 @@ function TitlePrice({
         {prod.name}
       </p>
       <div className="mt-1 min-h-[1.25rem]">
-        {hasPrice ? (
+        {showPrice ? (
           <p className="text-sm font-bold tabular-nums text-aurora-primary">
-            {symbol}
-            {Number(prod.price).toFixed(2)}
+            {formatPrice(cents, currency)}
           </p>
         ) : null}
       </div>
@@ -201,11 +204,11 @@ function CardMeta({
 
 export function ContentBlockProductCard({
   prod,
-  symbol,
+  currency = "GBP",
   withHolmesMarkers = true,
 }: {
   prod: ContentBlockProduct;
-  symbol: string;
+  currency?: string;
   withHolmesMarkers?: boolean;
 }) {
   const cardMarkers = withHolmesMarkers
@@ -269,7 +272,7 @@ export function ContentBlockProductCard({
         </Link>
         <div className="flex flex-col border-t border-stone-200/90 bg-[#faf8f5] p-3 sm:p-4">
           <Link href={pdp} className="block min-w-0 text-stone-900">
-            <TitlePrice prod={prod} symbol={symbol} titleClassName="text-stone-900" />
+            <TitlePrice prod={prod} currency={currency} titleClassName="text-stone-900" />
           </Link>
           <CardMeta prod={prod} variant="split" />
         </div>
@@ -290,7 +293,7 @@ export function ContentBlockProductCard({
       </Link>
       <div className="flex flex-col border-t border-aurora-border/40 p-3 sm:p-4">
         <Link href={pdp} className="block min-w-0">
-          <TitlePrice prod={prod} symbol={symbol} />
+          <TitlePrice prod={prod} currency={currency} />
         </Link>
         <CardMeta prod={prod} variant="radial" />
       </div>

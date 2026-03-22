@@ -2,13 +2,6 @@ import { getHomePersonalization, getStoreConfig } from "@aurora-studio/starter-c
 import { getDietaryFromCookie } from "@/lib/dietary-server";
 import { GroupedStoreContentSections } from "./storeContentBlocksUi";
 
-const SYMBOLS: Record<string, string> = {
-  gbp: "£",
-  usd: "$",
-  eur: "€",
-  aud: "A$",
-};
-
 /** SSR: load `store_content_blocks` for a CMS page + region (and optional catalogue category). */
 export async function StoreContentRails({
   contentPage,
@@ -40,12 +33,12 @@ export async function StoreContentRails({
   if (sections.length === 0) return null;
 
   const currency = ((config as { currency?: string })?.currency ?? "gbp").toLowerCase();
-  const symbol = SYMBOLS[currency] ?? "£";
+  const currencyCode = currency.length >= 3 ? currency.toUpperCase() : "GBP";
 
   return (
     <GroupedStoreContentSections
       sections={sections}
-      symbol={symbol}
+      currency={currencyCode}
       recipesWithProducts={[]}
       withHolmesMarkers={withHolmesMarkers}
       className={className}

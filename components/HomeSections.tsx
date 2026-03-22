@@ -8,13 +8,6 @@ import {
   GroupedStoreContentSections,
 } from "./storeContentBlocksUi";
 
-const CURRENCY_SYMBOLS: Record<string, string> = {
-  gbp: "£",
-  usd: "$",
-  eur: "€",
-  aud: "A$",
-};
-
 const HOME_PAGE = "home";
 const HOME_REGION = "home_main_feed";
 
@@ -35,7 +28,7 @@ export async function HomeSections() {
 
   const currency =
     (config as { currency?: string })?.currency?.toLowerCase() ?? "gbp";
-  const symbol = CURRENCY_SYMBOLS[currency] ?? "£";
+  const currencyCode = currency.length >= 3 ? currency.toUpperCase() : "GBP";
   const recipes = recipesResult?.recipes ?? [];
 
   const recipesWithProducts = await Promise.all(
@@ -65,7 +58,7 @@ export async function HomeSections() {
       <RecipeIdeasRail recipesWithProducts={recipesWithProducts} />
       <GroupedStoreContentSections
         sections={homeData.sections}
-        symbol={symbol}
+        currency={currencyCode}
         recipesWithProducts={recipesWithProducts}
         withHolmesMarkers
         pairGridClassName="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 last:mb-0"

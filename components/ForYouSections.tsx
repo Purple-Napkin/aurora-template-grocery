@@ -4,13 +4,6 @@ import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { getDietaryFromCookie } from "@/lib/dietary-server";
 import { RecipeIdeasRail, GroupedStoreContentSections } from "./storeContentBlocksUi";
 
-const CURRENCY_SYMBOLS: Record<string, string> = {
-  gbp: "£",
-  usd: "$",
-  eur: "€",
-  aud: "A$",
-};
-
 const FOR_YOU_PAGE = "for_you";
 const FOR_YOU_REGION = "for_you_below_cart_blocks";
 
@@ -31,7 +24,7 @@ export async function ForYouSections() {
 
   const currency =
     (config as { currency?: string })?.currency?.toLowerCase() ?? "gbp";
-  const symbol = CURRENCY_SYMBOLS[currency] ?? "£";
+  const currencyCode = currency.length >= 3 ? currency.toUpperCase() : "GBP";
   const recipes = recipesResult?.recipes ?? [];
 
   const recipesWithProducts = await Promise.all(
@@ -75,7 +68,7 @@ export async function ForYouSections() {
       <RecipeIdeasRail recipesWithProducts={recipesWithProducts} withHolmesMarkers={false} />
       <GroupedStoreContentSections
         sections={sections}
-        symbol={symbol}
+        currency={currencyCode}
         recipesWithProducts={recipesWithProducts}
         withHolmesMarkers={false}
         pairGridClassName="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 last:mb-0"

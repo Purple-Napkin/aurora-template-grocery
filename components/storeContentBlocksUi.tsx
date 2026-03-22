@@ -217,11 +217,12 @@ export {
 
 export function ProductGridSection({
   sec,
-  symbol,
+  currency = "GBP",
   withHolmesMarkers = true,
 }: {
   sec: StoreContentSection;
-  symbol: string;
+  /** ISO 4217 — same as storefront PDP / cart. */
+  currency?: string;
   withHolmesMarkers?: boolean;
 }) {
   if (!sec.products?.length) return null;
@@ -265,7 +266,7 @@ export function ProductGridSection({
           <ContentBlockProductCard
             key={prod.id}
             prod={prod}
-            symbol={symbol}
+            currency={currency}
             withHolmesMarkers={withHolmesMarkers}
           />
         ))}
@@ -391,7 +392,7 @@ export function RecipeIdeasRail({
 
 export function renderContentBlockSection(
   sec: StoreContentSection,
-  symbol: string,
+  currency: string,
   recipesWithProducts: RecipeWithProducts[],
   key: string,
   withHolmesMarkers = true
@@ -422,7 +423,7 @@ export function renderContentBlockSection(
       <ProductGridSection
         key={key}
         sec={sec}
-        symbol={symbol}
+        currency={currency}
         withHolmesMarkers={withHolmesMarkers}
       />
     );
@@ -463,14 +464,14 @@ export function groupHalfWidthSections(
 /** Renders grouped half-width rows + full-width blocks (SSR or client). */
 export function GroupedStoreContentSections({
   sections,
-  symbol,
+  currency = "GBP",
   recipesWithProducts = [],
   withHolmesMarkers = false,
   className = "",
   pairGridClassName = "grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 last:mb-0",
 }: {
   sections: StoreContentSection[];
-  symbol: string;
+  currency?: string;
   recipesWithProducts?: RecipeWithProducts[];
   withHolmesMarkers?: boolean;
   className?: string;
@@ -487,7 +488,7 @@ export function GroupedStoreContentSections({
               {g.secs.map((sec, si) =>
                 renderContentBlockSection(
                   sec,
-                  symbol,
+                  currency,
                   recipesWithProducts,
                   `p-${gi}-${si}`,
                   withHolmesMarkers
@@ -498,7 +499,7 @@ export function GroupedStoreContentSections({
         }
         return renderContentBlockSection(
           g.sec,
-          symbol,
+          currency,
           recipesWithProducts,
           `f-${gi}`,
           withHolmesMarkers
