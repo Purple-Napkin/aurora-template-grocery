@@ -50,3 +50,16 @@ export function isTravelLikeMission(key: string | undefined): boolean {
   if (!key) return false;
   return TRAVEL_MISSION_KEYS.has(key);
 }
+
+/** Top-up / essentials missions — pantry-style hero. */
+export const TOPUP_MISSION_KEYS = new Set([
+  "routine_shop",
+  "top_up",
+  "quick_topup",
+  "essentials",
+]);
+
+export function isTopUpMissionKey(key: string | undefined): boolean {
+  if (!key) return false;
+  return TOPUP_MISSION_KEYS.has(key);
+}

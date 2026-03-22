@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Search, UtensilsCrossed, RotateCcw, Apple, PiggyBank, Sparkles } from "lucide-react";
 import {
   SearchDropdown,
-  mergeTemplateLogoMask,
   useStore,
   useAuth,
   useVerticalProfile,
@@ -18,11 +17,10 @@ import { holmesMissionLockCombo } from "@aurora-studio/starter-core";
 import { shouldLockRecipeMissionForMissionPill } from "@/lib/holmes-mission-lock";
 import { CONTENT_BLOCK_CARD_SHELL } from "./ContentBlockProductCard";
 import { shouldFullRecipeHomeTakeover } from "@/lib/intent-mission";
+import { resolveHeroFromMission } from "@/lib/hero-intent";
+import { IntentHeroPanel } from "@/components/intent/IntentHeroPanel";
 import {
   fullWidthHeroBandClass,
-  splitHeroFallbackTitleClass,
-  splitHeroImageClampClass,
-  splitHeroLogoWellSizingClass,
   splitHeroRowGapClass,
   splitHeroSectionPaddingClass,
   type HeroSize,
@@ -76,74 +74,11 @@ function getDefaultQuickActions(timeOfDay: string): LocalQuickAction[] {
   return base;
 }
 
-const GROCERY_SPLIT_HERO_LINK_BASE = `logo-well inline-flex flex-col items-center justify-center self-start h-fit w-fit max-w-full transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-aurora-primary/50 rounded-xl overflow-hidden border border-aurora-border/60 ${CONTENT_BLOCK_CARD_SHELL}`;
-
-function HeroImageLink({
-  href,
-  heroImageUrl,
-  splitClampClass,
-  fullBleed,
-  heroSize,
-}: {
-  href: string;
-  heroImageUrl: string | null;
-  splitClampClass: string;
-  fullBleed: boolean;
-  heroSize: HeroSize;
-}) {
-  if (fullBleed) {
-    return (
-      <Link
-        href={href}
-        className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-b from-aurora-surface to-aurora-bg focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-aurora-primary/50"
-        aria-label="Home"
-      >
-        {heroImageUrl ? (
-          <img
-            src={heroImageUrl}
-            alt=""
-            className={mergeTemplateLogoMask(
-              heroImageUrl,
-              "absolute inset-0 h-full w-full object-cover object-center"
-            )}
-          />
-        ) : (
-          <span className="font-display relative z-[1] text-2xl sm:text-4xl font-bold text-aurora-text px-4 text-center">
-            {process.env.NEXT_PUBLIC_SITE_NAME ?? "Store"}
-          </span>
-        )}
-      </Link>
-    );
-  }
-  return (
-    <Link
-      href={href}
-      className={`${GROCERY_SPLIT_HERO_LINK_BASE} ${splitHeroLogoWellSizingClass(heroSize)}`}
-      aria-label="Home"
-    >
-      {heroImageUrl ? (
-        <img
-          src={heroImageUrl}
-          alt=""
-          className={mergeTemplateLogoMask(
-            heroImageUrl,
-            `w-auto max-w-full h-auto object-contain mx-auto drop-shadow-sm ${splitClampClass}`
-          )}
-        />
-      ) : (
-        <span className={splitHeroFallbackTitleClass(heroSize)}>
-          {process.env.NEXT_PUBLIC_SITE_NAME ?? "Store"}
-        </span>
-      )}
-    </Link>
-  );
-}
-
 export function CommandSurface({
-  heroImageUrl = null,
   heroLayout = "split",
   heroSize = "default",
 }: {
+  /** @deprecated Tenant logo/hero image — intent hero photography replaces the split logo well. */
   heroImageUrl?: string | null;
   heroLayout?: "split" | "full_width";
   heroSize?: HeroSize;
@@ -177,6 +112,11 @@ export function CommandSurface({
       missionKey: homeData.activeMission?.key,
     });
 
+  const hero = resolveHeroFromMission(
+    homeData?.activeMission?.key,
+    homeData?.activeMission?.band
+  );
+
   const missionChipClass =
     "inline-flex min-h-[2.75rem] items-center gap-2.5 px-5 py-3 rounded-xl bg-[#faf8f5] dark:bg-aurora-bg border border-stone-200/90 dark:border-aurora-border shadow-sm hover:border-aurora-primary/40 hover:shadow-md transition-all text-sm font-semibold text-aurora-text";
 
@@ -195,15 +135,20 @@ export function CommandSurface({
           </div>
         )}
         <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-aurora-text mb-3">
-          {isRecipeMission
-            ? "Or something else?"
-            : "Shopping that adapts to what you’re trying to get done"}
+          {isRecipeMission ? "Or something else?" : hero.title}
         </h1>
-      <p className="text-aurora-muted text-base sm:text-lg mb-6 font-medium">
-        {isRecipeMission
-          ? "Let’s get you there fast"
-          : "We infer your mission from your basket, search, and context—then clear the noise so you can checkout faster."}
-      </p>
+      {isRecipeMission ? (
+        <p className="text-aurora-muted text-base sm:text-lg mb-6 font-medium">
+          Let’s get you there fast
+        </p>
+      ) : hero.caption ? (
+        <div className="text-aurora-muted text-base sm:text-lg mb-6 font-medium space-y-1">
+          <p>{hero.subtitle}</p>
+          <p className="text-sm text-aurora-muted/90">{hero.caption}</p>
+        </div>
+      ) : (
+        <p className="text-aurora-muted text-base sm:text-lg mb-6 font-medium">{hero.subtitle}</p>
+      )}
 
         {/* Primary: mission quick actions first */}
         <div className="relative z-20 mb-6">
@@ -264,22 +209,15 @@ export function CommandSurface({
     </div>
   );
 
-  const splitClamp = splitHeroImageClampClass(heroSize);
-  const displayUrl = heroImageUrl?.trim() || null;
-
   if (heroLayout === "full_width") {
     return (
       <section className="command-surface-hero bg-gradient-to-b from-aurora-surface to-aurora-bg">
         <div
           className={`relative w-full overflow-hidden bg-aurora-surface/80 border-b border-aurora-border ${fullWidthHeroBandClass(heroSize)}`}
         >
-          <HeroImageLink
-            href="/"
-            heroImageUrl={displayUrl}
-            splitClampClass={splitClamp}
-            fullBleed
-            heroSize={heroSize}
-          />
+          <div className="absolute inset-0">
+            <IntentHeroPanel hero={hero} edgeToEdge />
+          </div>
         </div>
         <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-10 sm:py-12 lg:py-16 flex justify-center lg:justify-start">
           {formContent}
@@ -296,13 +234,7 @@ export function CommandSurface({
         className={`max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-center lg:items-start ${splitHeroRowGapClass(heroSize)}`}
       >
         <div className="min-w-0 order-2 lg:order-1 flex justify-center lg:justify-start items-start w-full lg:min-w-[280px] justify-self-center lg:justify-self-start">
-          <HeroImageLink
-            href="/"
-            heroImageUrl={displayUrl}
-            splitClampClass={splitClamp}
-            fullBleed={false}
-            heroSize={heroSize}
-          />
+          <IntentHeroPanel hero={hero} />
         </div>
 
         <div className="min-w-0 order-1 lg:order-2 flex justify-center lg:justify-end w-full lg:min-w-[320px] justify-self-center lg:justify-self-end">
