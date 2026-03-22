@@ -49,7 +49,7 @@ Copy in each vertical is tuned to retail, travel, or hotels; structure (pages / 
    **In the storefront:** when the **catalogue** has no products, **Use example data** calls **`POST /api/store/apply-example-data`**, which forwards **`init/seed.sql`** to **`POST /v1/apply-seed-sql`**, then reloads the page (enabled in all environments).
 
 3. **Manual alternative:** replace placeholders in **`init/seed.sql`** and run `psql $DATABASE_URL -v ON_ERROR_STOP=1 -f init/seed.sql` (or Studio SQL).
-4. **Reindex Meilisearch** for that tenant in Studio so `search_terms` blocks and catalogue search resolve.
+4. **Meilisearch:** In Aurora Studio open **Settings → Search**. Set **Main catalog table** to your storefront catalogue table (the UI shows the tenant’s **store catalog table**, e.g. `products`). Enable **Index `catalog_product_listing` view** so hits include joined `category_slug` / `category_label` (after schema migration created the view). Then run **Sync index now** (or your usual reindex) so `search_terms` blocks and catalogue search resolve.
 
 The SQL file is idempotent: it deletes prior seed rows for that vertical’s SKUs/slugs, then inserts vendors → zones → categories → products → `store_content_blocks`.
 
