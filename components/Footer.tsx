@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { mergeTemplateLogoMask } from "@aurora-studio/starter-core";
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Example Grocery";
 const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL ?? "/template-logo.png";
@@ -14,7 +15,7 @@ export function Footer() {
                 <img
                   src={logoUrl}
                   alt=""
-                  className="h-14 w-auto object-contain"
+                  className={mergeTemplateLogoMask(logoUrl, "h-14 w-auto object-contain")}
                 />
               </Link>
             ) : null}

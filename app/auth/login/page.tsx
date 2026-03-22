@@ -3,8 +3,7 @@
 import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useAuth } from "@aurora-studio/starter-core";
-import { FloatingLabelInput } from "@aurora-studio/starter-core";
+import { FloatingLabelInput, mergeTemplateLogoMask, useAuth } from "@aurora-studio/starter-core";
 
 function LoginContent() {
   const searchParams = useSearchParams();
@@ -82,7 +81,14 @@ function LoginContent() {
         <div className="absolute inset-0 bg-gradient-to-t from-white/85 via-transparent to-transparent" />
         <div className="relative z-10 flex flex-col items-center justify-center">
           {logoUrl ? (
-            <img src={logoUrl} alt="" className="h-40 sm:h-48 md:h-56 w-auto mb-8 object-contain drop-shadow-sm" />
+            <img
+              src={logoUrl}
+              alt=""
+              className={mergeTemplateLogoMask(
+                logoUrl,
+                "h-40 sm:h-48 md:h-56 w-auto mb-8 object-contain drop-shadow-sm"
+              )}
+            />
           ) : (
             <h1 className="text-3xl font-bold text-aurora-text mb-2">{siteName}</h1>
           )}

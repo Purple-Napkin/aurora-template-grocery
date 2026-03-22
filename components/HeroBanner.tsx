@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { createAuroraClient, getStoreConfig } from "@aurora-studio/starter-core";
+import {
+  createAuroraClient,
+  getStoreConfig,
+  mergeTemplateLogoMask,
+} from "@aurora-studio/starter-core";
 
 function getTimeOfDayOverrides(hour: number): { title?: string; cta?: string } | null {
   if (hour >= 5 && hour < 11) return { title: "Start the day right", cta: "Shop breakfast" };
@@ -73,7 +77,10 @@ export async function HeroBanner() {
             <img
               src={logoUrl}
               alt=""
-              className="h-24 sm:h-28 md:h-32 w-auto object-contain max-w-[min(80vw,360px)] drop-shadow-sm"
+              className={mergeTemplateLogoMask(
+                logoUrl,
+                "h-24 sm:h-28 md:h-32 w-auto object-contain max-w-[min(80vw,360px)] drop-shadow-sm"
+              )}
             />
           </Link>
         ) : (

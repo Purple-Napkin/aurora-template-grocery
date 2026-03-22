@@ -5,6 +5,7 @@ import { MapPin } from "lucide-react";
 import {
   CartLink,
   SearchDropdown,
+  mergeTemplateLogoMask,
   useStore,
   useAuth,
 } from "@aurora-studio/starter-core";
@@ -35,7 +36,10 @@ export function Nav() {
                 <img
                   src={logoUrl}
                   alt=""
-                  className="h-12 w-auto object-contain min-h-[2.5rem]"
+                  className={mergeTemplateLogoMask(
+                    logoUrl,
+                    "h-12 w-auto object-contain min-h-[2.5rem]"
+                  )}
                 />
               ) : (
                 <span className="text-xl font-bold">{siteName}</span>

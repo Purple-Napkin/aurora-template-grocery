@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { Search, UtensilsCrossed, RotateCcw, Apple, PiggyBank, Sparkles } from "lucide-react";
-import { SearchDropdown, useStore, useAuth } from "@aurora-studio/starter-core";
+import {
+  SearchDropdown,
+  mergeTemplateLogoMask,
+  useStore,
+  useAuth,
+} from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
 import { getRecipeSuggestion } from "@/lib/cart-intelligence";
 import { useMissionAware } from "./MissionAwareHome";
@@ -95,7 +100,10 @@ function HeroImageLink({
           <img
             src={heroImageUrl}
             alt=""
-            className="absolute inset-0 h-full w-full object-cover object-center"
+            className={mergeTemplateLogoMask(
+              heroImageUrl,
+              "absolute inset-0 h-full w-full object-cover object-center"
+            )}
           />
         ) : (
           <span className="font-display relative z-[1] text-2xl sm:text-4xl font-bold text-aurora-text px-4 text-center">
@@ -115,7 +123,10 @@ function HeroImageLink({
         <img
           src={heroImageUrl}
           alt=""
-          className={`w-auto max-w-full h-auto object-contain mx-auto drop-shadow-sm ${splitClampClass}`}
+          className={mergeTemplateLogoMask(
+            heroImageUrl,
+            `w-auto max-w-full h-auto object-contain mx-auto drop-shadow-sm ${splitClampClass}`
+          )}
         />
       ) : (
         <span className={splitHeroFallbackTitleClass(heroSize)}>
