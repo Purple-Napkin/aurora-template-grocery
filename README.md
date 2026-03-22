@@ -29,9 +29,11 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
    ```
    By default uses `init/schema-v2.json` (enterprise schema with Offers) when present; otherwise `init/schema.json`. Or import in Aurora Studio: Data Builder → Import from JSON.
 
-4. **Enable Meilisearch** (for search): Aurora Studio → Settings → Search → configure Meilisearch, then run "Sync index" for your products table.
+4. **Demo catalog + content blocks** (optional — empty tenants only): checked-in **`init/seed.sql`** posts to the API via **`pnpm seed:apply`**. Use **`pnpm seed:apply -- --dry-run`** to validate without writing. See [`docs/CONTENT-BLOCKS-HIPPO.md`](docs/CONTENT-BLOCKS-HIPPO.md).
 
-5. **Run the app:**
+5. **Enable Meilisearch** (for search): Aurora Studio → Settings → Search → configure Meilisearch, then run "Sync index" for your products table.
+
+6. **Run the app:**
    ```bash
    pnpm dev
    ```

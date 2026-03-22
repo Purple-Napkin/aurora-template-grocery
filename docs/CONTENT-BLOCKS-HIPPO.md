@@ -1,6 +1,6 @@
 # Store content blocks (Hippo templates)
 
-Grocery was the first vertical to ship this; **store, travel, and hotels** now use the same **`store_content_blocks`** pipeline, schema shape, UI components, and Holmes proxy behavior.
+All four Hippo storefront templates use the same **`store_content_blocks`** pipeline, schema shape, UI components, and Holmes proxy behavior.
 
 ## What shipped (all four Hippo storefront templates)
 
@@ -15,80 +15,53 @@ Grocery was the first vertical to ship this; **store, travel, and hotels** now u
   - **`AdaptiveFeed`:** Listens for **`holmes:homeSections`** and replaces the SSR feed; half-width grouping matches SSR.
 - **Holmes:** `app/api/holmes/home-personalization/route.ts` forwards **`page`**, **`region`**, and **`categorySlug`** to the Aurora API like the server components do.
 
-## Seed data: two paths
+## Seed data: `init/seed.sql`
 
-| Template | How demo catalog + `store_content_blocks` are loaded |
-|----------|------------------------------------------------------|
-| **Hotels, store, travel** | Checked-in **`init/seed.sql`** per app — deterministic UUIDs, stable copy, Pexels or picsum image URLs frozen at generation time. |
-| **Grocery** | **`scripts/seed-store-content-blocks.mjs`** and **`pnpm seed:content-blocks`** (API provision + insert). |
+| Template | Demo catalog + `store_content_blocks` |
+|----------|----------------------------------------|
+| **Grocery, hotels, store, travel** | Checked-in **`init/seed.sql`** per app — deterministic UUIDs, stable copy, Pexels or picsum image URLs frozen at check-in time. |
 
 Seed slugs use a **template-specific prefix** so one tenant can run multiple templates without collisions:
 
 | Template | Slug prefix |
 |----------|-------------|
-| Grocery | `seed-cb-` |
+| Grocery | `seed-cb-grocery-` |
 | Store | `seed-cb-store-` |
 | Travel | `seed-cb-travel-` |
 | Hotels | `seed-cb-hotels-` |
 
 Copy in each vertical is tuned to retail, travel, or hotels; structure (pages / regions) matches the shared CMS plan.
 
-### Hotels, store, travel — `init/seed.sql`
+### Apply `init/seed.sql` (any Hippo app)
 
 1. Ensure the tenant schema and tables exist (`pnpm schema:provision` in the app, or Studio).
-2. **Apply seed (no manual UUID/schema):** from **`aurora-hippo-hotels`**, **`-store`**, or **`-travel`**, with the same **`AURORA_API_URL`** / **`AURORA_API_KEY`** as the storefront (typically **`.env.local`**):
+2. **Apply seed (no manual UUID/schema):** from **`aurora-hippo-grocery`**, **`-hotels`**, **`-store`**, or **`-travel`**, with **`AURORA_API_URL`** / **`AURORA_API_KEY`** (typically **`.env.local`**):
 
    ```bash
    pnpm seed:apply
    ```
 
-   This POSTs the checked-in **`init/seed.sql`** (still containing **`__TENANT_UUID__`** / **`__TENANT_SCHEMA__`**) to **`POST /v1/apply-seed-sql`** on the Aurora API. The server resolves the tenant from the API key, substitutes placeholders, and runs the statements. Requires the API process to have **`DB_URL`** (same as migrations).
+   This POSTs **`init/seed.sql`** (with **`__TENANT_UUID__`** / **`__TENANT_SCHEMA__`**) to **`POST /v1/apply-seed-sql`**. The server resolves the tenant from the API key, substitutes placeholders, and runs the statements. Requires the API process to have **`DB_URL`** (same as migrations).
 
-   Optional: `pnpm seed:apply -- --dry-run`, or `node ../scripts/hippo-seed/apply-seed-sql-api.mjs --file path/to/seed.sql`.
+   Optional: `pnpm seed:apply -- --dry-run`, or `node scripts/apply-seed.mjs --file path/to/seed.sql`.
 
-   **In the storefront:** when the **catalogue** has no products, **Use example data** calls **`POST /api/store/apply-example-data`**, which forwards **`init/seed.sql`** to **`POST /v1/apply-seed-sql`**, then reloads the page (enabled in all environments).
+   **Storefront “Use example data”** (where implemented): when the catalogue is empty, that flow forwards **`init/seed.sql`** to **`POST /v1/apply-seed-sql`**, then reloads.
 
 3. **Manual alternative:** replace placeholders in **`init/seed.sql`** and run `psql $DATABASE_URL -v ON_ERROR_STOP=1 -f init/seed.sql` (or Studio SQL).
 4. **Meilisearch:** In Aurora Studio open **Settings → Search**. Set **Main catalog table** to your storefront catalogue table (the UI shows the tenant’s **store catalog table**, e.g. `products`). Enable **Index `catalog_product_listing` view** so hits include joined `category_slug` / `category_label` (after schema migration created the view). Then run **Sync index now** (or your usual reindex) so `search_terms` blocks and catalogue search resolve.
 
 The SQL file is idempotent: it deletes prior seed rows for that vertical’s SKUs/slugs, then inserts vendors → zones → categories → products → `store_content_blocks`.
 
-**Regenerating SQL** (e.g. after changing copy in [`scripts/hippo-seed`](../../scripts/hippo-seed)): from the monorepo root, with **`PEXELS_API_KEY`** in root [`.env`](../../.env) if you want live Pexels URLs (otherwise picsum fallbacks):
+**Regenerating SQL for hotels / store / travel** lives in the full Aurora repository: from that repo’s root, with **`PEXELS_API_KEY`** in `.env` if you want live Pexels URLs (otherwise picsum fallbacks), run `scripts/hippo-seed/emit-seed-sql.mjs` (targets: `hotels`, `store`, `travel`, or `all`). Source modules live under `scripts/hippo-seed/` (`hippo-vertical-catalog.mjs`, `hippo-vertical-content-blocks.mjs`, `hippo-vertical-ids.mjs`).
 
-```bash
-node scripts/hippo-seed/emit-seed-sql.mjs hotels
-node scripts/hippo-seed/emit-seed-sql.mjs store
-node scripts/hippo-seed/emit-seed-sql.mjs travel
-# or: node scripts/hippo-seed/emit-seed-sql.mjs all
-```
-
-Sources: [`hippo-vertical-catalog.mjs`](../../scripts/hippo-seed/hippo-vertical-catalog.mjs), [`hippo-vertical-content-blocks.mjs`](../../scripts/hippo-seed/hippo-vertical-content-blocks.mjs), [`hippo-vertical-ids.mjs`](../../scripts/hippo-seed/hippo-vertical-ids.mjs).
-
-### Grocery — API seed script
-
-From **`aurora-hippo-grocery`** with API credentials:
-
-```bash
-export AURORA_API_URL="https://your-api.example.com"
-export AURORA_API_KEY="your-key"
-pnpm seed:content-blocks
-# or: node scripts/seed-store-content-blocks.mjs
-```
-
-- Ensures **`store_content_blocks`** exists via **`POST /v1/provision-schema`** (same table definition as `init/schema-v2.json`).
-- Seeds include a default **`product_list`** row with **real catalogue UUIDs** sampled from the **hippo-grocery** tenant via live search (pantry staples: organic spaghetti, Barilla sauce, rice, olive oil, Cirio / cherry tomatoes). Copy and search-term rails read like a finished storefront; **`image_blurb`** URLs use **Pexels** when `PEXELS_API_KEY` is in the monorepo root `.env`, else **picsum** seeds (`hippo-grocery-weekly`, `hippo-grocery-about`).
-- Override curated products: **`SEED_PRODUCT_IDS=uuid1,uuid2,...`** (comma-separated record **`id`** values from your products table).
-- By default, removes rows whose **`slug`** starts with **`seed-cb-`**, then inserts blocks for the planned **page / region** matrix.
-- **`--dry-run`** — log actions only.
-- **`--skip-provision`** — only delete/insert seeds (table must already exist).
-- **`--no-clean`** — do not delete existing seed-prefix rows (may duplicate on re-run).
+**Grocery** does not use the emit script; maintain **`init/seed.sql`** in this repo when copy or demo products change.
 
 ## Pexels keys: root vs Aurora Studio
 
 | Where | Used for |
 |-------|-----------|
-| **Monorepo root `.env`** — `PEXELS_API_KEY` | **Regenerating** hotels/store/travel **`init/seed.sql`** via [`emit-seed-sql.mjs`](../../scripts/hippo-seed/emit-seed-sql.mjs), and **grocery** [`seed-store-content-blocks.mjs`](../scripts/seed-store-content-blocks.mjs) (via [`scripts/hippo-seed`](../../scripts/hippo-seed)). |
-| **`aurora-studio` API `.env`** — `PEXELS_API_KEY` | **Runtime** hero fallbacks and `GET /api/tenants/:slug/store/pexels-image` ([`aurora-studio/.env.example`](../../aurora-studio/.env.example)). Copy the same key into Studio’s API env for live storefronts. |
+| **Aurora monorepo root `.env`** — `PEXELS_API_KEY` | **Regenerating** hotels/store/travel **`init/seed.sql`** via `scripts/hippo-seed/emit-seed-sql.mjs` (only when you have that repo checked out). |
+| **Aurora Studio API `.env`** — `PEXELS_API_KEY` | **Runtime** hero fallbacks and tenant Pexels image routes. Copy the key from Studio’s env documentation into the API process env for live storefronts. |
 
 ## Studio setup (minimal)
 
@@ -104,4 +77,4 @@ Holmes injections (`basket-bundle`, `catalogue-list`, etc.) are unchanged; they 
 
 ## Further reading
 
-Canonical region map and half-width algorithm: [`docs/Content-Blocks-CMS-Regions-And-Holmes-Slots.md`](../../docs/Content-Blocks-CMS-Regions-And-Holmes-Slots.md) (repo root).
+Canonical region map and half-width algorithm: in the Aurora monorepo, **`docs/Content-Blocks-CMS-Regions-And-Holmes-Slots.md`**.

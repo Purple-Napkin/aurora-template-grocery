@@ -5,12 +5,15 @@
  * POSTs to /v1/provision-schema. Base: marketplace-base.
  *
  * Requires: AURORA_API_URL, AURORA_API_KEY. Run: pnpm schema:provision
+ * Loads template `.env.local` / `.env`, then optional monorepo `../../.env`.
  */
 import { readFileSync, existsSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { loadAllTemplateEnv } from "./load-template-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+loadAllTemplateEnv(import.meta.url);
 
 const apiUrl = process.env.AURORA_API_URL || process.env.NEXT_PUBLIC_AURORA_API_URL;
 const apiKey = process.env.AURORA_API_KEY;

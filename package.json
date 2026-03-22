@@ -9,7 +9,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "schema:provision": "node scripts/provision-schema.mjs",
-    "seed:content-blocks": "node scripts/seed-store-content-blocks.mjs"
+    "seed:apply": "node scripts/apply-seed.mjs"
   },
   "dependencies": {
     "@aurora-studio/sdk": "^0.2.32",
