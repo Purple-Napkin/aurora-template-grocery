@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme={theme}>
       <body
-        className="min-h-screen bg-aurora-bg pb-12"
+        className="min-h-screen bg-aurora-bg pb-28 sm:pb-32"
         style={
           {
             "--aurora-accent":

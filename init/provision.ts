@@ -14,25 +14,88 @@ export type SchemaShape = {
   workflows?: unknown[];
 };
 
+function shortHttpBody(text: string): string {
+  const t = text.trim().replace(/\s+/g, " ");
+  if (t.includes("<!DOCTYPE") || t.length > 160) {
+    return t.length > 140 ? `${t.slice(0, 140)}…` : t;
+  }
+  return t || "(empty body)";
+}
+
 /**
- * Run first-run provision: skip if tenant has tables, otherwise POST schema to Aurora.
+ * Apply PostgreSQL DDL + listing views for the API key tenant (picks up Studio metadata changes).
+ * POST /v1/run-schema-migration — safe to call on every process start.
+ *
+ * **404:** Older Aurora API builds omit this route; `provision-schema` still runs migrations at the
+ * end of each import. Log once and continue. Otherwise ensure `AURORA_API_URL` is the API origin
+ * (not the Next storefront) and deploy an API that includes `POST /v1/run-schema-migration`.
+ */
+export async function runPendingSchemaMigration(baseUrl: string, apiKey: string): Promise<void> {
+  const res = await fetch(`${baseUrl.replace(/\/$/, "")}/v1/run-schema-migration`, {
+    method: "POST",
+    headers: { "X-Api-Key": apiKey, "Content-Type": "application/json" },
+  });
+  if (res.status === 404) {
+    console.warn(
+      "[aurora] run-schema-migration: 404 (endpoint not on this API). Deploy latest Aurora API or rely on provision-schema migrations; check AURORA_API_URL is the API base, not the storefront."
+    );
+    return;
+  }
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`${res.status}: ${shortHttpBody(text)}`);
+  }
+  console.log("[aurora] run-schema-migration: ok");
+}
+
+/**
+ * Startup sync: merge init/schema into Aurora metadata, then run pending DB migrations.
  * Requires AURORA_API_URL (or NEXT_PUBLIC_AURORA_API_URL) and AURORA_API_KEY.
+ * Set AURORA_SKIP_STARTUP_SYNC=1 to skip (e.g. CI without API).
  */
 export async function runFirstRunProvision(): Promise<void> {
+  if (process.env.AURORA_SKIP_STARTUP_SYNC === "1") {
+    console.log("[aurora] startup sync skipped (AURORA_SKIP_STARTUP_SYNC=1)");
+    return;
+  }
+
   const apiUrl = process.env.AURORA_API_URL ?? process.env.NEXT_PUBLIC_AURORA_API_URL;
   const apiKey = process.env.AURORA_API_KEY;
 
-  if (!apiUrl || !apiKey) return;
+  if (!apiUrl || !apiKey) {
+    console.log(
+      "[aurora] startup sync skipped (set AURORA_API_URL and AURORA_API_KEY, or AURORA_SKIP_STARTUP_SYNC=1 in CI)"
+    );
+    return;
+  }
 
   const baseUrl = apiUrl.replace(/\/$/, "");
+  console.log("[aurora] startup sync →", baseUrl);
 
-  // Idempotent: importSchemaForTenant merges (skips existing tables/fields).
-  // Runs even when Studio provisioned base tables - adds any delta (hero_banners, home_sections, etc.).
-  const schema = loadSchema();
-  const result = await provisionSchema(baseUrl, apiKey, schema);
+  try {
+    // Idempotent: importSchemaForTenant merges (skips existing tables/fields).
+    const schema = loadSchema();
+    const result = await provisionSchema(baseUrl, apiKey, schema);
 
-  if (result.tablesCreated > 0) {
-    console.log("[aurora] Schema provisioned on first run:", result.message);
+    if (result.tablesCreated > 0) {
+      console.log("[aurora] provision-schema: ok (new tables)", result.message ?? "");
+    } else {
+      console.log("[aurora] provision-schema: ok (metadata merged, no new tables)");
+    }
+  } catch (err) {
+    console.warn(
+      "[aurora] provision-schema failed:",
+      err instanceof Error ? err.message : err
+    );
+  }
+
+  try {
+    await runPendingSchemaMigration(baseUrl, apiKey);
+  } catch (err) {
+    console.warn(
+      "[aurora] run-schema-migration failed:",
+      err instanceof Error ? err.message : err
+    );
   }
 }
 

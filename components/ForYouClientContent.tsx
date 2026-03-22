@@ -11,8 +11,10 @@ import { Sparkles } from "lucide-react";
 
 /** Client-only parts of For You page (cart-dependent). */
 export function ForYouClientContent({
+  belowTitle,
   sections,
 }: {
+  belowTitle?: React.ReactNode;
   sections: React.ReactNode;
 }) {
   const { items } = useCart();
@@ -28,6 +30,7 @@ export function ForYouClientContent({
         <p className="text-aurora-muted mt-1">
           Bundles, recipes, and suggestions assembled just for you.
         </p>
+        {belowTitle}
       </div>
 
       <div className="space-y-8">

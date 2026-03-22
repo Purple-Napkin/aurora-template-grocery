@@ -21,7 +21,8 @@
   --font-display: "Fraunces", "Manrope", "Plus Jakarta Sans", system-ui, serif;
   --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
   /* Light pattern wells (must live here — a later bare :root would override [data-theme="dark"]). */
-  --pattern-cream: rgba(250, 246, 238, 0.78);
+  /* Higher alpha = fainter tile pattern (more “transparent” illustration under the wash) */
+  --pattern-cream: rgba(252, 249, 244, 0.9);
   --pattern-warm: rgba(232, 226, 214, 0.5);
 }
 
@@ -36,7 +37,7 @@
   --aurora-primary-dark: #10b981;
   --aurora-accent: #34d399;
   /* Pattern wells + Holmes blocks: dark wash so light text stays legible (was cream + white text). */
-  --pattern-cream: rgba(18, 34, 24, 0.94);
+  --pattern-cream: rgba(18, 34, 24, 0.97);
   --pattern-warm: rgba(12, 26, 18, 0.55);
 }
 
@@ -285,12 +286,11 @@ button.checkout-btn:active {
 [data-holmes="basket-bundle"] [data-holmes-bundle] {
   padding: 1.25rem;
   border-radius: 12px;
-  border: 1px solid var(--aurora-border);
-  background-image:
-    linear-gradient(var(--pattern-cream), var(--pattern-cream)),
-    url(/grocery-pattern.png);
-  background-repeat: repeat;
-  background-size: auto, 120px 120px;
+  border: 1px solid color-mix(in srgb, var(--aurora-border) 55%, transparent);
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.04),
+    0 1px 3px rgb(0 0 0 / 0.06);
 }
 [data-holmes="basket-bundle"] [data-holmes-bundle-title] {
   font-size: 1rem;
@@ -316,10 +316,10 @@ button.checkout-btn:active {
   color: inherit;
   padding: 0.75rem;
   border-radius: 12px;
-  border: 1px solid var(--aurora-border);
-  background: var(--aurora-surface);
+  border: 1px solid color-mix(in srgb, var(--aurora-border) 55%, transparent);
+  background: #fff;
   transition: box-shadow 0.2s, border-color 0.2s;
-  min-height: 200px;
+  min-height: 0;
 }
 [data-holmes="basket-bundle"] [data-holmes-bundle-card]:hover {
   border-color: var(--aurora-primary);
@@ -328,11 +328,12 @@ button.checkout-btn:active {
 [data-holmes="basket-bundle"] [data-holmes-bundle-card-image] {
   position: relative;
   width: 100%;
-  padding-bottom: 100%;
-  height: 0;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  min-height: 0;
   border-radius: 12px;
   overflow: hidden;
-  background: var(--aurora-surface-hover);
+  background: #fff;
   flex-shrink: 0;
   margin-bottom: 0.5rem;
 }
@@ -341,7 +342,7 @@ button.checkout-btn:active {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   display: block;
 }
@@ -418,22 +419,14 @@ button.checkout-btn:active {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+/* Layout/chrome comes from Tailwind (CONTENT_BLOCK_CARD_SHELL etc.); keep only link semantics. */
 [data-holmes="home-sections"] [data-holmes-home-card] {
   display: flex;
   flex-direction: column;
   text-decoration: none;
   color: inherit;
-  padding: 1rem;
-  border-radius: 12px;
-  border: 1px solid var(--aurora-border);
-  background: var(--aurora-surface);
-  transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
-  min-height: 280px;
 }
 [data-holmes="home-sections"] [data-holmes-home-card]:hover {
-  border-color: var(--aurora-primary);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
   color: inherit;
 }
 [data-holmes="home-sections"] [data-holmes-home-card]:hover [data-holmes-home-card-title] {
@@ -442,11 +435,12 @@ button.checkout-btn:active {
 [data-holmes="home-sections"] [data-holmes-home-card-image] {
   position: relative;
   width: 100%;
-  padding-bottom: 100%;
-  height: 0;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  min-height: 0;
   border-radius: 12px;
   overflow: hidden;
-  background: var(--aurora-surface-hover);
+  background: #fff;
   margin-bottom: 0.75rem;
   flex-shrink: 0;
 }
@@ -455,7 +449,7 @@ button.checkout-btn:active {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   display: block;
 }
@@ -545,11 +539,12 @@ button.checkout-btn:active {
 [data-holmes="recommendations"] [data-holmes-rec-card-image] {
   position: relative;
   width: 100%;
-  padding-bottom: 100%;
-  height: 0;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  min-height: 0;
   border-radius: 12px;
   overflow: hidden;
-  background: var(--aurora-surface-hover);
+  background: #fff;
   margin-bottom: 0.5rem;
 }
 [data-holmes="recommendations"] [data-holmes-rec-card-image] img {
@@ -557,7 +552,7 @@ button.checkout-btn:active {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   display: block;
 }
@@ -624,7 +619,7 @@ button.checkout-btn:active {
   min-height: 120px;
   border-radius: 12px;
   overflow: hidden;
-  background: var(--aurora-surface-hover);
+  background: #fff;
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
@@ -633,7 +628,7 @@ button.checkout-btn:active {
 [data-holmes="catalogue-list"] [data-holmes-catalogue-card-image] img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   display: block;
 }

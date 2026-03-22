@@ -5,8 +5,13 @@ import { useStore } from "@aurora-studio/starter-core";
 import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { TrendingUp } from "lucide-react";
 
+type LiveSignalsRowProps = {
+  /** When true, render only the link (e.g. inside a card footer band). */
+  embedded?: boolean;
+};
+
 /** Live adapting UI signals - creates perceived intelligence before intent system kicks in */
-export function LiveSignalsRow() {
+export function LiveSignalsRow({ embedded = false }: LiveSignalsRowProps) {
   const { store } = useStore();
   const timeOfDay = getTimeOfDay();
 
@@ -18,15 +23,17 @@ export function LiveSignalsRow() {
         ? { label: "After school snacks", href: "/catalogue?q=snacks" }
         : { label: "Trending now", href: "/catalogue" };
 
-  return (
-    <section className="py-4">
-      <Link
-        href={signal.href}
-        className="flex items-center gap-2 text-sm text-aurora-muted hover:text-aurora-primary transition-colors"
-      >
-        <TrendingUp className="w-4 h-4 text-aurora-primary shrink-0" />
-        <span>{signal.label}</span>
-      </Link>
-    </section>
+  const link = (
+    <Link
+      href={signal.href}
+      className="flex items-center gap-2 text-sm text-aurora-muted hover:text-aurora-primary transition-colors"
+    >
+      <TrendingUp className="w-4 h-4 text-aurora-primary shrink-0" />
+      <span>{signal.label}</span>
+    </Link>
   );
+
+  if (embedded) return link;
+
+  return <section className="py-4">{link}</section>;
 }

@@ -3,6 +3,7 @@ import { holmesRecentRecipes, holmesRecipeProducts } from "@aurora-studio/starte
 import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { getDietaryFromCookie } from "@/lib/dietary-server";
 import { RecipeProductCollage } from "@/components/RecipeProductCollage";
+import { StoreContentRails } from "@/components/StoreContentRails";
 import { Sparkles, ArrowLeft } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -55,6 +56,12 @@ export default async function RecipesInterstitialPage() {
             </p>
           </div>
         </div>
+
+        <StoreContentRails
+          contentPage="recipe_index"
+          contentRegion="recipes_index_below_header"
+          className="mb-8"
+        />
 
         {recipesWithProducts.length === 0 ? (
           <div className="py-16 text-center rounded-2xl bg-aurora-surface border border-aurora-border">

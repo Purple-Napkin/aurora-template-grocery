@@ -147,6 +147,6 @@ From Aurora Studio: Settings → Apps → deploy. Uses template `hippo-grocery` 
 
 ## SDK Version
 
-This template uses `@aurora-studio/sdk@0.2.23`. Holmes features (active mission, home personalization, guardrails, offers, session attribution, time-to-completion metrics) are available in SDK 0.2.7+; **cart combos, `holmesSelectCombo`, contextual `hasCombo`** require **0.2.22+**.
+Pinned versions are in `package.json` (currently **`@aurora-studio/sdk@^0.2.31`**, **`@aurora-studio/starter-core@^0.1.11`**). Holmes features (active mission, home personalization, guardrails, offers, session attribution, time-to-completion metrics) are available in SDK 0.2.7+; **cart combos, `holmesSelectCombo`, contextual `hasCombo`** require **0.2.22+**.
 
 _Last build trigger: March 2026_

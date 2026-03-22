@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { InsightBlurb } from "@/components/InsightBlurb";
+import { StoreContentRails } from "@/components/StoreContentRails";
+
+export const dynamic = "force-dynamic";
 
 export default function AboutPage() {
   return (
     <div className="max-w-4xl mx-auto py-16 px-4 sm:px-6">
       <h1 className="text-3xl font-bold text-center mb-4">How We Work</h1>
-      <div className="space-y-12 mt-16">
+      <StoreContentRails contentPage="about" contentRegion="about_main" className="mb-12" />
+      <div className="space-y-12 mt-8">
         <div className="flex gap-6 items-start">
           <div className="w-16 h-16 rounded-full bg-aurora-accent/30 flex items-center justify-center text-2xl font-bold text-aurora-accent shrink-0">
             1

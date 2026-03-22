@@ -1002,12 +1002,12 @@
       ]
     },
     {
-      "slug": "home_sections",
-      "name": "Home Sections",
-      "display_field": null,
+      "slug": "store_content_blocks",
+      "name": "Store content blocks",
+      "display_field": "title",
       "display_expression": null,
       "icon": "Layout",
-      "description": null,
+      "description": "Editorial rails per page and region (Hippo grocery). Holmes injects separately via template mounts.",
       "fields": [
         {
           "slug": "slug",
@@ -1017,23 +1017,63 @@
           "validation": {}
         },
         {
-          "slug": "name",
-          "name": "Name",
-          "field_type": "text",
+          "slug": "sort_order",
+          "name": "Sort order",
+          "field_type": "number",
           "required": false,
           "validation": {}
         },
         {
-          "slug": "section_type",
-          "name": "Section Type",
+          "slug": "page",
+          "name": "Page",
+          "field_type": "select",
+          "required": true,
+          "validation": {
+            "options": [
+              "home",
+              "catalogue",
+              "for_you",
+              "product_detail",
+              "recipe",
+              "recipe_index",
+              "checkout",
+              "cart",
+              "offers",
+              "promotions",
+              "about"
+            ]
+          }
+        },
+        {
+          "slug": "region",
+          "name": "Region",
+          "field_type": "text",
+          "required": true,
+          "validation": {}
+        },
+        {
+          "slug": "width",
+          "name": "Width",
           "field_type": "select",
           "required": false,
           "validation": {
             "options": [
-              "inspiration",
-              "meals",
-              "top_up",
-              "promo"
+              "full",
+              "half"
+            ]
+          }
+        },
+        {
+          "slug": "block_kind",
+          "name": "Block kind",
+          "field_type": "select",
+          "required": true,
+          "validation": {
+            "options": [
+              "product_list",
+              "search_terms",
+              "blurb",
+              "image_blurb"
             ]
           }
         },
@@ -1047,6 +1087,13 @@
         {
           "slug": "subtitle",
           "name": "Subtitle",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "body",
+          "name": "Body",
           "field_type": "text",
           "required": false,
           "validation": {}
@@ -1066,8 +1113,29 @@
           "validation": {}
         },
         {
+          "slug": "link_label",
+          "name": "Link label",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "product_ids",
+          "name": "Product IDs (comma-separated)",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "search_terms",
+          "name": "Search terms (comma-separated, OR)",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
           "slug": "time_of_day",
-          "name": "Time of Day",
+          "name": "Time of day",
           "field_type": "select",
           "required": false,
           "validation": {
@@ -1080,7 +1148,7 @@
         },
         {
           "slug": "day_of_week",
-          "name": "Day of Week",
+          "name": "Day of week",
           "field_type": "select",
           "required": false,
           "validation": {
@@ -1097,52 +1165,14 @@
         },
         {
           "slug": "holiday_key",
-          "name": "Holiday Key",
+          "name": "Holiday key",
           "field_type": "text",
           "required": false,
           "validation": {}
         },
         {
-          "slug": "sort_order",
-          "name": "Sort Order",
-          "field_type": "number",
-          "required": false,
-          "validation": {}
-        }
-      ]
-    },
-    {
-      "slug": "curated_collections",
-      "name": "Curated Collections",
-      "display_field": null,
-      "display_expression": null,
-      "icon": "Package",
-      "description": null,
-      "fields": [
-        {
-          "slug": "name",
-          "name": "Name",
-          "field_type": "text",
-          "required": true,
-          "validation": {}
-        },
-        {
-          "slug": "slug",
-          "name": "Slug",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "product_ids",
-          "name": "Product IDs",
-          "field_type": "text",
-          "required": false,
-          "validation": {}
-        },
-        {
-          "slug": "image_url",
-          "name": "Image URL",
+          "slug": "category_slug",
+          "name": "Category slug (catalogue page only)",
           "field_type": "text",
           "required": false,
           "validation": {}

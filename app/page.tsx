@@ -6,7 +6,6 @@ import { ShoppingListTemplates } from "@/components/ShoppingListTemplates";
 import { HolmesHomeRefresher } from "@aurora-studio/starter-core";
 import { HomeSections } from "@/components/HomeSections";
 import { SmartCartPanel } from "@aurora-studio/starter-core";
-import { LiveSignalsRow } from "@/components/LiveSignalsRow";
 import {
   MissionAwareHero,
   MissionAwareSections,
@@ -40,9 +39,6 @@ export default function HomePage() {
 
           {/* Shopping list templates - e.g. Travel essentials when travel prep detected */}
           <ShoppingListTemplates />
-
-          {/* Live adapting signals - perceived intelligence */}
-          <LiveSignalsRow />
 
           {/* Single adaptive feed - Holmes data via event, trust signals, merged sections */}
           <MissionAwareSections>

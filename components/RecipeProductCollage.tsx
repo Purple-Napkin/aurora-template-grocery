@@ -16,25 +16,24 @@ export function RecipeProductCollage({
   if (urls.length === 0) {
     return (
       <div
-        className={`w-full h-full min-h-[120px] rounded-lg bg-aurora-surface-hover flex items-center justify-center ${className}`}
+        className={`flex h-full w-full items-center justify-center bg-white dark:bg-white ${className}`}
       >
-        <ChefHat className="w-12 h-12 text-aurora-primary/60" aria-hidden />
+        <ChefHat className="h-12 w-12 text-aurora-primary/60" aria-hidden />
       </div>
     );
   }
 
   if (urls.length === 1) {
     return (
-      <div
-        className={`w-full h-full rounded-lg overflow-hidden bg-aurora-surface-hover ${className}`}
-      >
+      <div className={`h-full w-full overflow-hidden bg-white dark:bg-white ${className}`}>
         <ProductImage
           src={urls[0]}
-          className="w-full h-full"
+          className="h-full w-full"
+          objectFit="contain"
           thumbnail
           fallback={
-            <div className="w-full h-full flex items-center justify-center">
-              <ChefHat className="w-12 h-12 text-aurora-primary/60" />
+            <div className="flex h-full w-full items-center justify-center">
+              <ChefHat className="h-12 w-12 text-aurora-primary/60" />
             </div>
           }
         />
@@ -45,7 +44,7 @@ export function RecipeProductCollage({
   if (urls.length === 2) {
     return (
       <div
-        className={`w-full h-full rounded-lg overflow-hidden grid grid-cols-2 gap-0.5 bg-aurora-surface-hover ${className}`}
+        className={`grid h-full w-full grid-cols-2 gap-0.5 overflow-hidden bg-white dark:bg-white ${className}`}
       >
         {urls.map((url, i) => (
           <div key={i} className="relative min-h-0">
@@ -68,7 +67,7 @@ export function RecipeProductCollage({
   // 3 or 4 images: 2x2 grid
   return (
     <div
-      className={`w-full h-full rounded-lg overflow-hidden grid grid-cols-2 grid-rows-2 gap-0.5 bg-aurora-surface-hover ${className}`}
+      className={`grid h-full w-full grid-cols-2 grid-rows-2 gap-0.5 overflow-hidden bg-white dark:bg-white ${className}`}
     >
       {urls.slice(0, 4).map((url, i) => (
         <div key={i} className="relative min-h-0 aspect-square">

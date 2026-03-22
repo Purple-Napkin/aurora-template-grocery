@@ -8,6 +8,9 @@ import { ProductImageGallery } from "@aurora-studio/starter-core";
 import { YouMayAlsoLike } from "@/components/YouMayAlsoLike";
 import { HolmesContextualWell } from "@/components/HolmesContextualWell";
 import { HolmesTidbits } from "@aurora-studio/starter-core";
+import { StoreContentRails } from "@/components/StoreContentRails";
+
+export const dynamic = "force-dynamic";
 
 function getImageUrl(record: Record<string, unknown>): string | null {
   const field = ["image_url", "image", "thumbnail", "photo"].find((f) => record[f]);
@@ -171,6 +174,11 @@ export default async function ProductPage({
 
       <div className="mt-12">
         <ProductDetailTabs record={record} />
+      </div>
+
+      <div className="mt-10 space-y-10">
+        <StoreContentRails contentPage="product_detail" contentRegion="pdp_below_tabs" />
+        <StoreContentRails contentPage="product_detail" contentRegion="pdp_below_context" />
       </div>
 
       <div className="mt-12">

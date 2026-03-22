@@ -1,4 +1,5 @@
 import { RecipePageView } from "@/components/RecipePageView";
+import { StoreContentRails } from "@/components/StoreContentRails";
 import { getStoreConfig } from "@aurora-studio/starter-core";
 import { holmesRecipe } from "@aurora-studio/starter-core";
 import { notFound } from "next/navigation";
@@ -29,6 +30,10 @@ export default async function RecipePage({ params }: Props) {
         recipeTitle={recipe.title}
         currency={currency}
       />
+      <div className="mt-12 space-y-10">
+        <StoreContentRails contentPage="recipe" contentRegion="recipe_below_title" />
+        <StoreContentRails contentPage="recipe" contentRegion="recipe_below_ingredients" />
+      </div>
     </div>
   );
 }

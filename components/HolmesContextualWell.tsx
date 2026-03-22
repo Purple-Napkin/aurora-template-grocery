@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart } from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "@/components/DietaryExclusionsContext";
 import { ProductImage } from "@aurora-studio/starter-core";
+import { CONTENT_BLOCK_CARD_SHELL } from "./ContentBlockProductCard";
 
 type Props = {
   /** Pass when on product detail page */
@@ -78,10 +79,12 @@ export function HolmesContextualWell({ currentProductId, variant = "default" }: 
           ? `Complete your ${comboTitle} – add missing ingredients`
           : `Complete your ${comboTitle} – add suggested items`
         : isRecipeStyle
-          ? `Holmes found a recipe for what you&apos;re building${comboTitle ? ` – complete your ${comboTitle}` : ""}.`
+          ? `Holmes found a recipe for what you're building${comboTitle ? ` – complete your ${comboTitle}` : ""}.`
           : `Holmes has suggestions for your cart${comboTitle ? ` – ${comboTitle}` : ""}.`;
     return (
-      <div className="pattern-well mb-6 p-4 rounded-xl border border-aurora-primary/30 bg-aurora-primary/5">
+      <div
+        className={`mb-6 rounded-xl bg-white overflow-hidden dark:bg-aurora-surface p-4 sm:p-5 ${CONTENT_BLOCK_CARD_SHELL}`}
+      >
         <p className="text-sm text-aurora-text mb-2">{cartCopy}</p>
         {variant === "cart" ? (
           <a
@@ -109,7 +112,9 @@ export function HolmesContextualWell({ currentProductId, variant = "default" }: 
   if (!hint) return null;
 
   return (
-    <div className="pattern-well mb-6 p-4 rounded-xl border border-aurora-primary/30">
+    <div
+      className={`mb-6 rounded-xl bg-white overflow-hidden dark:bg-aurora-surface p-4 sm:p-5 ${CONTENT_BLOCK_CARD_SHELL}`}
+    >
       <p className="text-sm text-aurora-text mb-2">{hint}</p>
       {products.length > 0 && (
         <div className="flex flex-wrap gap-2">

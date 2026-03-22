@@ -3,6 +3,7 @@ import { createAuroraClient } from "@aurora-studio/starter-core";
 import { AddToCartButton } from "@aurora-studio/starter-core";
 import { ProductImage } from "@aurora-studio/starter-core";
 import { StoreContextBar } from "@aurora-studio/starter-core";
+import { StoreContentRails } from "@/components/StoreContentRails";
 
 export const dynamic = "force-dynamic";
 
@@ -76,6 +77,7 @@ export default async function OffersPage() {
     <div className="max-w-6xl mx-auto">
       <StoreContextBar />
       <div className="py-12 px-4 sm:px-6">
+        <StoreContentRails contentPage="offers" contentRegion="offers_below_header" className="mb-8" />
         <h1 className="text-2xl font-bold mb-2">Offers</h1>
         <p className="text-aurora-muted mb-8">
           Products on sale. Discounts apply automatically at checkout.

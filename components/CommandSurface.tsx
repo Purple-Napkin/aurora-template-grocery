@@ -10,6 +10,7 @@ import { RecipeMissionHero } from "./RecipeMissionHero";
 import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { holmesMissionLockCombo } from "@aurora-studio/starter-core";
 import { shouldLockRecipeMissionForMissionPill } from "@/lib/holmes-mission-lock";
+import { CONTENT_BLOCK_CARD_SHELL } from "./ContentBlockProductCard";
 
 const ICON_MAP: Record<string, typeof UtensilsCrossed> = {
   "Dinner in 20 mins": UtensilsCrossed,
@@ -75,88 +76,95 @@ export function CommandSurface({ logoUrl }: { logoUrl?: string | null }) {
   const isRecipeMission =
     homeData?.mode === "recipe_mission" && homeData.recipeSlug && homeData.recipeTitle;
 
-  const formContent = (
-    <div className="relative z-10 w-full max-w-xl">
-      {isRecipeMission && (
-        <div className="mb-6">
-          <RecipeMissionHero
-            recipeTitle={homeData.recipeTitle!}
-            recipeSlug={homeData.recipeSlug!}
-            compact
-          />
-        </div>
-      )}
-      <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-aurora-text mb-3">
-        {isRecipeMission ? "Or something else?" : `How can we assist you this ${timeOfDay}?`}
-      </h1>
-      <p className="text-aurora-muted text-base sm:text-lg mb-6 font-medium">
-        {isRecipeMission ? "Let's get you there fast" : "Pick a mission or search below"}
-      </p>
+  const missionChipClass =
+    "inline-flex min-h-[2.75rem] items-center gap-2.5 px-5 py-3 rounded-xl bg-[#faf8f5] dark:bg-aurora-bg border border-stone-200/90 dark:border-aurora-border shadow-sm hover:border-aurora-primary/40 hover:shadow-md transition-all text-sm font-semibold text-aurora-text";
 
-      {/* Primary: mission quick actions first */}
-      <div className="relative z-20 mb-6">
-        <p className="text-xs font-semibold text-aurora-muted uppercase tracking-widest mb-3">
-          Start here
+  const formContent = (
+    <div
+      className={`relative z-10 w-full max-w-xl rounded-xl bg-white overflow-hidden dark:bg-aurora-surface ${CONTENT_BLOCK_CARD_SHELL}`}
+    >
+      <div className="p-5 sm:p-6 lg:p-8">
+        {isRecipeMission && (
+          <div className="mb-6">
+            <RecipeMissionHero
+              recipeTitle={homeData.recipeTitle!}
+              recipeSlug={homeData.recipeSlug!}
+              compact
+            />
+          </div>
+        )}
+        <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-aurora-text mb-3">
+          {isRecipeMission ? "Or something else?" : `How can we assist you this ${timeOfDay}?`}
+        </h1>
+        <p className="text-aurora-muted text-base sm:text-lg mb-6 font-medium">
+          {isRecipeMission ? "Let's get you there fast" : "Pick a mission or search below"}
         </p>
-        <div className="flex flex-wrap gap-3">
-          {quickActions.map((action) => {
-            const Icon = action.icon;
-            const href = action.label === "Recipe ideas" ? "/recipes" : action.href;
-            return (
+
+        {/* Primary: mission quick actions first */}
+        <div className="relative z-20 mb-6">
+          <p className="text-xs font-semibold text-aurora-muted uppercase tracking-widest mb-3">
+            Start here
+          </p>
+          <div className="flex flex-wrap gap-3">
+            {quickActions.map((action) => {
+              const Icon = action.icon;
+              const href = action.label === "Recipe ideas" ? "/recipes" : action.href;
+              return (
+                <Link
+                  key={action.label}
+                  href={href}
+                  onClick={() => {
+                    if (shouldLockRecipeMissionForMissionPill(action.label, href)) holmesMissionLockCombo();
+                  }}
+                  className={missionChipClass}
+                >
+                  <Icon className="h-4 w-4 shrink-0 text-aurora-primary" />
+                  {action.label}
+                </Link>
+              );
+            })}
+            {!quickActions.some((a) => a.label === "Recipe ideas") && (
               <Link
-                key={action.label}
-                href={href}
-                onClick={() => {
-                  if (shouldLockRecipeMissionForMissionPill(action.label, href)) holmesMissionLockCombo();
-                }}
-                className="inline-flex min-h-[2.75rem] items-center gap-2.5 px-5 py-3 rounded-2xl bg-aurora-surface border border-aurora-border shadow-sm hover:border-aurora-primary/40 hover:shadow-md transition-all text-sm font-semibold text-aurora-text"
+                href="/recipes"
+                onClick={() => holmesMissionLockCombo()}
+                className={missionChipClass}
               >
-                <Icon className="h-4 w-4 shrink-0 text-aurora-primary" />
-                {action.label}
+                <Sparkles className="h-4 w-4 shrink-0 text-aurora-primary" />
+                Recipe ideas
               </Link>
-            );
-          })}
-          {!quickActions.some((a) => a.label === "Recipe ideas") && (
-            <Link
-              href="/recipes"
-              onClick={() => holmesMissionLockCombo()}
-              className="inline-flex min-h-[2.75rem] items-center gap-2.5 px-5 py-3 rounded-2xl bg-aurora-surface border border-aurora-border shadow-sm hover:border-aurora-primary/40 hover:shadow-md transition-all text-sm font-semibold text-aurora-text"
+            )}
+          </div>
+        </div>
+
+        {/* Secondary: search as tool, not entry point */}
+        <div className="relative z-10">
+          <p className="text-xs font-semibold text-aurora-muted uppercase tracking-widest mb-2">
+            Search the store
+          </p>
+          {store ? (
+            <div
+              className="rounded-xl border border-aurora-border bg-white dark:bg-aurora-bg shadow-sm focus-within:border-aurora-primary/60 focus-within:ring-1 focus-within:ring-aurora-primary/25 transition-all max-w-md overflow-hidden"
+              data-command-search
             >
-              <Sparkles className="h-4 w-4 shrink-0 text-aurora-primary" />
-              Recipe ideas
+              <SearchDropdown
+                placeholder="milk, pasta, bananas…"
+                vendorId={store.id}
+                fullWidth
+                variant="embedded"
+                excludeDietary={excludeDietary}
+                getRecipeSuggestion={getRecipeSuggestion}
+              />
+            </div>
+          ) : (
+            <Link
+              href="/location"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-dashed border-aurora-border bg-aurora-surface/80 text-aurora-muted hover:text-aurora-text hover:border-aurora-primary/40 transition-all text-sm"
+            >
+              <Search className="w-4 h-4 shrink-0" />
+              <span>Set location to search</span>
             </Link>
           )}
         </div>
-      </div>
-
-      {/* Secondary: search as tool, not entry point */}
-      <div className="relative z-10">
-        <p className="text-xs font-semibold text-aurora-muted uppercase tracking-widest mb-2">
-          Search the store
-        </p>
-        {store ? (
-          <div
-            className="rounded-xl border border-aurora-border bg-aurora-surface shadow-sm focus-within:border-aurora-primary/60 focus-within:ring-1 focus-within:ring-aurora-primary/25 transition-all max-w-md overflow-hidden"
-            data-command-search
-          >
-            <SearchDropdown
-              placeholder="milk, pasta, bananas…"
-              vendorId={store.id}
-              fullWidth
-              variant="embedded"
-              excludeDietary={excludeDietary}
-              getRecipeSuggestion={getRecipeSuggestion}
-            />
-          </div>
-        ) : (
-          <Link
-            href="/location"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-dashed border-aurora-border bg-aurora-surface/80 text-aurora-muted hover:text-aurora-text hover:border-aurora-primary/40 transition-all text-sm"
-          >
-            <Search className="w-4 h-4 shrink-0" />
-            <span>Set location to search</span>
-          </Link>
-        )}
       </div>
     </div>
   );
@@ -168,7 +176,7 @@ export function CommandSurface({ logoUrl }: { logoUrl?: string | null }) {
         <div className="flex-1 min-w-0 order-2 lg:order-1 flex justify-center lg:justify-start w-full lg:min-w-[280px]">
           <Link
             href="/"
-            className="logo-well block w-full max-w-[min(85vw,320px)] lg:max-w-full transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-aurora-primary/50 rounded-2xl p-4 sm:p-6 border border-aurora-border/60"
+            className={`block w-full max-w-[min(85vw,320px)] lg:max-w-full transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-aurora-primary/50 rounded-xl overflow-hidden bg-white dark:bg-aurora-surface p-4 sm:p-6 ${CONTENT_BLOCK_CARD_SHELL}`}
             aria-label="Home"
           >
             {logoUrl ? (

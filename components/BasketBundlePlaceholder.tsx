@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CONTENT_BLOCK_CARD_SHELL } from "./ContentBlockProductCard";
 
 /** Skeleton for basket-bundle. Hides when Holmes injects or after ~3s. Renders as sibling so Holmes can replace container content. */
 export function BasketBundlePlaceholder() {
@@ -28,7 +29,7 @@ export function BasketBundlePlaceholder() {
 
   return (
     <div
-      className="pattern-well animate-pulse rounded-component border border-aurora-border p-4"
+      className={`animate-pulse rounded-xl bg-white overflow-hidden p-4 ${CONTENT_BLOCK_CARD_SHELL}`}
       aria-hidden="true"
     >
       <div className="h-5 w-56 bg-aurora-surface-hover rounded mb-4" />

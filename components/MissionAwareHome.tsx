@@ -63,7 +63,7 @@ export function MissionAwareHomeProvider({
       const sid =
         (window as { holmes?: { getSessionId?: () => string } }).holmes?.getSessionId?.() ?? "";
       fetch(
-        `/api/holmes/home-personalization?sid=${encodeURIComponent(sid)}${excludeDietary.length ? `&excludeDietary=${encodeURIComponent(excludeDietary.join(","))}` : ""}`
+        `/api/holmes/home-personalization?sid=${encodeURIComponent(sid)}&page=home&region=home_main_feed${excludeDietary.length ? `&excludeDietary=${encodeURIComponent(excludeDietary.join(","))}` : ""}`
       )
         .then((r) => r.json())
         .then((d) => {
@@ -172,11 +172,19 @@ export function MissionAwareSections({ children }: { children: React.ReactNode }
 
   if (data?.mode === "recipe_mission" && data.recipeSlug && data.recipeTitle) {
     return (
-      <RecipeIngredientsSection
-        recipeSlug={data.recipeSlug}
-        recipeTitle={data.recipeTitle}
-        currency={currency}
-      />
+      <div className="space-y-10">
+        <RecipeIngredientsSection
+          recipeSlug={data.recipeSlug}
+          recipeTitle={data.recipeTitle}
+          currency={currency}
+        />
+        <div className="border-t border-aurora-border pt-10">
+          <p className="text-sm font-semibold text-aurora-muted uppercase tracking-widest mb-6">
+            More for you
+          </p>
+          {children}
+        </div>
+      </div>
     );
   }
   return <>{children}</>;

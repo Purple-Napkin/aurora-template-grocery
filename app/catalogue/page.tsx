@@ -26,6 +26,7 @@ import { SortDropdown } from "@aurora-studio/starter-core";
 import { ProductCardSkeleton } from "@aurora-studio/starter-core";
 import { CatalogueEmptyState } from "@aurora-studio/starter-core";
 import { RecipePageView } from "@/components/RecipePageView";
+import { CatalogueStoreContentRail } from "@/components/CatalogueStoreContentRail";
 
 const DEFAULT_CATEGORIES: CategoryItem[] = [
   { name: "Bakery Items", slug: "bakery-items" },
@@ -331,6 +332,7 @@ function CatalogueContent() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 sm:py-10 px-4 sm:px-6">
+      <CatalogueStoreContentRail region="catalogue_above_grid" className="mb-6" />
       <div className="flex flex-col md:flex-row gap-6">
         {/* Sidebar filters (desktop) */}
         <CatalogueFilters
@@ -363,6 +365,8 @@ function CatalogueContent() {
 
         {/* Main content - min-w-0 lets it shrink; flex-1 lets it grow to fill space */}
         <main className="flex-1 min-w-0 w-full sm:min-w-[280px] flex flex-col">
+          <CatalogueStoreContentRail region="catalogue_below_filters" className="mb-6" />
+
           <div
             className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${recipeTitle ? "mb-4" : "mb-3"}`}
           >
@@ -424,10 +428,11 @@ function CatalogueContent() {
                       className="group p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 transition-all overflow-hidden min-w-[160px] min-h-[260px] flex flex-col"
                     >
                       <Link href={`/catalogue/${id}`} className="block">
-                        <div className="aspect-square rounded-lg bg-aurora-surface-hover mb-3 overflow-hidden">
+                        <div className="aspect-square rounded-lg bg-white dark:bg-white mb-3 overflow-hidden">
                           <ProductImage
                             src={imageUrl}
                             className="w-full h-full"
+                            objectFit="contain"
                             thumbnail
                             fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
                           />
@@ -535,10 +540,11 @@ function CatalogueContent() {
                       className="group p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 transition-all duration-200 overflow-hidden min-w-[160px] min-h-[280px] flex flex-col"
                     >
                       <Link href={`/catalogue/${id}`} className="block">
-                        <div className="aspect-square rounded-lg bg-aurora-surface-hover mb-3 overflow-hidden">
+                        <div className="aspect-square rounded-lg bg-white dark:bg-white mb-3 overflow-hidden">
                           <ProductImage
                             src={imageUrl}
                             className="w-full h-full"
+                            objectFit="contain"
                             thumbnail
                             fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
                           />
