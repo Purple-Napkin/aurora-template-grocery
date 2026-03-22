@@ -90,6 +90,90 @@ export function getRecipeSuggestion(query: string): string | null {
   return match ? `${match}?` : null;
 }
 
+/** True if `token` appears as a whole word (avoids "oil" matching "boil" / vague description noise). */
+export function matchesRecipeHintToken(haystack: string, token: string): boolean {
+  const t = token.trim().toLowerCase();
+  if (t.length < 2) return false;
+  const esc = t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[^a-z0-9])${esc}([^a-z0-9]|$)`, "i").test(haystack);
+}
+
+/** Pantry / vague tokens — count for little when ranking against URL ingredient hints. */
+const LIGHT_RECIPE_HINT_TOKENS = new Set([
+  "oil",
+  "olive",
+  "salt",
+  "pepper",
+  "water",
+  "stock",
+  "garlic",
+  "butter",
+  "sugar",
+  "herbs",
+]);
+
+/**
+ * Rank Holmes cached recipes when `?ingredients=` (or similar) is provided.
+ * First hint is the theme (e.g. pasta); it must appear in slug/title for a recipe to stay in the
+ * primary list when any recipe matches that bar — otherwise results drift to anything mentioning "olive oil".
+ */
+export function rankRecipesByIngredientHints(
+  recipes: Array<{ slug: string; title: string; description: string | null }>,
+  hints: string[],
+  mealFromCart: string | null
+): Array<{ slug: string; title: string }> {
+  const cleaned = hints.map((h) => h.trim()).filter((h) => h.length >= 2);
+  if (cleaned.length === 0) {
+    return recipes.map((r) => ({ slug: r.slug, title: r.title }));
+  }
+  const theme = cleaned[0]!.toLowerCase();
+  const rest = cleaned.slice(1).map((h) => h.toLowerCase());
+  const mealLower = mealFromCart?.toLowerCase() ?? "";
+
+  const score = (r: { slug: string; title: string; description: string | null }) => {
+    let s = 0;
+    const slug = r.slug.toLowerCase();
+    const title = (r.title ?? "").toLowerCase();
+    const desc = (r.description ?? "").toLowerCase();
+    const head = `${slug} ${title}`;
+    const all = `${head} ${desc}`;
+
+    if (
+      mealLower &&
+      (matchesRecipeHintToken(slug, mealLower) || matchesRecipeHintToken(title, mealLower))
+    ) {
+      s += 160;
+    }
+
+    if (matchesRecipeHintToken(head, theme)) s += 320;
+    else if (matchesRecipeHintToken(all, theme)) s += 75;
+
+    for (const w of rest) {
+      if (w.length < 2) continue;
+      if (LIGHT_RECIPE_HINT_TOKENS.has(w)) {
+        if (matchesRecipeHintToken(all, w)) s += 4;
+        continue;
+      }
+      if (matchesRecipeHintToken(head, w)) s += 48;
+      else if (matchesRecipeHintToken(all, w)) s += 14;
+    }
+    return s;
+  };
+
+  const sorted = [...recipes].sort((a, b) => score(b) - score(a));
+  const themeInHead = (r: (typeof recipes)[number]) =>
+    matchesRecipeHintToken(`${r.slug} ${r.title}`.toLowerCase(), theme);
+  const themeAnywhere = (r: (typeof recipes)[number]) =>
+    matchesRecipeHintToken(
+      `${r.slug} ${r.title} ${r.description ?? ""}`.toLowerCase(),
+      theme
+    );
+  const strong = sorted.filter(themeInHead);
+  const relaxed = sorted.filter(themeAnywhere);
+  const chosen = strong.length > 0 ? strong : relaxed.length > 0 ? relaxed : sorted;
+  return chosen.map((r) => ({ slug: r.slug, title: r.title }));
+}
+
 /** Extract recipe title from search query for catalogue - matches "paella", "spaghetti", "pasta", etc. */
 export function getRecipeTitle(q: string): string | null {
   const lower = q.trim().toLowerCase();
@@ -103,6 +187,13 @@ export function getRecipeTitle(q: string): string | null {
     (r) => r.startsWith(lower) || lower.startsWith(r.split(" ")[0]) || lower.includes(r.split(" ")[0])
   );
   return match ? match.split(" ")[0].charAt(0).toUpperCase() + match.split(" ")[0].slice(1) : null;
+}
+
+/** Distinct search terms to pass as `/for-you/recipes?ingredients=` when leaving recipe-mode catalogue search. */
+export function recipeSearchIngredientHints(q: string): string[] {
+  const expanded = expandRecipeSearchQuery(q.trim());
+  const terms = expanded.split(/\s+/).map((t) => t.trim()).filter(Boolean);
+  return [...new Set(terms)];
 }
 
 /** Expand search query for recipes - "paell" or "paella" → "paella rice saffron seafood" for better Meilisearch hits */

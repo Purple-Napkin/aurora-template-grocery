@@ -6,7 +6,7 @@ import { Carrot, Apple, Check } from "lucide-react";
 import { useCart } from "@aurora-studio/starter-core";
 import { holmesCombosForCart, holmesRecentRecipes, holmesRecipe, holmesRecipeProducts, getStoreConfig } from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "@/components/DietaryExclusionsContext";
-import { getMealToComplete } from "@/lib/cart-intelligence";
+import { getMealToComplete, rankRecipesByIngredientHints } from "@/lib/cart-intelligence";
 import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { AddToCartButton } from "@aurora-studio/starter-core";
 import { ProductImage } from "@aurora-studio/starter-core";
@@ -56,54 +56,80 @@ type RecipeData = {
   catalogSlug: string | null;
 };
 
-export function RecipeFolioCarousel() {
+export function RecipeFolioCarousel({
+  seedIngredientNames = [],
+}: {
+  /** When the cart is sparse, rank/fetch recipes as if these names were in the basket (e.g. from catalogue search via `?ingredients=`). */
+  seedIngredientNames?: string[];
+}) {
   const { items, addItem } = useCart();
   const { excludeDietary } = useDietaryExclusions();
+  const hintNames = seedIngredientNames.map((s) => s.trim()).filter(Boolean);
+  const hintKey = hintNames.join("\u0001");
   const [combos, setCombos] = useState<Combo[]>([]);
   const [index, setIndex] = useState(0);
   const [recipe, setRecipe] = useState<RecipeData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [listLoading, setListLoading] = useState(() => hintNames.length > 0);
   const [direction, setDirection] = useState<"next" | "prev" | null>(null);
   const [animating, setAnimating] = useState(false);
   const [enterFrom, setEnterFrom] = useState<"right" | "left" | null>(null);
   const [currency, setCurrency] = useState("GBP");
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (items.length === 0 && hintNames.length === 0) {
       setCombos([]);
-      setLoading(false);
+      setListLoading(false);
       return;
     }
+
     const cartNames = items.map((i) => i.name).filter(Boolean);
+    const rankNames = [...new Set([...cartNames, ...hintNames])];
     const cartIds = items.map((i) => i.recordId).filter(Boolean);
     let cancelled = false;
 
     const dietaryOpts = excludeDietary.length ? { excludeDietary } : undefined;
-    const fetchCatalogueFallback = () => {
-      holmesRecentRecipes(24, getTimeOfDay(), dietaryOpts)
+    const recipePoolLimit = hintNames.length > 0 ? 50 : 24;
+
+    const rankFromPool = (
+      recipes: Array<{ slug: string; title: string; description: string | null }>
+    ) => {
+      const meal = getMealToComplete(rankNames)?.meal ?? null;
+      if (hintNames.length > 0) {
+        return rankRecipesByIngredientHints(recipes, hintNames, meal);
+      }
+      return rankRecipesByCart(recipes, rankNames, meal);
+    };
+
+    const fetchCatalogueFallback = (): Promise<void> =>
+      holmesRecentRecipes(recipePoolLimit, getTimeOfDay(), dietaryOpts)
         .then(({ recipes }) => {
           if (cancelled) return;
           if (recipes?.length) {
-            const meal = getMealToComplete(cartNames)?.meal ?? null;
-            const ranked = rankRecipesByCart(recipes, cartNames, meal);
+            const ranked = rankFromPool(recipes);
             setCombos(ranked.map((r) => ({ slug: r.slug, title: r.title })));
             return;
           }
-          // Retry without time filter if time-filtered returned empty
-          return holmesRecentRecipes(24, undefined, dietaryOpts);
+          return holmesRecentRecipes(recipePoolLimit, undefined, dietaryOpts);
         })
         .then((res) => {
           if (!res || cancelled || !res.recipes?.length) return;
-          const meal = getMealToComplete(cartNames)?.meal ?? null;
-          const ranked = rankRecipesByCart(res.recipes, cartNames, meal);
+          const ranked = rankFromPool(res.recipes);
           setCombos(ranked.map((r) => ({ slug: r.slug, title: r.title })));
         })
         .catch(() => {});
+
+    setListLoading(true);
+    const finishList = () => {
+      if (!cancelled) setListLoading(false);
     };
 
-    if (items.length < 2) {
-      fetchCatalogueFallback();
-      return () => { cancelled = true; };
+    // URL `?ingredients=` is explicit intent — do not replace it with cart combos when the basket has 2+ lines.
+    if (items.length < 2 || hintNames.length > 0) {
+      fetchCatalogueFallback().finally(finishList);
+      return () => {
+        cancelled = true;
+      };
     }
 
     holmesCombosForCart({
@@ -121,13 +147,27 @@ export function RecipeFolioCarousel() {
           setCombos(res.combos);
           return;
         }
-        fetchCatalogueFallback();
+        return fetchCatalogueFallback();
       })
       .catch(() => {
-        if (!cancelled) fetchCatalogueFallback();
-      });
-    return () => { cancelled = true; };
-  }, [items.length, items.map((i) => i.recordId).join(","), items.map((i) => i.name).join("|"), excludeDietary.join(",")]);
+        if (!cancelled) return fetchCatalogueFallback();
+      })
+      .finally(finishList);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    items.length,
+    items.map((i) => i.recordId).join(","),
+    items.map((i) => i.name).join("|"),
+    hintKey,
+    excludeDietary.join(","),
+  ]);
+
+  useEffect(() => {
+    setIndex(0);
+  }, [hintKey]);
 
   const currentSlug = combos[index]?.slug;
 
@@ -227,7 +267,7 @@ export function RecipeFolioCarousel() {
   const totalAddable = recipeProductIds.size;
   const allAdded = totalAddable > 0 && inCartProductIds.size >= totalAddable;
 
-  if (items.length < 2) {
+  if (items.length < 2 && hintNames.length === 0) {
     return (
       <div className="max-w-2xl mx-auto py-16 px-6 text-center">
         <p className="font-folio text-2xl text-aurora-muted mb-4">
@@ -239,6 +279,14 @@ export function RecipeFolioCarousel() {
         >
           Browse catalogue
         </Link>
+      </div>
+    );
+  }
+
+  if (listLoading) {
+    return (
+      <div className="max-w-2xl mx-auto py-20 px-6 text-center font-folio text-xl text-aurora-muted animate-pulse">
+        Finding recipe ideas…
       </div>
     );
   }

@@ -16,12 +16,14 @@ export async function GET(req: NextRequest) {
     const contentPage = searchParams.get("page")?.trim();
     const contentRegion = searchParams.get("region")?.trim();
     const categorySlug = searchParams.get("categorySlug")?.trim() || undefined;
+    const catalogueSearchQuery = searchParams.get("catalogueSearchQuery")?.trim() || undefined;
     const client = createAuroraClient();
     const opts = {
       ...(excludeDietary?.length && { excludeDietary }),
       ...(contentPage && { contentPage }),
       ...(contentRegion && { contentRegion }),
       ...(categorySlug && { categorySlug }),
+      ...(catalogueSearchQuery && { catalogueSearchQuery }),
     };
     const result = await (
       client.store.homePersonalization as (
@@ -32,6 +34,7 @@ export async function GET(req: NextRequest) {
           contentPage?: string;
           contentRegion?: string;
           categorySlug?: string;
+          catalogueSearchQuery?: string;
         }
       ) => Promise<{ hero?: unknown; sections?: unknown[]; [key: string]: unknown }>
     )(sid, undefined, Object.keys(opts).length ? opts : undefined);

@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { Nav } from "./Nav";
 import { ActiveMissionBar } from "./ActiveMissionBar";
@@ -12,7 +13,9 @@ export function ConditionalLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Nav />
-      <ActiveMissionBar />
+      <Suspense fallback={null}>
+        <ActiveMissionBar />
+      </Suspense>
       <main className="min-h-[calc(100vh-3.5rem)] flex flex-col">
         <div key={pathname} className="animate-page-enter">
           {children}

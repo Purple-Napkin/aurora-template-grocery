@@ -9,25 +9,25 @@ import { AddToCartButton } from "@aurora-studio/starter-core";
 import { ProductImage } from "@aurora-studio/starter-core";
 import { formatPrice, toCents } from "@aurora-studio/starter-core";
 import { useCart } from "@aurora-studio/starter-core";
-import { useStore } from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "@/components/DietaryExclusionsContext";
 import { getStoreConfig } from "@aurora-studio/starter-core";
 import type { SearchHit } from "@aurora-studio/starter-core";
-import { getTimeOfDay } from "@aurora-studio/starter-core";
 
 interface RecipePageViewProps {
   recipeSlug: string;
   recipeTitle: string;
   currency?: string;
+  /** Use h2 for the recipe title when embedded under a page-level sr-only h1 (e.g. catalogue recipe search). */
+  embeddedTitle?: boolean;
 }
 
 export function RecipePageView({
   recipeSlug,
   recipeTitle,
   currency = "GBP",
+  embeddedTitle = false,
 }: RecipePageViewProps) {
   const { addItem } = useCart();
-  const { store } = useStore();
   const { excludeDietary } = useDietaryExclusions();
   const [recipe, setRecipe] = useState<{
     title: string;
@@ -41,12 +41,17 @@ export function RecipePageView({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const TitleTag = embeddedTitle ? "h2" : "h1";
+  const titleClass = "font-display text-2xl sm:text-3xl font-bold mb-2";
+
   useEffect(() => {
-    holmesRecipeView(recipeSlug, recipeTitle);
-  }, [recipeSlug, recipeTitle]);
+    holmesRecipeView(recipeSlug, recipe?.title ?? recipeTitle);
+  }, [recipeSlug, recipe?.title, recipeTitle]);
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
+    setError(null);
     Promise.all([
       holmesRecipe(recipeSlug),
       holmesRecipeProducts(recipeSlug, 24, {
@@ -64,6 +69,8 @@ export function RecipePageView({
             instructions: rec.instructions,
             origin_tidbit: rec.origin_tidbit,
           });
+        } else {
+          setRecipe(null);
         }
         setProducts((prodRes.products ?? []) as SearchHit[]);
         const slug = (config as { catalogTableSlug?: string })?.catalogTableSlug ?? null;
@@ -75,7 +82,9 @@ export function RecipePageView({
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [recipeSlug, excludeDietary]);
 
   const addAllToCart = () => {
@@ -102,6 +111,8 @@ export function RecipePageView({
     0
   );
 
+  const displayTitle = recipe?.title ?? recipeTitle;
+
   if (loading) {
     return (
       <div className="w-full py-16 flex flex-col items-center justify-center text-aurora-muted">
@@ -127,11 +138,7 @@ export function RecipePageView({
   return (
     <div className="w-full space-y-8">
       <header>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold mb-2">
-          {getTimeOfDay() === "evening"
-            ? `Make tonight: ${recipe?.title ?? recipeTitle}`
-            : `Make: ${recipe?.title ?? recipeTitle}`}
-        </h1>
+        <TitleTag className={titleClass}>{displayTitle}</TitleTag>
         {recipe?.origin_tidbit && (
           <p className="text-aurora-muted text-sm sm:text-base max-w-2xl italic">
             {recipe.origin_tidbit}

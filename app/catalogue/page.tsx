@@ -10,9 +10,8 @@ import { useCart } from "@aurora-studio/starter-core";
 import { useMissionAware } from "@/components/MissionAwareHome";
 import { formatPrice, toCents } from "@aurora-studio/starter-core";
 import { search, getStoreConfig } from "@aurora-studio/starter-core";
-import { getRecipeTitle, expandRecipeSearchQuery } from "@/lib/cart-intelligence";
+import { getRecipeTitle, expandRecipeSearchQuery, recipeSearchIngredientHints } from "@/lib/cart-intelligence";
 import { holmesSearch } from "@aurora-studio/starter-core";
-import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { isMissionBarDismissed } from "@/lib/mission-bar";
 import { MISSION_CATEGORY_PRIORITY, MISSION_FOCUS_QUERY } from "@/lib/mission-catalogue-config";
 import type { SearchHit } from "@aurora-studio/starter-core";
@@ -126,17 +125,15 @@ function CatalogueContent() {
   }
 
   const loadProducts = useCallback(async () => {
-    if (getRecipeTitle(q)) {
-      setHits([]);
-      setTotal(0);
-      setLoading(false);
-      return;
-    }
     setLoading(true);
     try {
       const sort = tab === "new" ? "created_at" : tab === "sale" ? "price" : "name";
       const order = tab === "new" ? "desc" : "asc";
-      const searchQ = q.trim() ? expandRecipeSearchQuery(q.trim()) : undefined;
+      const rawQ = q.trim();
+      const searchQ =
+        rawQ && getRecipeTitle(q)
+          ? expandRecipeSearchQuery(rawQ)
+          : rawQ || undefined;
       const res = await search({
         q: searchQ || undefined,
         limit,
@@ -307,6 +304,12 @@ function CatalogueContent() {
   }, []);
 
   const recipeTitle = getRecipeTitle(q);
+  const forYouRecipesFromSearchHref =
+    recipeTitle && q.trim()
+      ? `/for-you/recipes?${new URLSearchParams({
+          ingredients: recipeSearchIngredientHints(q).join(","),
+        }).toString()}`
+      : "/for-you/recipes";
 
   useEffect(() => {
     if (q.trim()) holmesSearch(q.trim());
@@ -332,7 +335,6 @@ function CatalogueContent() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 sm:py-10 px-4 sm:px-6">
-      <CatalogueStoreContentRail region="catalogue_above_grid" className="mb-6" />
       <div className="flex flex-col md:flex-row gap-6">
         {/* Sidebar filters (desktop) */}
         <CatalogueFilters
@@ -365,17 +367,21 @@ function CatalogueContent() {
 
         {/* Main content - min-w-0 lets it shrink; flex-1 lets it grow to fill space */}
         <main className="flex-1 min-w-0 w-full sm:min-w-[280px] flex flex-col">
-          <CatalogueStoreContentRail region="catalogue_below_filters" className="mb-6" />
+          {/* 1. CMS first (e.g. “Everything in one grid”) */}
+          <CatalogueStoreContentRail region="catalogue_above_grid" className="mb-6" />
 
+          {/* 2. Holmes recommendations */}
+          <div data-holmes="basket-bundle" className="mb-6 min-h-[1px]" />
+          <div data-holmes="catalogue-list" className="mb-8 min-h-[1px]" />
+
+          {/* 3. Sort + filters, then category / search results */}
           <div
             className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${recipeTitle ? "mb-4" : "mb-3"}`}
           >
             <div className="flex flex-wrap items-center gap-3">
               {recipeTitle ? (
-                <h1 className="font-display text-xl sm:text-2xl font-bold">
-                  {getTimeOfDay() === "evening"
-                    ? `Make tonight: ${recipeTitle}`
-                    : `Make: ${recipeTitle}`}
+                <h1 className="sr-only">
+                  Recipe shopping list for {recipeTitle}
                 </h1>
               ) : (
                 <h1 className="sr-only">
@@ -395,79 +401,6 @@ function CatalogueContent() {
             <SortDropdown value={tab} onChange={handleSortChange} />
           </div>
 
-          {/* Holmes injects "Complete your [Recipe]" when recipe mission + cart has items */}
-          <div data-holmes="basket-bundle" className="mb-6 min-h-[1px]" />
-
-          {/* Holmes injects personalised "Recommended for you" block */}
-          <div data-holmes="catalogue-list" className="mb-8 min-h-[1px]" />
-
-          {/* For your mission - when narrowCatalog, show mission-scoped products */}
-          {narrowCatalog && missionFocusHits.length > 0 && !recipeTitle && activeMission && (
-            <section className="mb-8">
-              <h2 className="text-sm font-semibold text-aurora-muted uppercase tracking-widest mb-4">
-                For your mission: {activeMission.label}
-              </h2>
-              <div className="grid gap-4 sm:gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {missionFocusHits.map((record) => {
-                  const id = (record.recordId ?? record.id) as string;
-                  const name = getDisplayName(record);
-                  const rawPrice = getPrice(record);
-                  const sellByWeight = Boolean(record.sell_by_weight);
-                  const unit = (record.unit as string) || "kg";
-                  const pricePerUnit = record.price_per_unit as number | undefined;
-                  const priceCents =
-                    sellByWeight && pricePerUnit != null
-                      ? Math.round(pricePerUnit * 100)
-                      : rawPrice != null
-                        ? Math.round(rawPrice * 100)
-                        : undefined;
-                  const imageUrl = getImageUrl(record);
-                  return (
-                    <div
-                      key={id}
-                      className="group p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 transition-all overflow-hidden min-w-[160px] min-h-[260px] flex flex-col"
-                    >
-                      <Link href={`/catalogue/${id}`} className="block">
-                        <div className="aspect-square rounded-lg bg-white dark:bg-white mb-3 overflow-hidden">
-                          <ProductImage
-                            src={imageUrl}
-                            className="w-full h-full"
-                            objectFit="contain"
-                            thumbnail
-                            fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
-                          />
-                        </div>
-                        <p className="font-semibold text-sm truncate group-hover:text-aurora-primary transition-colors">
-                          {name}
-                        </p>
-                        {priceCents != null && (
-                          <p className="text-sm mt-1 font-bold text-aurora-primary">
-                            {sellByWeight && pricePerUnit != null
-                              ? formatPrice(Math.round(pricePerUnit * 100), currency) + `/${unit}`
-                              : formatPrice(priceCents, currency)}
-                          </p>
-                        )}
-                      </Link>
-                      {priceCents != null && catalogSlug && (
-                        <div className="mt-auto pt-3">
-                          <AddToCartButton
-                            recordId={id}
-                            tableSlug={catalogSlug}
-                            name={name}
-                            unitAmount={priceCents}
-                            sellByWeight={sellByWeight}
-                            unit={unit}
-                            imageUrl={imageUrl}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          )}
-
           {/* Mobile filter drawer */}
           {filtersOpen && (
             <div className="md:hidden mb-6 rounded-lg border border-aurora-border overflow-hidden">
@@ -485,33 +418,58 @@ function CatalogueContent() {
             </div>
           )}
 
-          {/* Loading/empty/grid - ensure full width so layout doesn't collapse */}
-          <div className="min-h-[400px] w-full flex-1 min-w-0 flex">
-          {loading && hits.length === 0 && store ? (
-            <div className="grid gap-4 sm:gap-5 w-full transition-opacity duration-200 flex-1 min-w-0 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <ProductCardSkeleton key={i} />
-              ))}
-            </div>
-          ) : recipeTitle ? (
-            <div className="w-full flex-1">
-              <RecipePageView
-                recipeSlug={recipeTitle.toLowerCase()}
-                recipeTitle={recipeTitle}
-                currency={currency}
-              />
-            </div>
-          ) : hits.length === 0 ? (
-            <div className="w-full flex-1 flex items-start justify-center">
-            <CatalogueEmptyState
-              hasCategory={!!category}
-              hasStore={!!store}
-              categories={categoriesWithProducts}
-            />
-            </div>
-          ) : (
-            <div className="w-full flex-1 min-w-0">
-            <>
+          {/* Recipe card (non-blocking) + product grid load in parallel */}
+          <div className="min-h-[400px] w-full flex-1 min-w-0 flex flex-col gap-10">
+            {recipeTitle && (
+              <article className="w-full overflow-hidden rounded-2xl border border-aurora-border bg-aurora-surface shadow-[0_8px_30px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.04]">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-aurora-border bg-gradient-to-b from-white to-aurora-surface/90 px-5 py-4 sm:px-8 sm:py-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-aurora-muted">
+                    Recipe for your search
+                  </p>
+                  <Link
+                    href={forYouRecipesFromSearchHref}
+                    className="inline-flex items-center justify-center rounded-full border border-aurora-primary/35 bg-aurora-primary/[0.07] px-4 py-2 text-sm font-semibold text-aurora-primary transition hover:border-aurora-primary/55 hover:bg-aurora-primary/12"
+                  >
+                    Other suggestions?
+                  </Link>
+                </div>
+                <div className="px-5 py-6 sm:px-8 sm:py-8">
+                  <RecipePageView
+                    key={recipeTitle}
+                    recipeSlug={recipeTitle.toLowerCase()}
+                    recipeTitle={recipeTitle}
+                    currency={currency}
+                    embeddedTitle
+                  />
+                </div>
+              </article>
+            )}
+
+            {loading && hits.length === 0 && store ? (
+              <div className="grid gap-4 sm:gap-5 w-full transition-opacity duration-200 flex-1 min-w-0 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))}
+              </div>
+            ) : null}
+
+            {!loading && hits.length === 0 && !recipeTitle ? (
+              <div className="w-full flex-1 flex items-start justify-center">
+                <CatalogueEmptyState
+                  hasCategory={!!category}
+                  hasStore={!!store}
+                  categories={categoriesWithProducts}
+                />
+              </div>
+            ) : null}
+
+            {!loading && hits.length === 0 && recipeTitle ? (
+              <p className="text-aurora-muted text-sm">No matching products for this search yet.</p>
+            ) : null}
+
+            {hits.length > 0 ? (
+              <div className="w-full flex-1 min-w-0">
+              <>
               <div
                 className={`grid gap-4 sm:gap-5 w-full transition-opacity duration-200 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 ${
                   loading ? "opacity-50 pointer-events-none" : ""
@@ -610,9 +568,78 @@ function CatalogueContent() {
                 </div>
               )}
             </>
-            </div>
-          )}
+              </div>
+            ) : null}
           </div>
+
+          {/* 4. Mission + remaining CMS rails */}
+          {narrowCatalog && missionFocusHits.length > 0 && !recipeTitle && activeMission && (
+            <section className="mb-8">
+              <h2 className="text-sm font-semibold text-aurora-muted uppercase tracking-widest mb-4">
+                For your mission: {activeMission.label}
+              </h2>
+              <div className="grid gap-4 sm:gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                {missionFocusHits.map((record) => {
+                  const id = (record.recordId ?? record.id) as string;
+                  const name = getDisplayName(record);
+                  const rawPrice = getPrice(record);
+                  const sellByWeight = Boolean(record.sell_by_weight);
+                  const unit = (record.unit as string) || "kg";
+                  const pricePerUnit = record.price_per_unit as number | undefined;
+                  const priceCents =
+                    sellByWeight && pricePerUnit != null
+                      ? Math.round(pricePerUnit * 100)
+                      : rawPrice != null
+                        ? Math.round(rawPrice * 100)
+                        : undefined;
+                  const imageUrl = getImageUrl(record);
+                  return (
+                    <div
+                      key={id}
+                      className="group p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 transition-all overflow-hidden min-w-[160px] min-h-[260px] flex flex-col"
+                    >
+                      <Link href={`/catalogue/${id}`} className="block">
+                        <div className="aspect-square rounded-lg bg-white dark:bg-white mb-3 overflow-hidden">
+                          <ProductImage
+                            src={imageUrl}
+                            className="w-full h-full"
+                            objectFit="contain"
+                            thumbnail
+                            fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
+                          />
+                        </div>
+                        <p className="font-semibold text-sm truncate group-hover:text-aurora-primary transition-colors">
+                          {name}
+                        </p>
+                        {priceCents != null && (
+                          <p className="text-sm mt-1 font-bold text-aurora-primary">
+                            {sellByWeight && pricePerUnit != null
+                              ? formatPrice(Math.round(pricePerUnit * 100), currency) + `/${unit}`
+                              : formatPrice(priceCents, currency)}
+                          </p>
+                        )}
+                      </Link>
+                      {priceCents != null && catalogSlug && (
+                        <div className="mt-auto pt-3">
+                          <AddToCartButton
+                            recordId={id}
+                            tableSlug={catalogSlug}
+                            name={name}
+                            unitAmount={priceCents}
+                            sellByWeight={sellByWeight}
+                            unit={unit}
+                            imageUrl={imageUrl}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          <CatalogueStoreContentRail region="catalogue_below_filters" className="mt-2 mb-6" />
         </main>
       </div>
     </div>

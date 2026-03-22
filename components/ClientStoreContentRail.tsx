@@ -8,6 +8,7 @@ import {
   GroupedStoreContentSections,
   type StoreContentSection,
 } from "@/components/storeContentBlocksUi";
+import { getRecipeTitle } from "@/lib/cart-intelligence";
 
 const SYMBOLS: Record<string, string> = {
   gbp: "£",
@@ -38,6 +39,7 @@ export function ClientStoreContentRail({
 }: Props) {
   const searchParams = useSearchParams();
   const urlCategory = searchParams.get("category")?.trim() ?? "";
+  const urlSearchQ = searchParams.get("q")?.trim() ?? "";
   const { excludeDietary } = useDietaryExclusions();
   const [sections, setSections] = useState<StoreContentSection[]>([]);
   const [symbol, setSymbol] = useState("£");
@@ -74,11 +76,27 @@ export function ClientStoreContentRail({
       if (resolvedCategory) {
         url += `&categorySlug=${encodeURIComponent(resolvedCategory)}`;
       }
+      if (contentPage === "catalogue" && urlSearchQ) {
+        url += `&catalogueSearchQuery=${encodeURIComponent(urlSearchQ)}`;
+      }
       fetch(url)
         .then((r) => r.json())
         .then((d) => {
           if (cancelled) return;
-          setSections(Array.isArray(d?.sections) ? d.sections : []);
+          let next = Array.isArray(d?.sections) ? (d.sections as StoreContentSection[]) : [];
+          const recipeTheme = getRecipeTitle(urlSearchQ);
+          if (contentPage === "catalogue" && recipeTheme) {
+            next = next.filter(
+              (s) =>
+                !(
+                  s.type === "for_you" &&
+                  "title" in s &&
+                  typeof (s as { title?: string }).title === "string" &&
+                  (s as { title: string }).title.startsWith("You searched")
+                )
+            );
+          }
+          setSections(next);
         })
         .catch(() => {
           if (!cancelled) setSections([]);
@@ -90,7 +108,7 @@ export function ClientStoreContentRail({
       cancelled = true;
       document.removeEventListener("holmes:ready", load);
     };
-  }, [contentPage, contentRegion, resolvedCategory, dietaryKey]);
+  }, [contentPage, contentRegion, resolvedCategory, dietaryKey, urlSearchQ]);
 
   return (
     <GroupedStoreContentSections

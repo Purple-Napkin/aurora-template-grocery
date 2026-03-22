@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { X, RotateCcw, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
 import { useMissionAware } from "./MissionAwareHome";
 import { useCart } from "@aurora-studio/starter-core";
+import { getRecipeTitle } from "@/lib/cart-intelligence";
 import {
   MISSION_BAR_DISMISS_KEY,
   isMissionBarDismissed,
@@ -37,6 +39,8 @@ function setDismissed(value: boolean) {
 export function ActiveMissionBar() {
   const missionData = useMissionAware();
   const { items } = useCart();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [dismissed, setDismissedState] = useState(false);
   const [collapsed, setCollapsedState] = useState(false);
 
@@ -46,10 +50,13 @@ export function ActiveMissionBar() {
   }, []);
 
   const activeMission = missionData?.activeMission;
+  const catalogueRecipeSearch =
+    pathname === "/catalogue" && Boolean(getRecipeTitle(searchParams.get("q") ?? ""));
   const showBar =
     activeMission &&
     activeMission.uiHints?.showMissionBar !== false &&
-    !dismissed;
+    !dismissed &&
+    !catalogueRecipeSearch;
 
   const isBundleMission = activeMission && BUNDLE_MISSION_KEYS.has(activeMission.key);
   const hasCartItems = items.length >= 2;
