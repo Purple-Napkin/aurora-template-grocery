@@ -50,7 +50,9 @@ Copy in each vertical is tuned to retail, travel, or hotels; structure (pages / 
 3. **Manual alternative:** replace placeholders in **`init/seed.sql`** and run `psql $DATABASE_URL -v ON_ERROR_STOP=1 -f init/seed.sql` (or Studio SQL).
 4. **Meilisearch:** In Aurora Studio open **Settings → Search**. Set **Main catalog table** to your storefront catalogue table (the UI shows the tenant’s **store catalog table**, e.g. `products`). Enable **Index `catalog_product_listing` view** so hits include joined `category_slug` / `category_label` (after schema migration created the view). Then run **Sync index now** (or your usual reindex) so `search_terms` blocks and catalogue search resolve.
 
-The SQL file is idempotent: it deletes prior seed rows for that vertical’s SKUs/slugs, then inserts vendors → zones → categories → products → `store_content_blocks`.
+**Grocery** `init/seed.sql` is safe to re-run on a tenant that already has a real catalogue: it **does not delete** vendors, zones, categories, or arbitrary products. It **upserts** the template vendor/zone/category rows and demo products by fixed `id`; product rows are only updated on conflict if the existing row still has `sku LIKE 'SEED-TEMPLATE-GROCERY-%'`. It **deletes** only `store_content_blocks` whose `slug` starts with `seed-cb-grocery-`, then re-inserts those CMS rows so template copy stays aligned.
+
+Other templates (hotels, store, travel) may still use delete-then-insert patterns in their own `init/seed.sql` — read the header comment in each file.
 
 **Regenerating SQL for hotels / store / travel** lives in the full Aurora repository: from that repo’s root, with **`PEXELS_API_KEY`** in `.env` if you want live Pexels URLs (otherwise picsum fallbacks), run `scripts/template-seed/emit-seed-sql.mjs` (targets: `hotels`, `store`, `travel`, or `all`). Source modules live under `scripts/template-seed/` (`template-vertical-catalog.mjs`, `template-vertical-content-blocks.mjs`, `template-vertical-ids.mjs`).
 

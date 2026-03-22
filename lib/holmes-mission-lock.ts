@@ -5,7 +5,9 @@ export function shouldLockRecipeMissionForMissionPill(label: string, href: strin
   const l = label.toLowerCase();
   const h = href.toLowerCase();
   if (/\/recipes\/?$/i.test(h) || h === "/recipes") return true;
-  if (/\bsnack\b|top\s*up\s*essentials|under\s*£|repeat\s*last|travel|packing|face\s*wipes|adapter/i.test(l))
+  if (
+    /\bsnack\b|top[\s-]*up|under\s*£|repeat\s*last|travel|packing|face\s*wipes|adapter/i.test(l)
+  )
     return false;
   if (
     /dinner|breakfast|lunch|brunch|recipe|cook|meal|quick|healthy|fresh\s*ingredient|hosting|wine\s*\+|cheese/i.test(

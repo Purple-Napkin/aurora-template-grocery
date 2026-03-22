@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useCallback,
+  useMemo,
   useState,
   useEffect,
   type ReactNode,
@@ -99,7 +100,10 @@ export function DietaryExclusionsProvider({ children }: { children: ReactNode })
     [exclusions]
   );
 
-  const excludeDietary = mounted ? [...exclusions] : [];
+  const excludeDietary = useMemo(
+    () => (mounted ? [...exclusions] : []),
+    [mounted, exclusions]
+  );
 
   return (
     <DietaryExclusionsContext.Provider

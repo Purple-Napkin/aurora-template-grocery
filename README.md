@@ -152,6 +152,16 @@ From Aurora Studio: Settings → Apps → deploy. Uses template `aurora-template
 
 ---
 
+## Vertical theme (CSS tokens)
+
+Defined in `app/globals.css` (`:root` / `[data-theme="dark"]`). Precedence: **`NEXT_PUBLIC_ACCENT_COLOR`** → Studio **`branding.accent_color`** → template default (`app/layout.tsx` + starter-core `getResolvedStorefrontAccentForLayout`). Promo rail emphasis uses **`--aurora-promo`** (`#ea580c` light).
+
+| Token | Light | Dark |
+|-------|-------|------|
+| `--aurora-primary` | `#1fa971` | `#34d399` |
+| `--aurora-accent` | `#1fa971` | `#34d399` |
+| `--aurora-bg` | `#f4fbf7` | `#0a0f0c` |
+
 ## SDK Version
 
 Pinned versions are in `package.json` (currently **`@aurora-studio/sdk@^0.2.33`**, **`@aurora-studio/starter-core@^0.1.15`**). Holmes features (active mission, home personalization, guardrails, offers, session attribution, time-to-completion metrics) are available in SDK 0.2.7+; **cart combos, `holmesSelectCombo`, contextual `hasCombo`** require **0.2.22+**.

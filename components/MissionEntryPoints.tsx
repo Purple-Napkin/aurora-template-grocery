@@ -12,20 +12,24 @@ import {
 import { LiveSignalsRow } from "./LiveSignalsRow";
 
 const DEFAULT_MISSIONS = [
-  { label: "Cook dinner", href: "/catalogue?q=dinner", icon: UtensilsCrossed },
-  { label: "Quick snacks", href: "/catalogue?q=snacks", icon: Cookie },
-  { label: "Top up essentials", href: "/catalogue?q=essentials", icon: Sparkles },
+  { label: "Cook tonight", href: "/catalogue?q=dinner", icon: UtensilsCrossed },
+  { label: "Quick top-up", href: "/catalogue?q=essentials", icon: Sparkles },
   { label: "Healthy week", href: "/catalogue?q=healthy", icon: Salad },
-  { label: "Hosting / guests", href: "/catalogue?q=wine+cheese", icon: Wine },
+  { label: "Hosting / drinks", href: "/catalogue?q=wine+cheese", icon: Wine },
+  { label: "Travel / last minute", href: "/catalogue?q=travel+essentials", icon: MapPin },
 ] as const;
 
 const ICON_MAP: Record<string, typeof UtensilsCrossed> = {
   "Cook dinner": UtensilsCrossed,
+  "Cook tonight": UtensilsCrossed,
   "Quick snacks": Cookie,
   "Top up essentials": Sparkles,
+  "Quick top-up": Sparkles,
   "Healthy week": Salad,
   "Hosting / guests": Wine,
+  "Hosting / drinks": Wine,
   "Travel essentials": MapPin,
+  "Travel / last minute": MapPin,
   "Packing checklist": MapPin,
   "Recipe ideas": Sparkles,
   "Quick meals": UtensilsCrossed,
@@ -48,10 +52,14 @@ export function MissionEntryPoints() {
         className={`rounded-xl bg-white overflow-hidden dark:bg-aurora-surface ${CONTENT_BLOCK_CARD_SHELL}`}
       >
         <div className="p-5 sm:p-6">
-          <h2 className="text-xs font-semibold text-aurora-muted uppercase tracking-widest mb-4">
-            Start here
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-aurora-text mb-1">
+            Shop by mission
           </h2>
-          <div className="flex flex-wrap gap-3">
+          <p className="text-sm text-aurora-muted mb-5 max-w-2xl">
+            Pick a path — we&apos;ll adapt aisles and suggestions as we learn what you&apos;re trying to do. No
+            single mode is forced.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {missions.map((m) => {
               const Icon = m.icon;
               const href = m.label === "Recipe ideas" ? "/recipes" : m.href;
@@ -62,12 +70,12 @@ export function MissionEntryPoints() {
                   onClick={() => {
                     if (shouldLockRecipeMissionForMissionPill(m.label, href)) holmesMissionLockCombo();
                   }}
-                  className="flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-[#faf8f5] dark:bg-aurora-bg border border-stone-200/90 dark:border-aurora-border/80 shadow-sm hover:border-aurora-primary/40 hover:shadow-md hover:shadow-aurora-primary/5 transition-all font-medium text-aurora-text"
+                  className="group flex items-center gap-3 px-4 py-3.5 rounded-xl bg-gradient-to-br from-[#fafdfb] to-[#f0f7f3] dark:from-aurora-bg dark:to-aurora-surface border border-stone-200/90 dark:border-aurora-border/80 shadow-sm hover:border-aurora-primary/45 hover:shadow-md transition-all font-semibold text-aurora-text text-sm sm:text-base"
                 >
-                  <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-aurora-primary/10 text-aurora-primary">
+                  <span className="flex items-center justify-center w-11 h-11 rounded-xl bg-[#14532d]/10 text-[#14532d] dark:bg-aurora-primary/15 dark:text-aurora-primary group-hover:bg-[#14532d]/15 transition-colors">
                     <Icon className="w-5 h-5" />
                   </span>
-                  {m.label}
+                  <span className="text-left leading-snug">{m.label}</span>
                 </Link>
               );
             })}

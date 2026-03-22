@@ -344,18 +344,21 @@ export function RecipeIdeasRail({
   return (
     <section
       {...(withHolmesMarkers ? { "data-holmes-home-section": true } : {})}
-      className="mb-10 last:mb-0"
+      className="mb-10 last:mb-0 pt-4 border-t border-aurora-border/80"
     >
       <h2
         {...(withHolmesMarkers ? { "data-holmes-home-section-title": true } : {})}
-        className="text-xl font-bold mb-4 flex items-center gap-2"
+        className="font-display text-xl sm:text-2xl font-bold text-aurora-text mb-1 flex items-center gap-2"
       >
-        <ChefHat className="w-6 h-6 text-aurora-primary" />
-        Recipe ideas
+        <ChefHat className="w-6 h-6 text-aurora-primary shrink-0" aria-hidden />
+        Common next steps
       </h2>
+      <p className="text-sm text-aurora-muted mb-4 max-w-2xl">
+        Recipes and meal ideas — one way to complete a cooking mission, not the only path.
+      </p>
       <div
         {...(withHolmesMarkers ? { "data-holmes-home-section-grid": true } : {})}
-        className="grid grid-cols-2 items-start gap-4 sm:grid-cols-4 sm:gap-5"
+        className="grid grid-cols-2 items-start gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4"
       >
         {recipesWithProducts.map((r) => (
           <Link

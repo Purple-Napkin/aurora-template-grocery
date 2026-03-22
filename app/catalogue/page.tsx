@@ -472,7 +472,7 @@ function CatalogueContent() {
               <>
               <div
                 className={`grid gap-4 sm:gap-5 w-full transition-opacity duration-200 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 ${
-                  loading ? "opacity-50 pointer-events-none" : ""
+                  loading ? "opacity-60" : ""
                 }`}
               >
                 {hits.map((record) => {

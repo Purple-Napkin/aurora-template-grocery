@@ -5,6 +5,10 @@ import { usePathname } from "next/navigation";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
 import { RecipeIngredientsSection } from "./RecipeIngredientsSection";
 import { getStoreConfig } from "@aurora-studio/starter-core";
+import {
+  shouldFullRecipeHomeTakeover,
+  shouldMediumRecipeCompletionRail,
+} from "@/lib/intent-mission";
 export type QuickAction = { label: string; href: string };
 export type Mission = { label: string; href: string };
 export type ShoppingListTemplate = { slug: string; label: string; description?: string; searchTerms: string[] };
@@ -158,7 +162,7 @@ export function MissionAwareHero({ children }: { children: React.ReactNode }) {
   return <div data-holmes="home-hero">{children}</div>;
 }
 
-/** Sections area: RecipeIngredientsSection when in recipe mission, else default sections (server component). */
+/** Sections area: full recipe takeover only at high confidence; medium gets a compact rail below merchandising. */
 export function MissionAwareSections({ children }: { children: React.ReactNode }) {
   const data = useMissionAware();
   const [currency, setCurrency] = useState("GBP");
@@ -170,7 +174,30 @@ export function MissionAwareSections({ children }: { children: React.ReactNode }
     });
   }, []);
 
-  if (data?.mode === "recipe_mission" && data.recipeSlug && data.recipeTitle) {
+  const band = data?.activeMission?.band;
+  const missionKey = data?.activeMission?.key;
+
+  const fullTakeover =
+    data &&
+    shouldFullRecipeHomeTakeover({
+      mode: data.mode,
+      recipeSlug: data.recipeSlug,
+      recipeTitle: data.recipeTitle,
+      band,
+      missionKey,
+    });
+
+  const mediumRail =
+    data &&
+    shouldMediumRecipeCompletionRail({
+      mode: data.mode,
+      recipeSlug: data.recipeSlug,
+      recipeTitle: data.recipeTitle,
+      band,
+      missionKey,
+    });
+
+  if (fullTakeover && data.recipeSlug && data.recipeTitle) {
     return (
       <div className="space-y-10">
         <RecipeIngredientsSection
@@ -187,5 +214,22 @@ export function MissionAwareSections({ children }: { children: React.ReactNode }
       </div>
     );
   }
+
+  if (mediumRail && data.recipeSlug && data.recipeTitle) {
+    return (
+      <div className="space-y-10">
+        {children}
+        <div className="border-t border-aurora-border pt-8 rounded-2xl border border-aurora-border/80 bg-aurora-surface/60 px-4 sm:px-6 py-6">
+          <RecipeIngredientsSection
+            recipeSlug={data.recipeSlug}
+            recipeTitle={data.recipeTitle}
+            currency={currency}
+            compact
+          />
+        </div>
+      </div>
+    );
+  }
+
   return <>{children}</>;
 }

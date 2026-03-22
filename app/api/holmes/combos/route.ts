@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAuroraClient } from "@aurora-studio/starter-core";
 
-/**
- * Legacy proxy: same data as GET /api/holmes/combos but response key `recipes`.
- * Prefer `/api/holmes/combos` for new code.
- */
+/** Proxy Holmes editorial combo list (canonical). Mirrors GET /store/holmes/combos. */
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -21,8 +18,8 @@ export async function GET(req: NextRequest) {
     const client = createAuroraClient();
     const opts = excludeDietary?.length ? { excludeDietary } : undefined;
     const { combos } = await client.store.holmesRecentCombos(limit, timeOfDay, opts);
-    return NextResponse.json({ recipes: combos });
+    return NextResponse.json({ combos });
   } catch {
-    return NextResponse.json({ recipes: [] });
+    return NextResponse.json({ combos: [] });
   }
 }

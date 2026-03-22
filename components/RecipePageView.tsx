@@ -19,6 +19,8 @@ interface RecipePageViewProps {
   currency?: string;
   /** Use h2 for the recipe title when embedded under a page-level sr-only h1 (e.g. catalogue recipe search). */
   embeddedTitle?: boolean;
+  /** Medium-confidence home rail: product grid + add-all only, no long-form recipe body. */
+  compact?: boolean;
 }
 
 export function RecipePageView({
@@ -26,6 +28,7 @@ export function RecipePageView({
   recipeTitle,
   currency = "GBP",
   embeddedTitle = false,
+  compact = false,
 }: RecipePageViewProps) {
   const { addItem } = useCart();
   const { excludeDietary } = useDietaryExclusions();
@@ -41,8 +44,10 @@ export function RecipePageView({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const TitleTag = embeddedTitle ? "h2" : "h1";
-  const titleClass = "font-display text-2xl sm:text-3xl font-bold mb-2";
+  const TitleTag = embeddedTitle || compact ? "h2" : "h1";
+  const titleClass = compact
+    ? "font-display text-xl sm:text-2xl font-bold mb-1"
+    : "font-display text-2xl sm:text-3xl font-bold mb-2";
 
   useEffect(() => {
     holmesRecipeView(recipeSlug, recipe?.title ?? recipeTitle);
@@ -54,7 +59,7 @@ export function RecipePageView({
     setError(null);
     Promise.all([
       holmesRecipe(recipeSlug),
-      holmesRecipeProducts(recipeSlug, 24, {
+      holmesRecipeProducts(recipeSlug, compact ? 8 : 24, {
         excludeDietary: excludeDietary.length ? excludeDietary : undefined,
       }),
       getStoreConfig(),
@@ -85,11 +90,12 @@ export function RecipePageView({
     return () => {
       cancelled = true;
     };
-  }, [recipeSlug, excludeDietary]);
+  }, [recipeSlug, excludeDietary, compact]);
 
   const addAllToCart = () => {
     if (!catalogSlug) return;
-    for (const hit of products) {
+    const toAdd = compact ? products.slice(0, 8) : products;
+    for (const hit of toAdd) {
       const id = (hit.recordId ?? hit.id) as string;
       const name = hit.name ?? hit.title ?? String(id);
       const rawPrice = hit.price;
@@ -106,7 +112,8 @@ export function RecipePageView({
     }
   };
 
-  const totalCents = products.reduce(
+  const displayProducts = compact ? products.slice(0, 8) : products;
+  const totalCents = displayProducts.reduce(
     (s, p) => s + (toCents(p.price) ?? 0),
     0
   );
@@ -115,8 +122,12 @@ export function RecipePageView({
 
   if (loading) {
     return (
-      <div className="w-full py-16 flex flex-col items-center justify-center text-aurora-muted">
-        <div className="animate-pulse text-lg">Finding your recipe…</div>
+      <div
+        className={`w-full flex flex-col items-center justify-center text-aurora-muted ${compact ? "py-8" : "py-16"}`}
+      >
+        <div className={`animate-pulse ${compact ? "text-base" : "text-lg"}`}>
+          {compact ? "Loading suggestions…" : "Finding your recipe…"}
+        </div>
       </div>
     );
   }
@@ -136,36 +147,45 @@ export function RecipePageView({
   }
 
   return (
-    <div className="w-full space-y-8">
+    <div className={`w-full ${compact ? "space-y-4" : "space-y-8"}`}>
       <header>
+        {compact && (
+          <p className="text-xs font-semibold text-aurora-muted uppercase tracking-widest mb-2">
+            Finish this shop
+          </p>
+        )}
         <TitleTag className={titleClass}>{displayTitle}</TitleTag>
-        {recipe?.origin_tidbit && (
+        {!compact && recipe?.origin_tidbit && (
           <p className="text-aurora-muted text-sm sm:text-base max-w-2xl italic">
             {recipe.origin_tidbit}
           </p>
         )}
-        {recipe?.description && (
+        {!compact && recipe?.description && (
           <p className="mt-3 text-aurora-text text-base">{recipe.description}</p>
         )}
-        <div className="mt-4">
-          <HolmesTidbits entity={recipeSlug} entityType="recipe" />
-        </div>
+        {!compact && (
+          <div className="mt-4">
+            <HolmesTidbits entity={recipeSlug} entityType="recipe" />
+          </div>
+        )}
       </header>
 
-      {products.length > 0 && catalogSlug && (
+      {displayProducts.length > 0 && catalogSlug && (
         <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"
             onClick={addAllToCart}
-            className="px-4 py-2 rounded-lg bg-aurora-primary text-white text-sm font-semibold hover:bg-aurora-primary-dark transition-colors"
+            className={`rounded-lg bg-aurora-primary text-white font-semibold hover:bg-aurora-primary-dark transition-colors ${
+              compact ? "px-3 py-2 text-sm" : "px-4 py-2 text-sm"
+            }`}
           >
-            Add all to cart
+            {compact ? "Add missing items" : "Add all to cart"}
             {totalCents > 0 && ` – ${formatPrice(totalCents, currency)}`}
           </button>
         </div>
       )}
 
-      {recipe?.ingredients && recipe.ingredients.length > 0 && (
+      {!compact && recipe?.ingredients && recipe.ingredients.length > 0 && (
         <section>
           <h2 className="font-display text-lg font-semibold mb-3">Ingredients</h2>
           <ul className="list-disc list-inside text-aurora-text space-y-1">
@@ -180,20 +200,26 @@ export function RecipePageView({
         </section>
       )}
 
-      {recipe?.instructions && (
+      {!compact && recipe?.instructions && (
         <section>
           <h2 className="font-display text-lg font-semibold mb-3">Instructions</h2>
           <div className="text-aurora-text whitespace-pre-wrap">{recipe.instructions}</div>
         </section>
       )}
 
-      {products.length > 0 && (
+      {displayProducts.length > 0 && (
         <section>
-          <h2 className="font-display text-lg font-semibold mb-4">Products for this recipe</h2>
+          <h2 className={`font-display font-semibold mb-4 ${compact ? "text-base" : "text-lg"}`}>
+            {compact ? "Popular picks to complete your basket" : "Products for this recipe"}
+          </h2>
           <div
-            className={`grid gap-4 sm:gap-5 w-full grid-cols-[repeat(auto-fill,minmax(160px,1fr))]`}
+            className={
+              compact
+                ? "grid gap-3 sm:gap-4 w-full grid-cols-[repeat(auto-fill,minmax(140px,1fr))]"
+                : "grid gap-4 sm:gap-5 w-full grid-cols-[repeat(auto-fill,minmax(160px,1fr))]"
+            }
           >
-            {products.map((hit) => {
+            {displayProducts.map((hit) => {
               const id = (hit.recordId ?? hit.id) as string;
               const name = hit.name ?? hit.title ?? String(id);
               const priceCents = toCents(hit.price);

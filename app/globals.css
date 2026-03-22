@@ -4,41 +4,40 @@
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap");
 
-/* Retail design system - 2026 modern grocery aesthetic */
+/* Grocery vertical — fresh greens, appetite-friendly promo (P2-06 refine) */
 :root,
 [data-theme="light"] {
-  --aurora-bg: #F8FAF6;
-  --aurora-surface: #FFFFFF;
-  --aurora-surface-hover: #F1F5E8;
-  --aurora-border: #E6ECE9;
-  --aurora-muted: #6B7280;
-  --aurora-text: #111827;
-  --aurora-primary: #1FA971;
-  --aurora-primary-dark: #178C5D;
-  --aurora-accent: #1FA971;
-  --aurora-promo: #F97316;
-  --aurora-error: #EF4444;
+  --aurora-bg: #f6f7f5;
+  --aurora-surface: #ffffff;
+  --aurora-surface-hover: #eef4f0;
+  --aurora-border: #d4e0d9;
+  --aurora-muted: #4b5a52;
+  --aurora-text: #0f172a;
+  --aurora-primary: #15803d;
+  --aurora-primary-dark: #14532d;
+  --aurora-accent: #15803d;
+  --aurora-promo: #ea580c;
+  --aurora-error: #ef4444;
   --font-display: "Fraunces", "Manrope", "Plus Jakarta Sans", system-ui, serif;
   --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
-  /* Light pattern wells (must live here — a later bare :root would override [data-theme="dark"]). */
-  /* Higher alpha = fainter tile pattern (more “transparent” illustration under the wash) */
-  --pattern-cream: rgba(252, 249, 244, 0.9);
-  --pattern-warm: rgba(232, 226, 214, 0.5);
+  --pattern-cream: rgba(244, 251, 247, 0.92);
+  --pattern-warm: rgba(220, 237, 228, 0.55);
 }
 
 [data-theme="dark"] {
-  --aurora-bg: #0a0f0a;
-  --aurora-surface: rgba(30, 50, 30, 0.9);
-  --aurora-surface-hover: rgba(45, 80, 45, 0.8);
-  --aurora-border: rgba(148, 163, 148, 0.2);
-  --aurora-muted: rgba(248, 250, 248, 0.65);
-  --aurora-text: #f1f5f1;
+  --aurora-bg: #0a0f0c;
+  --aurora-surface: rgba(28, 48, 36, 0.92);
+  --aurora-surface-hover: rgba(40, 72, 52, 0.85);
+  --aurora-border: rgba(134, 180, 152, 0.2);
+  --aurora-muted: rgba(236, 253, 245, 0.65);
+  --aurora-text: #ecfdf5;
   --aurora-primary: #34d399;
   --aurora-primary-dark: #10b981;
   --aurora-accent: #34d399;
-  /* Pattern wells + Holmes blocks: dark wash so light text stays legible (was cream + white text). */
-  --pattern-cream: rgba(18, 34, 24, 0.97);
-  --pattern-warm: rgba(12, 26, 18, 0.55);
+  --aurora-promo: #fb923c;
+  --aurora-error: #f87171;
+  --pattern-cream: rgba(16, 30, 22, 0.97);
+  --pattern-warm: rgba(12, 40, 28, 0.55);
 }
 
 /* Fallback pin icon: no border/background so inline SVG is the only visible part */

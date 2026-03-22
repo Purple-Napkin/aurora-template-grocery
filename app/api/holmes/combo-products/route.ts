@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAuroraClient } from "@aurora-studio/starter-core";
 
-/**
- * Legacy proxy: accepts `recipe` or `combo` query param.
- * Prefer GET /api/holmes/combo-products?combo=...
- */
+/** Proxy Holmes combo products (canonical). Query: `combo` (or legacy `recipe`). */
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -16,15 +13,18 @@ export async function GET(req: NextRequest) {
       ? excludeDietaryRaw.split(",").map((s) => s.trim()).filter(Boolean)
       : undefined;
     if (!combo) {
-      return NextResponse.json({ error: "recipe or combo required", products: [], total: 0 }, { status: 400 });
+      return NextResponse.json(
+        { error: "combo query param required", products: [], total: 0, combo: "" },
+        { status: 400 }
+      );
     }
     const client = createAuroraClient();
     const result = await client.store.holmesComboProducts(combo, limit, {
       ...(excludeDietary?.length && { excludeDietary }),
     });
-    return NextResponse.json({ ...result, recipe: result.combo });
+    return NextResponse.json(result);
   } catch (e) {
-    const msg = e instanceof Error ? e.message : "Recipe products failed";
+    const msg = e instanceof Error ? e.message : "Combo products failed";
     return NextResponse.json({ error: msg, products: [], total: 0 }, { status: 500 });
   }
 }

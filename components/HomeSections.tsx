@@ -48,21 +48,21 @@ export async function HomeSections() {
   if (!homeData?.sections?.length) {
     return (
       <AdaptiveFeed recipes={recipesWithProducts} currency={currency}>
-        <div className="min-h-[1px]" />
+        <RecipeIdeasRail recipesWithProducts={recipesWithProducts} />
       </AdaptiveFeed>
     );
   }
 
   return (
     <AdaptiveFeed recipes={recipesWithProducts} currency={currency}>
-      <RecipeIdeasRail recipesWithProducts={recipesWithProducts} />
       <GroupedStoreContentSections
         sections={homeData.sections}
         currency={currencyCode}
         recipesWithProducts={recipesWithProducts}
         withHolmesMarkers
-        pairGridClassName="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 last:mb-0"
+        pairGridClassName="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10 last:mb-0"
       />
+      <RecipeIdeasRail recipesWithProducts={recipesWithProducts} />
     </AdaptiveFeed>
   );
 }

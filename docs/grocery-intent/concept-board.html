@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aurora Grocery — Intent UX concept board</title>
+    <style>
+      :root {
+        --green: #14532d;
+        --green-soft: #dcfce7;
+        --border: #d4e0d9;
+        --muted: #4b5a52;
+        --bg: #f6f7f5;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+        background: var(--bg);
+        color: #0f172a;
+        line-height: 1.45;
+        padding: 2rem 1rem 3rem;
+      }
+      h1 {
+        font-size: 1.75rem;
+        margin: 0 0 0.5rem;
+      }
+      .intro {
+        max-width: 52rem;
+        color: var(--muted);
+        margin-bottom: 2rem;
+      }
+      .board {
+        display: grid;
+        gap: 1.5rem;
+        max-width: 72rem;
+        margin: 0 auto;
+      }
+      @media (min-width: 900px) {
+        .board {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .panel {
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        background: #fff;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .panel header {
+        background: var(--green-soft);
+        border-bottom: 1px solid var(--border);
+        padding: 0.75rem 1rem;
+      }
+      .panel header strong {
+        display: block;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--green);
+        margin-bottom: 0.25rem;
+      }
+      .panel header span {
+        font-size: 1rem;
+        font-weight: 700;
+      }
+      .panel .body {
+        padding: 1rem 1.25rem 1.25rem;
+        font-size: 0.9rem;
+        flex: 1;
+      }
+      .panel .body ul {
+        margin: 0.5rem 0 0;
+        padding-left: 1.1rem;
+        color: var(--muted);
+      }
+      .mock-bar {
+        background: var(--green);
+        color: #ecfdf5;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+        border-radius: 6px;
+        margin-bottom: 0.75rem;
+      }
+      .mock-card {
+        border: 1px dashed var(--border);
+        border-radius: 8px;
+        padding: 0.65rem 0.85rem;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        background: #fafafa;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: #e2e8f0;
+        color: #334155;
+        padding: 0.15rem 0.45rem;
+        border-radius: 4px;
+        margin-right: 0.35rem;
+      }
+      footer.note {
+        max-width: 52rem;
+        margin: 2rem auto 0;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Aurora Grocery — intent-driven commerce</h1>
+    <p class="intro">
+      Labelled concept panels (not a single stitched screenshot). Maps to the live template: low / medium / high confidence,
+      homepage vs basket vs mode-active examples.
+    </p>
+
+    <div class="board">
+      <article class="panel">
+        <header>
+          <strong>Panel A</strong>
+          <span>Homepage — low confidence</span>
+        </header>
+        <div class="body">
+          <span class="tag">Live</span> Gentle basket prompt only; no mission bar; full merchandising feed.
+          <ul>
+            <li>Copy: “Want help with your basket?”</li>
+            <li>No “mode active” chrome</li>
+            <li>Recipes demoted to “Common next steps” at bottom</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="panel">
+        <header>
+          <strong>Panel B</strong>
+          <span>Homepage — medium confidence</span>
+        </header>
+        <div class="body">
+          <span class="tag">Live</span> Floating dismissible card (not full mode switch).
+          <div class="mock-card">
+            <strong>Looks like you might be…</strong><br />
+            Primary CTA: “Add missing essentials” → cart.<br />
+            <em>Why am I seeing this?</em> popover with summary text.
+          </div>
+          <ul>
+            <li>Optional “View recipes (optional)” link — secondary</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="panel">
+        <header>
+          <strong>Panel C</strong>
+          <span>Homepage — high confidence (cook or travel)</span>
+        </header>
+        <div class="body">
+          <span class="tag">Live</span> Full-width intent bar under nav.
+          <div class="mock-bar">
+            Shop by mission · Cook dinner — mode active<br />
+            <small style="opacity: 0.85">Based on items in your basket…</small>
+          </div>
+          <ul>
+            <li>Travel high: same bar, different copy + travel shopping list templates</li>
+            <li>Recipe rail hidden on home when travel mode is high</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="panel">
+        <header>
+          <strong>Panel D</strong>
+          <span>Basket — mission completion surface</span>
+        </header>
+        <div class="body">
+          <span class="tag">Live</span> Narrative header + sticky summary; one-tap bundle block up the page.
+          <ul>
+            <li>Cooking high: CompleteYourMeal + recipe picker inside “More meal ideas (optional)”</li>
+            <li>Travel high: recipe upsells suppressed; shopping list templates + checkout focus</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+
+    <footer class="note">
+      Open the running storefront on port 3001 to compare these panels with implemented behaviour. This HTML file is documentation
+      only; it does not load the app.
+    </footer>
+  </body>
+</html>

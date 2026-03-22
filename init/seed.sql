@@ -5,58 +5,92 @@
 --   pnpm seed:apply
 -- The API resolves your tenant from AURORA_API_KEY and substitutes __TENANT_UUID__ / __TENANT_SCHEMA__.
 --
--- Re-run safe: deletes seed SKUs/slugs for this vertical before insert.
--- Category slugs are namespaced (template-grocery-*) so we do not delete tenant "vegetables" etc.
+-- Re-run safe for tenant catalogue: we do NOT delete vendors, zones, categories, or products.
+-- Those rows are upserted by id so your own SKUs/categories are never dropped.
+-- Template demo products are only overwritten on conflict if the row still has sku LIKE 'SEED-TEMPLATE-GROCERY-%'
+-- (if you repurposed a seed row and changed the SKU, the seed script leaves your row alone).
+-- We still replace CMS rows whose slug starts with seed-cb-grocery- so template copy stays in sync.
 -- After apply: reindex Meilisearch for the tenant.
 
 BEGIN;
 
 DELETE FROM __TENANT_SCHEMA__.store_content_blocks WHERE tenant_id = '__TENANT_UUID__'::uuid AND slug LIKE 'seed-cb-grocery-%';
-DELETE FROM __TENANT_SCHEMA__.products WHERE tenant_id = '__TENANT_UUID__'::uuid AND sku LIKE 'SEED-TEMPLATE-GROCERY-%';
-DELETE FROM __TENANT_SCHEMA__.categories WHERE tenant_id = '__TENANT_UUID__'::uuid AND slug IN ('template-grocery-vegetables', 'template-grocery-beverages', 'template-grocery-snacks', 'template-grocery-bakery-items');
-DELETE FROM __TENANT_SCHEMA__.zones WHERE tenant_id = '__TENANT_UUID__'::uuid AND slug = 'template-grocery-seed-zone';
-DELETE FROM __TENANT_SCHEMA__.vendors WHERE tenant_id = '__TENANT_UUID__'::uuid AND id = 'a1000000-0000-4000-8000-000000000001'::uuid;
 
 INSERT INTO __TENANT_SCHEMA__.vendors (id, tenant_id, name, email, status, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000001'::uuid, '__TENANT_UUID__'::uuid, 'Seed — Example Grocery supply', 'seed-grocery@example.com', 'active', now(), now());
+VALUES ('a1000000-0000-4000-8000-000000000001'::uuid, '__TENANT_UUID__'::uuid, 'Seed — Example Grocery supply', 'seed-grocery@example.com', 'active', now(), now())
+ON CONFLICT (id) DO UPDATE SET
+  tenant_id = EXCLUDED.tenant_id,
+  name = EXCLUDED.name,
+  email = EXCLUDED.email,
+  status = EXCLUDED.status,
+  updated_at = now();
 
 INSERT INTO __TENANT_SCHEMA__.zones (id, tenant_id, slug, name, sort_order, vendor_id, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000002'::uuid, '__TENANT_UUID__'::uuid, 'template-grocery-seed-zone', 'Supermarket floor', 1, 'a1000000-0000-4000-8000-000000000001'::uuid, now(), now());
+VALUES ('a1000000-0000-4000-8000-000000000002'::uuid, '__TENANT_UUID__'::uuid, 'template-grocery-seed-zone', 'Supermarket floor', 1, 'a1000000-0000-4000-8000-000000000001'::uuid, now(), now())
+ON CONFLICT (id) DO UPDATE SET
+  tenant_id = EXCLUDED.tenant_id,
+  slug = EXCLUDED.slug,
+  name = EXCLUDED.name,
+  sort_order = EXCLUDED.sort_order,
+  vendor_id = EXCLUDED.vendor_id,
+  updated_at = now();
 
 INSERT INTO __TENANT_SCHEMA__.categories (id, tenant_id, name, slug, zone_id, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000011'::uuid, '__TENANT_UUID__'::uuid, 'Vegetables', 'template-grocery-vegetables', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now());
-INSERT INTO __TENANT_SCHEMA__.categories (id, tenant_id, name, slug, zone_id, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000012'::uuid, '__TENANT_UUID__'::uuid, 'Beverages', 'template-grocery-beverages', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now());
-INSERT INTO __TENANT_SCHEMA__.categories (id, tenant_id, name, slug, zone_id, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000013'::uuid, '__TENANT_UUID__'::uuid, 'Snacks & pantry', 'template-grocery-snacks', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now());
-INSERT INTO __TENANT_SCHEMA__.categories (id, tenant_id, name, slug, zone_id, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000014'::uuid, '__TENANT_UUID__'::uuid, 'Bakery', 'template-grocery-bakery-items', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now());
+VALUES
+  ('a1000000-0000-4000-8000-000000000011'::uuid, '__TENANT_UUID__'::uuid, 'Vegetables', 'template-grocery-vegetables', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now()),
+  ('a1000000-0000-4000-8000-000000000012'::uuid, '__TENANT_UUID__'::uuid, 'Beverages', 'template-grocery-beverages', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now()),
+  ('a1000000-0000-4000-8000-000000000013'::uuid, '__TENANT_UUID__'::uuid, 'Snacks & pantry', 'template-grocery-snacks', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now()),
+  ('a1000000-0000-4000-8000-000000000014'::uuid, '__TENANT_UUID__'::uuid, 'Bakery', 'template-grocery-bakery-items', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now()),
+  ('a1000000-0000-4000-8000-000000000015'::uuid, '__TENANT_UUID__'::uuid, 'Health & travel', 'template-grocery-health-travel', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now())
+ON CONFLICT (id) DO UPDATE SET
+  tenant_id = EXCLUDED.tenant_id,
+  name = EXCLUDED.name,
+  slug = EXCLUDED.slug,
+  zone_id = EXCLUDED.zone_id,
+  updated_at = now();
 
 INSERT INTO __TENANT_SCHEMA__.products (id, tenant_id, name, description, price, sku, ean, stock_quantity, image_url, category_id, vendor_id, tags, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000021'::uuid, '__TENANT_UUID__'::uuid, 'Organic Cherry Tomato 250g', 'Salads and quick sauces.', 2.49, 'SEED-TEMPLATE-GROCERY-01', '05012345678905', 80, 'https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000011'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'hero, new_arrival', now(), now());
-INSERT INTO __TENANT_SCHEMA__.products (id, tenant_id, name, description, price, sku, ean, stock_quantity, image_url, category_id, vendor_id, tags, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000022'::uuid, '__TENANT_UUID__'::uuid, 'Peeled Plum Tomatoes 4x400g', 'Passata-ready pantry line.', 3.99, 'SEED-TEMPLATE-GROCERY-02', '05012345678912', 60, 'https://images.pexels.com/photos/5945562/pexels-photo-5945562.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000011'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, NULL, now(), now());
-INSERT INTO __TENANT_SCHEMA__.products (id, tenant_id, name, description, price, sku, ean, stock_quantity, image_url, category_id, vendor_id, tags, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000023'::uuid, '__TENANT_UUID__'::uuid, 'Cloudy Apple Juice 6x330ml', 'Fridge-friendly multipack.', 4.50, 'SEED-TEMPLATE-GROCERY-03', '05012345678929', 40, 'https://images.pexels.com/photos/1435735/pexels-photo-1435735.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000012'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, NULL, now(), now());
-INSERT INTO __TENANT_SCHEMA__.products (id, tenant_id, name, description, price, sku, ean, stock_quantity, image_url, category_id, vendor_id, tags, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000024'::uuid, '__TENANT_UUID__'::uuid, 'Organic Spaghetti 500g', 'Cupboard staple for quick dinners.', 2.20, 'SEED-TEMPLATE-GROCERY-04', '05012345678936', 100, 'https://images.pexels.com/photos/143133/pexels-photo-143133.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000013'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'seasonal', now(), now());
-INSERT INTO __TENANT_SCHEMA__.products (id, tenant_id, name, description, price, sku, ean, stock_quantity, image_url, category_id, vendor_id, tags, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000025'::uuid, '__TENANT_UUID__'::uuid, 'Pasta Sauce Basilico 400g', 'Pairs with dried pasta nights.', 2.80, 'SEED-TEMPLATE-GROCERY-05', '05012345678943', 90, 'https://images.pexels.com/photos/5945562/pexels-photo-5945562.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000013'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, NULL, now(), now());
-INSERT INTO __TENANT_SCHEMA__.products (id, tenant_id, name, description, price, sku, ean, stock_quantity, image_url, category_id, vendor_id, tags, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000026'::uuid, '__TENANT_UUID__'::uuid, 'Artisan Sourdough Loaf', 'Baked daily — freeze half for toast.', 3.40, 'SEED-TEMPLATE-GROCERY-06', '05012345678950', 35, 'https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000014'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, NULL, now(), now());
+VALUES
+  ('a1000000-0000-4000-8000-000000000021'::uuid, '__TENANT_UUID__'::uuid, 'Organic Cherry Tomato 250g', 'Salads and quick sauces.', 2.49, 'SEED-TEMPLATE-GROCERY-01', '05012345678905', 80, 'https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000011'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'hero, new_arrival', now(), now()),
+  ('a1000000-0000-4000-8000-000000000022'::uuid, '__TENANT_UUID__'::uuid, 'Peeled Plum Tomatoes 4x400g', 'Passata-ready pantry line.', 3.99, 'SEED-TEMPLATE-GROCERY-02', '05012345678912', 60, 'https://images.pexels.com/photos/5945562/pexels-photo-5945562.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000011'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, NULL, now(), now()),
+  ('a1000000-0000-4000-8000-000000000023'::uuid, '__TENANT_UUID__'::uuid, 'Cloudy Apple Juice 6x330ml', 'Fridge-friendly multipack.', 4.50, 'SEED-TEMPLATE-GROCERY-03', '05012345678929', 40, 'https://images.pexels.com/photos/1435735/pexels-photo-1435735.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000012'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, NULL, now(), now()),
+  ('a1000000-0000-4000-8000-000000000024'::uuid, '__TENANT_UUID__'::uuid, 'Organic Spaghetti 500g', 'Cupboard staple for quick dinners.', 2.20, 'SEED-TEMPLATE-GROCERY-04', '05012345678936', 100, 'https://images.pexels.com/photos/143133/pexels-photo-143133.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000013'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'seasonal', now(), now()),
+  ('a1000000-0000-4000-8000-000000000025'::uuid, '__TENANT_UUID__'::uuid, 'Pasta Sauce Basilico 400g', 'Pairs with dried pasta nights.', 2.80, 'SEED-TEMPLATE-GROCERY-05', '05012345678943', 90, 'https://images.pexels.com/photos/5945562/pexels-photo-5945562.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000013'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, NULL, now(), now()),
+  ('a1000000-0000-4000-8000-000000000026'::uuid, '__TENANT_UUID__'::uuid, 'Artisan Sourdough Loaf', 'Baked daily — freeze half for toast.', 3.40, 'SEED-TEMPLATE-GROCERY-06', '05012345678950', 35, 'https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000014'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, NULL, now(), now()),
+  ('a1000000-0000-4000-8000-000000000027'::uuid, '__TENANT_UUID__'::uuid, 'SPF 50 Face Sunscreen 50ml', 'Travel-size UV protection — cabin-bag friendly.', 8.99, 'SEED-TEMPLATE-GROCERY-07', '05012345678967', 45, 'https://images.pexels.com/photos/4465121/pexels-photo-4465121.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000015'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'travel, sunscreen', now(), now()),
+  ('a1000000-0000-4000-8000-000000000028'::uuid, '__TENANT_UUID__'::uuid, 'Fabric Plasters Assorted 40 Pack', 'First-aid travel kit staple.', 2.75, 'SEED-TEMPLATE-GROCERY-08', '05012345678974', 70, 'https://images.pexels.com/photos/7269873/pexels-photo-7269873.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000015'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'travel, plasters', now(), now()),
+  ('a1000000-0000-4000-8000-000000000029'::uuid, '__TENANT_UUID__'::uuid, 'Antibacterial Hand Gel 100ml', 'Quick sanitise before snacks on the go.', 1.95, 'SEED-TEMPLATE-GROCERY-09', '05012345678981', 120, 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000015'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'travel, hand gel', now(), now()),
+  ('a1000000-0000-4000-8000-00000000002a'::uuid, '__TENANT_UUID__'::uuid, 'Semi-Skimmed Milk 2L', 'Fridge essential for tea, cereal, and top-up shops.', 1.85, 'SEED-TEMPLATE-GROCERY-10', '05012345678998', 200, 'https://images.pexels.com/photos/416471/pexels-photo-416471.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000012'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'essentials, top_up', now(), now()),
+  ('a1000000-0000-4000-8000-00000000002b'::uuid, '__TENANT_UUID__'::uuid, 'Free-Range Eggs Large 6', 'Breakfast and baking staple.', 2.10, 'SEED-TEMPLATE-GROCERY-11', '05012345679001', 150, 'https://images.pexels.com/photos/162712/egg-white-food-protein-162712.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000013'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'essentials, top_up', now(), now())
+ON CONFLICT (id) DO UPDATE SET
+  tenant_id = EXCLUDED.tenant_id,
+  name = EXCLUDED.name,
+  description = EXCLUDED.description,
+  price = EXCLUDED.price,
+  sku = EXCLUDED.sku,
+  ean = EXCLUDED.ean,
+  stock_quantity = EXCLUDED.stock_quantity,
+  image_url = EXCLUDED.image_url,
+  category_id = EXCLUDED.category_id,
+  vendor_id = EXCLUDED.vendor_id,
+  tags = EXCLUDED.tags,
+  updated_at = now()
+WHERE __TENANT_SCHEMA__.products.sku LIKE 'SEED-TEMPLATE-GROCERY-%';
 
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
 VALUES ('b2000001-0000-4000-8000-000000000001'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-main-products', 0, 'home', 'home_main_feed', 'full', 'product_list', 'Pantry picks we stock for busy weeks', 'Organic pasta, passata-ready tomatoes, rice, and oil — one pass down the middle aisles.', NULL, NULL, NULL, NULL, 'a1000000-0000-4000-8000-000000000024,a1000000-0000-4000-8000-000000000025,a1000000-0000-4000-8000-000000000022,a1000000-0000-4000-8000-000000000021,a1000000-0000-4000-8000-000000000023,a1000000-0000-4000-8000-000000000026', NULL, NULL, NULL, NULL, NULL, now(), now());
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
-VALUES ('b2000002-0000-4000-8000-000000000002'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-main-search', 1, 'home', 'home_main_feed', 'full', 'search_terms', 'Brands your household already trusts', 'One search pulls a mixed shelf — swap terms anytime in Studio.', NULL, NULL, NULL, NULL, NULL, 'Nescafe, Barilla, Weetabix, India Gate, Pompeian, Kelloggs', NULL, NULL, NULL, NULL, now(), now());
+VALUES ('b200001c-0000-4000-8000-00000000001c'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-travel-topup', 1, 'home', 'home_main_feed', 'full', 'product_list', 'Travel last-minute & everyday top-up', 'Sunscreen, plasters, hand gel for trip mode; milk and eggs for quick essentials — demo SKUs for intent-driven merchandising.', NULL, NULL, NULL, NULL, 'a1000000-0000-4000-8000-000000000027,a1000000-0000-4000-8000-000000000028,a1000000-0000-4000-8000-000000000029,a1000000-0000-4000-8000-00000000002a,a1000000-0000-4000-8000-00000000002b', NULL, NULL, NULL, NULL, NULL, now(), now());
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
-VALUES ('b2000003-0000-4000-8000-000000000003'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-main-blurb', 2, 'home', 'home_main_feed', 'full', 'blurb', 'Shop the way you cook', NULL, 'Filter by aisle, dietary needs, or mission — then let Holmes suggest bundles and swaps from what is in stock. Your cart and For You page stay in sync so you never double-buy the heavy items.', NULL, '/catalogue', 'Browse full catalogue', NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
+VALUES ('b2000002-0000-4000-8000-000000000002'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-main-search', 2, 'home', 'home_main_feed', 'full', 'search_terms', 'Brands your household already trusts', 'One search pulls a mixed shelf — swap terms anytime in Studio.', NULL, NULL, NULL, NULL, NULL, 'Nescafe, Barilla, Weetabix, India Gate, Pompeian, Kelloggs, sunscreen, plasters, travel', NULL, NULL, NULL, NULL, now(), now());
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
-VALUES ('b2000004-0000-4000-8000-000000000004'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-main-half-a', 3, 'home', 'home_main_feed', 'half', 'blurb', 'Fresh produce first', NULL, 'Tomatoes, herbs, and loose veg pair with the organic and passata lines in our pantry rail — build a simple sauce night without a second trip.', NULL, '/catalogue?category=template-grocery-vegetables', 'Vegetables', NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
+VALUES ('b2000003-0000-4000-8000-000000000003'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-main-blurb', 3, 'home', 'home_main_feed', 'full', 'blurb', 'Adaptive shopping, not just recipes', NULL, 'The storefront infers missions from your basket, search, time, and context — then clears clutter at high confidence. Recipes are one optional path; travel kits and top-ups get the same treatment.', NULL, '/catalogue', 'Browse full catalogue', NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
-VALUES ('b2000005-0000-4000-8000-000000000005'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-main-half-b', 4, 'home', 'home_main_feed', 'half', 'blurb', 'Breakfast in two taps', NULL, 'Cereals plus Nescafe and creamer-style lines show up when you search from For You — add milk or juice from Dairy and Beverages in one pass.', NULL, '/for-you', 'Open For You', NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
+VALUES ('b2000004-0000-4000-8000-000000000004'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-main-half-a', 4, 'home', 'home_main_feed', 'half', 'blurb', 'Fresh produce first', NULL, 'Tomatoes, herbs, and loose veg pair with the organic and passata lines in our pantry rail — build a simple sauce night without a second trip.', NULL, '/catalogue?category=template-grocery-vegetables', 'Vegetables', NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
-VALUES ('b2000006-0000-4000-8000-000000000006'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-main-image', 5, 'home', 'home_main_feed', 'full', 'image_blurb', 'This week''s price drops', NULL, 'Replace this placeholder image with your weekly deals banner. Tie the CTA to live offers so seasonal produce and bundle SKUs get the spotlight.', 'https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', '/offers', 'See current offers', NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
+VALUES ('b2000005-0000-4000-8000-000000000005'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-main-half-b', 5, 'home', 'home_main_feed', 'half', 'blurb', 'Breakfast in two taps', NULL, 'Cereals plus Nescafe and creamer-style lines show up when you search from For You — add milk or juice from Dairy and Beverages in one pass.', NULL, '/for-you', 'Open For You', NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
+INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
+VALUES ('b2000006-0000-4000-8000-000000000006'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-main-image', 6, 'home', 'home_main_feed', 'full', 'image_blurb', 'This week''s price drops', NULL, 'Replace this placeholder image with your weekly deals banner. Tie the CTA to live offers so seasonal produce and bundle SKUs get the spotlight.', 'https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', '/offers', 'See current offers', NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
 VALUES ('b2000007-0000-4000-8000-000000000007'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-below-well', 1, 'home', 'home_below_context_well', 'full', 'blurb', 'Smart cart remembers weight', NULL, 'Slot reserved above the feed: use it for delivery cut-off times, minimum-order nudges, or weather-based substitutions. Not rendered on the home template yet — available via API with page=home, region=home_below_context_well.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
@@ -88,7 +122,7 @@ VALUES ('b2000014-0000-4000-8000-000000000014'::uuid, '__TENANT_UUID__'::uuid, '
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
 VALUES ('b2000015-0000-4000-8000-000000000015'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-checkout-sidebar', 1, 'checkout', 'checkout_sidebar', 'full', 'blurb', 'Need help?', NULL, 'Chat opens from the Holmes bubble. For order changes, reference your confirmation email. Sidebar CMS is ideal for support hours and FAQ links.', NULL, '/about', 'Contact & FAQs', NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
-VALUES ('b2000016-0000-4000-8000-000000000016'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-cart-above', 1, 'cart', 'cart_above_lines', 'full', 'blurb', 'Review before you pay', NULL, 'Quantities sync with For You and missions. Remove chilled items you no longer need — pickers pack in route order to keep temperature stable.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
+VALUES ('b2000016-0000-4000-8000-000000000016'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-cart-above', 1, 'cart', 'cart_above_lines', 'full', 'blurb', 'Mission completion', NULL, 'Your basket is framed as finishing what you started — bundles and suggestions stay relevant to inferred intent. Quantities sync with the rest of the shop.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
 VALUES ('b2000017-0000-4000-8000-000000000017'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-cart-below-bundle', 1, 'cart', 'cart_below_bundle', 'full', 'blurb', 'Complete the meal', NULL, 'Holmes may suggest a bundle under your lines. This block is for static cross-sell copy (e.g. Add bread for soup night).', NULL, '/catalogue?category=template-grocery-bakery-items', 'Bakery aisle', NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)

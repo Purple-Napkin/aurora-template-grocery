@@ -8,6 +8,8 @@ import { ChefHat } from "lucide-react";
 import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { useStore } from "@aurora-studio/starter-core";
 import { RecipeProductCollage } from "./RecipeProductCollage";
+import { useMissionAware } from "@/components/MissionAwareHome";
+import { isTravelLikeMission } from "@/lib/intent-mission";
 import {
   BlurbBlock,
   ContentBlockProductCard,
@@ -88,6 +90,10 @@ export function AdaptiveFeed({
   const clientTimeOfDay = getTimeOfDay();
   const timeOfDay = holmesData?.timeOfDay ?? clientTimeOfDay;
   const currencyCode = currency.length >= 3 ? currency.toUpperCase() : "GBP";
+  const missionAware = useMissionAware();
+  const suppressRecipeForward =
+    missionAware?.activeMission?.band === "high" &&
+    isTravelLikeMission(missionAware.activeMission.key);
 
   useEffect(() => {
     const el = ref.current;
@@ -144,7 +150,7 @@ export function AdaptiveFeed({
               <p className="text-sm text-aurora-muted mt-0.5">{sec.subtitle}</p>
             )}
           </div>
-          <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-4 sm:gap-5">
+          <div className="grid grid-cols-2 items-start gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
             {sec.cards.map((card, j) => (
               <Link
                 key={j}
@@ -180,12 +186,12 @@ export function AdaptiveFeed({
       return (
         <section key={key} className="space-y-3 min-w-0">
           <div className="flex items-baseline justify-between gap-2">
-            <h2 className="text-lg font-bold text-aurora-text">{sec.title}</h2>
+            <h2 className="font-display text-lg sm:text-xl font-bold text-aurora-text">{sec.title}</h2>
             {trustSignal && (
-              <span className="text-xs text-aurora-muted font-medium">{trustSignal}</span>
+              <span className="text-xs text-aurora-muted font-medium shrink-0">{trustSignal}</span>
             )}
           </div>
-          <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-4 sm:gap-5">
+          <div className="grid grid-cols-2 items-start gap-3 sm:grid-cols-3 lg:grid-cols-5 sm:gap-4">
             {sec.products.map((prod) => (
               <ContentBlockProductCard
                 key={prod.id}
@@ -208,7 +214,7 @@ export function AdaptiveFeed({
               <span className="text-xs text-aurora-muted font-medium">{trustSignal}</span>
             )}
           </div>
-          <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-4 sm:gap-5">
+          <div className="grid grid-cols-2 items-start gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
             {sec.cards.map((card, j) => (
               <Link
                 key={j}
@@ -245,44 +251,49 @@ export function AdaptiveFeed({
 
   const grouped = groupHalfWidthSections(sections as StoreContentSection[]);
 
+  const recipeHolmesRail =
+    recipes.length > 0 && !suppressRecipeForward ? (
+      <section className="space-y-3 pt-6 border-t border-aurora-border/80">
+        <h2 className="font-display text-lg sm:text-xl font-bold text-aurora-text flex items-center gap-2">
+          <ChefHat className="w-5 h-5 text-aurora-primary shrink-0" aria-hidden />
+          Common next steps
+        </h2>
+        <p className="text-sm text-aurora-muted max-w-2xl">
+          Recipes — optional inspiration when you&apos;re cooking, not the main shop story.
+        </p>
+        <div className="grid grid-cols-2 items-start gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
+          {recipes.slice(0, 4).map((r) => (
+            <Link
+              key={r.id}
+              href={`/recipes/${encodeURIComponent(r.slug)}`}
+              className={`flex flex-col overflow-hidden rounded-xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
+            >
+              <div className={CONTENT_BLOCK_IMAGE_WELL}>
+                <RecipeProductCollage
+                  imageUrls={r.productImageUrls ?? []}
+                  className="absolute inset-0 h-full w-full"
+                />
+              </div>
+              <div className={CONTENT_BLOCK_CARD_FOOTER_BAND}>
+                <p className="line-clamp-2 text-sm font-semibold leading-snug text-stone-900">
+                  {r.title}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+    ) : null;
+
   return (
     <div ref={ref} data-holmes="home-sections" className="py-6">
       <div className="space-y-10">
-        {recipes.length > 0 && (
-          <section className="space-y-3">
-            <h2 className="text-lg font-bold text-aurora-text flex items-center gap-2">
-              <ChefHat className="w-5 h-5 text-aurora-primary" />
-              Recipe ideas
-            </h2>
-            <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-4 sm:gap-5">
-              {recipes.slice(0, 4).map((r) => (
-                <Link
-                  key={r.id}
-                  href={`/recipes/${encodeURIComponent(r.slug)}`}
-                  className={`flex flex-col overflow-hidden rounded-xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
-                >
-                  <div className={CONTENT_BLOCK_IMAGE_WELL}>
-                    <RecipeProductCollage
-                      imageUrls={r.productImageUrls ?? []}
-                      className="absolute inset-0 h-full w-full"
-                    />
-                  </div>
-                  <div className={CONTENT_BLOCK_CARD_FOOTER_BAND}>
-                    <p className="line-clamp-2 text-sm font-semibold leading-snug text-stone-900">
-                      {r.title}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
         {grouped.map((g, gi) => {
           if (g.mode === "pair") {
             return (
               <div
                 key={`pair-${gi}`}
-                className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch"
+                className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch"
               >
                 {g.secs.map((sec, si) =>
                   renderHolmesSection(sec as Section, `p-${gi}-${si}`)
@@ -292,6 +303,7 @@ export function AdaptiveFeed({
           }
           return renderHolmesSection(g.sec as Section, `f-${gi}`);
         })}
+        {recipeHolmesRail}
       </div>
     </div>
   );

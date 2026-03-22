@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { Nav } from "./Nav";
 import { ActiveMissionBar } from "./ActiveMissionBar";
+import { IntentPresenceBar } from "./intent/IntentPresenceBar";
 import { Footer } from "./Footer";
 import { FooterTip } from "./FooterTip";
 
@@ -13,6 +14,9 @@ export function ConditionalLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Nav />
+      <Suspense fallback={null}>
+        <IntentPresenceBar />
+      </Suspense>
       <Suspense fallback={null}>
         <ActiveMissionBar />
       </Suspense>

@@ -10,6 +10,7 @@ import {
   MissionAwareHero,
   MissionAwareSections,
 } from "@/components/MissionAwareHome";
+import { IntentAssistancePanel } from "@/components/intent/IntentAssistancePanel";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,7 @@ export default async function HomePage() {
         </div>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-0">
+          <IntentAssistancePanel />
           <HolmesContextualWell />
 
           {/* Holmes injects "Complete your [Recipe]" when recipe mission + cart has items */}

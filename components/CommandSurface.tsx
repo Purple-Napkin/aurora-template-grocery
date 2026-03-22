@@ -8,7 +8,6 @@ import {
   useStore,
   useAuth,
   useVerticalProfile,
-  verticalMissionSubtitle,
 } from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
 import { getRecipeSuggestion } from "@/lib/cart-intelligence";
@@ -18,6 +17,7 @@ import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { holmesMissionLockCombo } from "@aurora-studio/starter-core";
 import { shouldLockRecipeMissionForMissionPill } from "@/lib/holmes-mission-lock";
 import { CONTENT_BLOCK_CARD_SHELL } from "./ContentBlockProductCard";
+import { shouldFullRecipeHomeTakeover } from "@/lib/intent-mission";
 import {
   fullWidthHeroBandClass,
   splitHeroFallbackTitleClass,
@@ -151,7 +151,7 @@ export function CommandSurface({
   const { store } = useStore();
   const { user } = useAuth();
   const { excludeDietary } = useDietaryExclusions();
-  const { dietaryFilteringEnabled, verticalProfile } = useVerticalProfile();
+  const { dietaryFilteringEnabled } = useVerticalProfile();
   const excludeForSearch = dietaryFilteringEnabled ? excludeDietary : [];
   const homeData = useMissionAware();
   const timeOfDay = getTimeOfDay();
@@ -168,7 +168,14 @@ export function CommandSurface({
   const quickActions = rawActions.filter((a) => !a.authOnly || user);
 
   const isRecipeMission =
-    homeData?.mode === "recipe_mission" && homeData.recipeSlug && homeData.recipeTitle;
+    !!homeData &&
+    shouldFullRecipeHomeTakeover({
+      mode: homeData.mode,
+      recipeSlug: homeData.recipeSlug,
+      recipeTitle: homeData.recipeTitle,
+      band: homeData.activeMission?.band,
+      missionKey: homeData.activeMission?.key,
+    });
 
   const missionChipClass =
     "inline-flex min-h-[2.75rem] items-center gap-2.5 px-5 py-3 rounded-xl bg-[#faf8f5] dark:bg-aurora-bg border border-stone-200/90 dark:border-aurora-border shadow-sm hover:border-aurora-primary/40 hover:shadow-md transition-all text-sm font-semibold text-aurora-text";
@@ -188,10 +195,14 @@ export function CommandSurface({
           </div>
         )}
         <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-aurora-text mb-3">
-          {isRecipeMission ? "Or something else?" : `How can we assist you this ${timeOfDay}?`}
+          {isRecipeMission
+            ? "Or something else?"
+            : "Shopping that adapts to what you’re trying to get done"}
         </h1>
       <p className="text-aurora-muted text-base sm:text-lg mb-6 font-medium">
-        {isRecipeMission ? "Let's get you there fast" : verticalMissionSubtitle(verticalProfile)}
+        {isRecipeMission
+          ? "Let’s get you there fast"
+          : "We infer your mission from your basket, search, and context—then clear the noise so you can checkout faster."}
       </p>
 
         {/* Primary: mission quick actions first */}
@@ -213,20 +224,10 @@ export function CommandSurface({
                   className={missionChipClass}
                 >
                   <Icon className="h-4 w-4 shrink-0 text-aurora-primary" />
-                  {action.label}
+                  {action.label === "Recipe ideas" ? "Meal ideas (optional)" : action.label}
                 </Link>
               );
             })}
-            {!quickActions.some((a) => a.label === "Recipe ideas") && (
-              <Link
-                href="/recipes"
-                onClick={() => holmesMissionLockCombo()}
-                className={missionChipClass}
-              >
-                <Sparkles className="h-4 w-4 shrink-0 text-aurora-primary" />
-                Recipe ideas
-              </Link>
-            )}
           </div>
         </div>
 
@@ -241,7 +242,7 @@ export function CommandSurface({
               data-command-search
             >
               <SearchDropdown
-                placeholder="milk, pasta, bananas…"
+                placeholder="What do you need today?"
                 vendorId={store.id}
                 fullWidth
                 variant="embedded"
