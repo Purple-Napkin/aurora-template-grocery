@@ -24,9 +24,12 @@ export async function HeroCommandSurface() {
   const brandingLogo = config?.branding?.logo_url?.trim() || null;
   const heroOverride = sh?.image_url?.trim() || null;
   const displayUrl = heroOverride || brandingLogo || envLogo;
-  const heroLayout = sh?.layout === "full_width" ? "full_width" : "split";
+  const layoutNorm =
+    typeof sh?.layout === "string" ? sh.layout.trim().toLowerCase().replace(/-/g, "_") : "";
+  const heroLayout = layoutNorm === "full_width" ? "full_width" : "split";
+  const sizeNorm = typeof sh?.size === "string" ? sh.size.trim().toLowerCase() : "";
   const heroSize =
-    sh?.size === "compact" || sh?.size === "tall" ? sh.size : "default";
+    sizeNorm === "compact" || sizeNorm === "tall" ? sizeNorm : "default";
 
   return (
     <CommandSurface
