@@ -19,6 +19,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { ProductImage } from "@aurora-studio/starter-core";
+import { CONTENT_BLOCK_IMAGE_WELL } from "@/components/ContentBlockProductCard";
 
 /** Map category slug to icon when no image provided */
 function getCategoryIcon(slug: string): LucideIcon {
@@ -125,22 +126,21 @@ export function CategoryCards() {
         <Link
           key={cat.slug}
           href={`/catalogue?category=${encodeURIComponent(cat.slug)}`}
-          className="group block rounded-xl overflow-hidden bg-aurora-surface border border-aurora-border hover:border-aurora-primary/60 hover:shadow-lg hover:shadow-aurora-primary/10 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+          className="group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white border border-aurora-border hover:border-aurora-primary/60 hover:shadow-lg hover:shadow-aurora-primary/10 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
         >
-          <div
-            className={`aspect-square relative bg-gradient-to-br ${gradientForSlug(cat.slug)}`}
-          >
+          <div className={CONTENT_BLOCK_IMAGE_WELL}>
             {cat.image_url ? (
-              <div className="absolute inset-0">
-                <ProductImage
-                  src={cat.image_url}
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                  fallback={null}
-                />
-              </div>
+              <ProductImage
+                src={cat.image_url}
+                className="absolute inset-0 h-full w-full opacity-95 group-hover:opacity-100 transition-opacity"
+                objectFit="cover"
+                fallback={null}
+              />
             ) : (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="opacity-40 group-hover:opacity-60 transition-opacity">
+              <div
+                className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br ${gradientForSlug(cat.slug)}`}
+              >
+                <span className="opacity-50 group-hover:opacity-70 transition-opacity">
                   {(() => {
                     const Icon = getCategoryIcon(cat.slug);
                     return <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-white" strokeWidth={1.5} aria-hidden />;
@@ -148,11 +148,9 @@ export function CategoryCards() {
                 </span>
               </div>
             )}
-            <div className="absolute inset-0 flex items-end p-2 sm:p-3 bg-gradient-to-t from-black/50 via-transparent to-transparent">
-              <span className="font-semibold text-xs sm:text-sm text-white drop-shadow-md line-clamp-2">
-                {cat.name}
-              </span>
-            </div>
+          </div>
+          <div className="p-2 sm:p-3 border-t border-stone-200/90">
+            <span className="font-semibold text-xs sm:text-sm text-stone-900 line-clamp-2">{cat.name}</span>
           </div>
         </Link>
       ))}

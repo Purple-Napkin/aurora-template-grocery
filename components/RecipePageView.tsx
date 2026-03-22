@@ -12,6 +12,10 @@ import { useCart } from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "@/components/DietaryExclusionsContext";
 import { getStoreConfig } from "@aurora-studio/starter-core";
 import type { SearchHit } from "@aurora-studio/starter-core";
+import {
+  CONTENT_BLOCK_CARD_SHELL,
+  CONTENT_BLOCK_IMAGE_WELL,
+} from "@/components/ContentBlockProductCard";
 
 interface RecipePageViewProps {
   recipeSlug: string;
@@ -227,13 +231,14 @@ export function RecipePageView({
               return (
                 <div
                   key={id}
-                  className="p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition-all overflow-hidden min-w-[160px] min-h-[280px] flex flex-col"
+                  className={`group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white min-w-[160px] min-h-[280px] ${CONTENT_BLOCK_CARD_SHELL}`}
                 >
-                  <Link href={`/catalogue/${id}`} className="block">
-                    <div className="aspect-square rounded-lg bg-aurora-surface-hover mb-3 overflow-hidden">
+                  <Link href={`/catalogue/${id}`} className="block shrink-0">
+                    <div className={CONTENT_BLOCK_IMAGE_WELL}>
                       <ProductImage
                         src={imageUrl}
-                        className="w-full h-full"
+                        className="absolute inset-0 h-full w-full"
+                        objectFit="cover"
                         thumbnail
                         fallback={
                           <div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">
@@ -242,26 +247,30 @@ export function RecipePageView({
                         }
                       />
                     </div>
-                    <p className="font-semibold text-sm sm:text-base truncate group-hover:text-aurora-primary transition-colors">
-                      {name}
-                    </p>
-                    {priceCents != null && (
-                      <p className="text-sm mt-1 font-bold text-aurora-primary">
-                        {formatPrice(priceCents, currency)}
-                      </p>
-                    )}
                   </Link>
-                  {priceCents != null && catalogSlug && (
-                    <div className="mt-auto pt-3">
-                      <AddToCartButton
-                        recordId={id}
-                        tableSlug={catalogSlug}
-                        name={name}
-                        unitAmount={priceCents}
-                        imageUrl={imageUrl}
-                      />
-                    </div>
-                  )}
+                  <div className="flex flex-col flex-1 px-3 sm:px-4 pt-3 pb-4 border-t border-stone-200/90">
+                    <Link href={`/catalogue/${id}`} className="block min-w-0">
+                      <p className="font-semibold text-sm sm:text-base truncate group-hover:text-aurora-primary transition-colors">
+                        {name}
+                      </p>
+                      {priceCents != null && (
+                        <p className="text-sm mt-1 font-bold text-aurora-primary">
+                          {formatPrice(priceCents, currency)}
+                        </p>
+                      )}
+                    </Link>
+                    {priceCents != null && catalogSlug && (
+                      <div className="mt-auto pt-3">
+                        <AddToCartButton
+                          recordId={id}
+                          tableSlug={catalogSlug}
+                          name={name}
+                          unitAmount={priceCents}
+                          imageUrl={imageUrl}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}

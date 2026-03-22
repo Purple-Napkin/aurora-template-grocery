@@ -25,8 +25,8 @@ export type ContentBlockProduct = {
 };
 
 /**
- * `split` = cream text band + stone-toned meta. `radial` = cutout PNG path + aurora-toned meta.
- * Image well is always plain white (light & dark) for consistent, accurate packshots.
+ * `split` = stone-toned meta on white. `radial` = cutout PNG path + aurora-toned meta.
+ * Image well: white, top-bleed band with `object-cover` from the top (see `CONTENT_BLOCK_IMAGE_WELL`).
  */
 type CardLayoutMode = "radial" | "split";
 
@@ -99,13 +99,13 @@ const cardShell =
 /** Shared chrome for product grid + adaptive/inspiration link cards (split-style). */
 export const CONTENT_BLOCK_CARD_SHELL = cardShell;
 
-/** Image tile: white well, `object-contain` in callers. */
+/** Top image band: full card width, rounded with card via `overflow-hidden`; images use `object-cover` + top anchor. */
 export const CONTENT_BLOCK_IMAGE_WELL =
-  "relative isolate block aspect-square w-full shrink-0 overflow-hidden bg-white dark:bg-white";
+  "relative isolate block aspect-[5/3] w-full shrink-0 overflow-hidden bg-white dark:bg-white [&_img]:!object-top";
 
 /** Bottom band matching split `ContentBlockProductCard` meta area. */
 export const CONTENT_BLOCK_CARD_FOOTER_BAND =
-  "border-t border-stone-200/90 bg-[#faf8f5] p-3 sm:p-4";
+  "border-t border-stone-200/90 bg-white dark:bg-white p-3 sm:p-4";
 
 function relatedSearchQuery(prod: ContentBlockProduct): string {
   const fromCat = prod.category?.trim().split(/\s+/)[0];
@@ -248,8 +248,7 @@ export function ContentBlockProductCard({
     src: prod.image_url,
     alt: prod.name,
     baseUrl: process.env.NEXT_PUBLIC_APP_URL,
-    /** Letterbox on white instead of cover-crop so tiles stay one clean white field (no grey “stage” bands). */
-    objectFit: "contain" as const,
+    objectFit: "cover" as const,
     thumbnail: true as const,
     fallback: (
       <span className="flex h-full min-h-[5rem] w-full items-center justify-center text-aurora-muted text-2xl font-light">
@@ -264,7 +263,7 @@ export function ContentBlockProductCard({
     return (
       <div
         {...cardMarkers}
-        className={`group flex flex-col overflow-hidden rounded-xl bg-white ${cardShell}`}
+        className={`group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white ${cardShell}`}
       >
         <Link href={pdp} {...imgMarkers} className={CONTENT_BLOCK_IMAGE_WELL}>
           {prod.on_sale ? <span className="sr-only">On sale. </span> : null}
@@ -274,7 +273,7 @@ export function ContentBlockProductCard({
           />
           {prod.on_sale ? <ProductSaleBadge /> : null}
         </Link>
-        <div className="flex flex-col border-t border-stone-200/90 bg-[#faf8f5] p-3 sm:p-4">
+        <div className="flex flex-col border-t border-stone-200/90 bg-white dark:bg-white p-3 sm:p-4">
           <Link href={pdp} className="block min-w-0 text-stone-900">
             <TitlePrice prod={prod} currency={currency} titleClassName="text-stone-900" />
           </Link>
@@ -287,7 +286,7 @@ export function ContentBlockProductCard({
   return (
     <div
       {...cardMarkers}
-      className={`group flex flex-col overflow-hidden rounded-xl bg-aurora-surface ${cardShell}`}
+      className={`group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white ${cardShell}`}
     >
       <Link href={pdp} {...imgMarkers} className={CONTENT_BLOCK_IMAGE_WELL}>
         {prod.on_sale ? <span className="sr-only">On sale. </span> : null}
@@ -297,7 +296,7 @@ export function ContentBlockProductCard({
         />
         {prod.on_sale ? <ProductSaleBadge /> : null}
       </Link>
-      <div className="flex flex-col border-t border-aurora-border/40 p-3 sm:p-4">
+      <div className="flex flex-col border-t border-stone-200/90 bg-white dark:bg-white p-3 sm:p-4">
         <Link href={pdp} className="block min-w-0">
           <TitlePrice prod={prod} currency={currency} />
         </Link>

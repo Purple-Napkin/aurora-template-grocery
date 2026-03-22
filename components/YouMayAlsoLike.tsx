@@ -4,6 +4,10 @@ import { formatPrice, toCents } from "@aurora-studio/starter-core";
 import { AddToCartButton } from "@aurora-studio/starter-core";
 import { ProductImage } from "@aurora-studio/starter-core";
 import { getImageUrlFromRecord } from "@aurora-studio/starter-core";
+import {
+  CONTENT_BLOCK_CARD_SHELL,
+  CONTENT_BLOCK_IMAGE_WELL,
+} from "@/components/ContentBlockProductCard";
 
 /** Aurora stores prices as decimal. Use toCents for display/cart. */
 function getPrice(record: Record<string, unknown>): number | undefined {
@@ -85,35 +89,40 @@ export async function YouMayAlsoLike({
           return (
             <div
               key={id}
-              className="pattern-well p-4 rounded-component border border-aurora-border flex flex-col"
+              className={`flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
             >
-              <Link href={`/catalogue/${id}`} className="flex flex-col flex-1 min-h-0">
-                <div className="aspect-square w-full rounded-component bg-aurora-surface-hover mb-2 overflow-hidden relative shrink-0">
+              <Link href={`/catalogue/${id}`} className="block shrink-0">
+                <div className={CONTENT_BLOCK_IMAGE_WELL}>
                   <ProductImage
                     src={imageUrl}
-                    className="absolute inset-0 w-full h-full object-center"
+                    className="absolute inset-0 h-full w-full"
+                    objectFit="cover"
                     thumbnail
-                    fallback={<div className="absolute inset-0 flex items-center justify-center text-aurora-muted text-2xl">-</div>}
+                    fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-2xl">-</div>}
                   />
                 </div>
-                <p className="font-semibold text-sm truncate">{name}</p>
-                {priceCents != null && (
-                  <p className="text-sm font-bold text-aurora-accent">
-                    {formatPrice(priceCents, currency)}
-                  </p>
-                )}
               </Link>
-              {priceCents != null && (
-                <div className="mt-2">
-                  <AddToCartButton
-                    recordId={id}
-                    tableSlug={catalogTableSlug}
-                    name={name}
-                    unitAmount={priceCents}
-                    imageUrl={imageUrl}
-                  />
-                </div>
-              )}
+              <div className="flex flex-col flex-1 px-3 sm:px-4 pt-3 pb-4 border-t border-stone-200/90">
+                <Link href={`/catalogue/${id}`} className="block min-w-0">
+                  <p className="font-semibold text-sm truncate">{name}</p>
+                  {priceCents != null && (
+                    <p className="text-sm font-bold text-aurora-accent">
+                      {formatPrice(priceCents, currency)}
+                    </p>
+                  )}
+                </Link>
+                {priceCents != null && (
+                  <div className="mt-auto pt-3">
+                    <AddToCartButton
+                      recordId={id}
+                      tableSlug={catalogTableSlug}
+                      name={name}
+                      unitAmount={priceCents}
+                      imageUrl={imageUrl}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           );
         })}

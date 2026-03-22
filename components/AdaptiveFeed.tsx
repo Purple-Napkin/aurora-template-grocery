@@ -161,7 +161,7 @@ export function AdaptiveFeed({
                   <ProductImage
                     src={card.imageUrl}
                     className="absolute inset-0 h-full w-full"
-                    objectFit="contain"
+                    objectFit="cover"
                     thumbnail
                     fallback={
                       <span className="flex h-full min-h-[5rem] w-full items-center justify-center px-2 text-center text-sm text-aurora-muted">
@@ -225,7 +225,7 @@ export function AdaptiveFeed({
                   <ProductImage
                     src={card.imageUrl}
                     className="absolute inset-0 h-full w-full"
-                    objectFit="contain"
+                    objectFit="cover"
                     thumbnail
                     fallback={
                       <span className="flex h-full min-h-[5rem] w-full items-center justify-center text-sm text-aurora-muted">

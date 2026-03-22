@@ -10,6 +10,10 @@ import { useDietaryExclusions } from "./DietaryExclusionsContext";
 import { formatPrice } from "@aurora-studio/starter-core";
 import { holmesGoesWith, search, type SearchHit } from "@aurora-studio/starter-core";
 import { toCents } from "@aurora-studio/starter-core";
+import {
+  CONTENT_BLOCK_CARD_SHELL,
+  CONTENT_BLOCK_IMAGE_WELL,
+} from "@/components/ContentBlockProductCard";
 
 function getImageUrl(hit: SearchHit): string | null {
   return hit.image_url ?? null;
@@ -77,32 +81,37 @@ export function SmartBasketSuggest() {
           return (
             <div
               key={id}
-              className="p-3 rounded-component bg-aurora-surface border border-aurora-border"
+              className={`flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
             >
-              <Link href={`/catalogue/${id}`} className="block mb-2">
-                <div className="aspect-square rounded-lg bg-aurora-surface-hover overflow-hidden mb-2">
+              <Link href={`/catalogue/${id}`} className="block shrink-0">
+                <div className={CONTENT_BLOCK_IMAGE_WELL}>
                   <ProductImage
                     src={imageUrl}
-                    className="w-full h-full"
+                    className="absolute inset-0 h-full w-full"
+                    objectFit="cover"
                     thumbnail
                     fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted">-</div>}
                   />
                 </div>
-                <p className="text-sm font-medium truncate">{name}</p>
-                {priceCents != null && (
-                  <p className="text-sm font-bold text-aurora-primary">{formatPrice(priceCents)}</p>
-                )}
               </Link>
-              {priceCents != null && (
-                <AddToCartButton
-                  recordId={id}
-                  tableSlug={tableSlug}
-                  name={name}
-                  unitAmount={priceCents}
-                  imageUrl={imageUrl}
-                  className="w-full py-2 text-sm"
-                />
-              )}
+              <div className="flex flex-col flex-1 px-3 pt-3 pb-3 border-t border-stone-200/90">
+                <Link href={`/catalogue/${id}`} className="block min-w-0 mb-2">
+                  <p className="text-sm font-medium truncate">{name}</p>
+                  {priceCents != null && (
+                    <p className="text-sm font-bold text-aurora-primary">{formatPrice(priceCents)}</p>
+                  )}
+                </Link>
+                {priceCents != null && (
+                  <AddToCartButton
+                    recordId={id}
+                    tableSlug={tableSlug}
+                    name={name}
+                    unitAmount={priceCents}
+                    imageUrl={imageUrl}
+                    className="w-full py-2 text-sm"
+                  />
+                )}
+              </div>
             </div>
           );
         })}

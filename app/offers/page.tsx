@@ -7,6 +7,10 @@ import {
   createAuroraClient,
 } from "@aurora-studio/starter-core";
 import { StoreContentRails } from "@/components/StoreContentRails";
+import {
+  CONTENT_BLOCK_CARD_SHELL,
+  CONTENT_BLOCK_IMAGE_WELL,
+} from "@/components/ContentBlockProductCard";
 
 export const dynamic = "force-dynamic";
 
@@ -110,41 +114,46 @@ export default async function OffersPage() {
               return (
                 <div
                   key={id}
-                  className="p-4 rounded-component bg-aurora-surface/80 border border-aurora-border hover:border-aurora-accent/40 transition-all"
+                  className={`flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
                 >
-                  <Link href={`/catalogue/${id}`}>
+                  <Link href={`/catalogue/${id}`} className="block shrink-0">
                     {isOnSale ? <span className="sr-only">On sale. </span> : null}
-                    <div className="relative aspect-square rounded-component bg-aurora-surface-hover mb-3 overflow-hidden">
+                    <div className={CONTENT_BLOCK_IMAGE_WELL}>
                       <ProductImage
                         src={imageUrl}
-                        className="w-full h-full"
+                        className="absolute inset-0 h-full w-full"
+                        objectFit="cover"
                         thumbnail
                         fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
                       />
                       {isOnSale ? <ProductSaleBadge>On Sale</ProductSaleBadge> : null}
                     </div>
-                    <p className="font-semibold text-sm truncate">{name}</p>
-                    {(priceCents != null || (sellByWeight && pricePerUnit != null)) && (
-                      <p className="text-sm mt-1 font-bold text-aurora-accent">
-                        {sellByWeight && pricePerUnit != null
-                          ? formatPrice(Math.round(pricePerUnit * 100), currency) + `/${unit}`
-                          : formatPrice(priceCents!, currency)}
-                      </p>
-                    )}
                   </Link>
-                  {priceCents != null && catalogTableSlug && (
-                    <div className="mt-3">
-                      <AddToCartButton
-                        recordId={id}
-                        tableSlug={catalogTableSlug}
-                        name={name}
-                        unitAmount={priceCents}
-                        sellByWeight={sellByWeight}
-                        unit={unit}
-                        imageUrl={imageUrl}
-                      />
-                    </div>
-                  )}
+                  <div className="flex flex-col flex-1 px-3 sm:px-4 pt-3 pb-4 border-t border-stone-200/90">
+                    <Link href={`/catalogue/${id}`} className="block min-w-0">
+                      <p className="font-semibold text-sm truncate">{name}</p>
+                      {(priceCents != null || (sellByWeight && pricePerUnit != null)) && (
+                        <p className="text-sm mt-1 font-bold text-aurora-accent">
+                          {sellByWeight && pricePerUnit != null
+                            ? formatPrice(Math.round(pricePerUnit * 100), currency) + `/${unit}`
+                            : formatPrice(priceCents!, currency)}
+                        </p>
+                      )}
+                    </Link>
+                    {priceCents != null && catalogTableSlug && (
+                      <div className="mt-auto pt-3">
+                        <AddToCartButton
+                          recordId={id}
+                          tableSlug={catalogTableSlug}
+                          name={name}
+                          unitAmount={priceCents}
+                          sellByWeight={sellByWeight}
+                          unit={unit}
+                          imageUrl={imageUrl}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}

@@ -25,11 +25,13 @@ export function RecipeProductCollage({
 
   if (urls.length === 1) {
     return (
-      <div className={`h-full w-full overflow-hidden bg-white dark:bg-white ${className}`}>
+      <div
+        className={`h-full w-full overflow-hidden bg-white dark:bg-white [&_img]:!object-top ${className}`}
+      >
         <ProductImage
           src={urls[0]}
           className="h-full w-full"
-          objectFit="contain"
+          objectFit="cover"
           thumbnail
           fallback={
             <div className="flex h-full w-full items-center justify-center">
@@ -44,7 +46,7 @@ export function RecipeProductCollage({
   if (urls.length === 2) {
     return (
       <div
-        className={`grid h-full w-full grid-cols-2 gap-0.5 overflow-hidden bg-white dark:bg-white ${className}`}
+        className={`grid h-full w-full grid-cols-2 gap-0.5 overflow-hidden bg-white dark:bg-white [&_img]:!object-top ${className}`}
       >
         {urls.map((url, i) => (
           <div key={i} className="relative min-h-0">
@@ -67,7 +69,7 @@ export function RecipeProductCollage({
   // 3 or 4 images: 2x2 grid
   return (
     <div
-      className={`grid h-full w-full grid-cols-2 grid-rows-2 gap-0.5 overflow-hidden bg-white dark:bg-white ${className}`}
+      className={`grid h-full w-full grid-cols-2 grid-rows-2 gap-0.5 overflow-hidden bg-white dark:bg-white [&_img]:!object-top ${className}`}
     >
       {urls.slice(0, 4).map((url, i) => (
         <div key={i} className="relative min-h-0 aspect-square">

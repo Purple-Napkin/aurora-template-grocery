@@ -78,9 +78,9 @@ export function BlurbBlock({
     return (
       <SectionShell
         withHolmesMarkers={withHolmesMarkers}
-        className="mb-10 last:mb-0 rounded-xl bg-aurora-surface border border-aurora-border overflow-hidden shadow-sm"
+        className="mb-10 last:mb-0 rounded-xl bg-white border border-aurora-border overflow-hidden shadow-sm"
       >
-        <div className="relative w-full h-44 sm:h-52 md:h-60">
+        <div className="relative w-full h-44 sm:h-52 md:h-60 bg-white [&_img]:!object-top">
           <ProductImage
             src={sec.imageUrl}
             className="absolute inset-0 w-full h-full object-cover"
@@ -312,7 +312,7 @@ export function InspirationSection({
               <ProductImage
                 src={card.imageUrl}
                 className="absolute inset-0 h-full w-full"
-                objectFit="contain"
+                objectFit="cover"
                 thumbnail
                 fallback={
                   <span className="flex h-full min-h-[5rem] w-full items-center justify-center px-2 text-center text-sm text-aurora-muted">

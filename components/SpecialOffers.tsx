@@ -3,6 +3,10 @@ import { createAuroraClient } from "@aurora-studio/starter-core";
 import { formatPrice, toCents } from "@aurora-studio/starter-core";
 import { AddToCartButton } from "@aurora-studio/starter-core";
 import { ProductImage } from "@aurora-studio/starter-core";
+import {
+  CONTENT_BLOCK_CARD_SHELL,
+  CONTENT_BLOCK_IMAGE_WELL,
+} from "@/components/ContentBlockProductCard";
 
 function getImageUrl(record: Record<string, unknown>): string | null {
   const field = ["image_url", "image", "thumbnail", "photo"].find((f) => record[f]);
@@ -79,35 +83,40 @@ export async function SpecialOffers() {
         return (
           <div
             key={id}
-            className="p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 shadow-sm transition-all"
+            className={`flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
           >
-            <Link href={`/catalogue/${id}`} className="block">
-              <div className="aspect-square rounded-component bg-aurora-surface-hover mb-3 overflow-hidden">
+            <Link href={`/catalogue/${id}`} className="block shrink-0">
+              <div className={CONTENT_BLOCK_IMAGE_WELL}>
                 <ProductImage
                   src={imageUrl}
-                  className="w-full h-full"
+                  className="absolute inset-0 h-full w-full"
+                  objectFit="cover"
                   thumbnail
                   fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
                 />
               </div>
-              <p className="font-semibold text-sm truncate">{name}</p>
-              {priceCents != null && (
-                <p className="text-sm mt-1 font-bold text-aurora-accent">
-                  {formatPrice(priceCents, currency)}
-                </p>
-              )}
             </Link>
-            {priceCents != null && catalogTableSlug && (
-              <div className="mt-3">
-                <AddToCartButton
-                  recordId={id}
-                  tableSlug={catalogTableSlug}
-                  name={name}
-                  unitAmount={priceCents}
-                  imageUrl={imageUrl}
-                />
-              </div>
-            )}
+            <div className="flex flex-col flex-1 px-3 sm:px-4 pt-3 pb-4 border-t border-stone-200/90">
+              <Link href={`/catalogue/${id}`} className="block min-w-0">
+                <p className="font-semibold text-sm truncate">{name}</p>
+                {priceCents != null && (
+                  <p className="text-sm mt-1 font-bold text-aurora-accent">
+                    {formatPrice(priceCents, currency)}
+                  </p>
+                )}
+              </Link>
+              {priceCents != null && catalogTableSlug && (
+                <div className="mt-auto pt-3">
+                  <AddToCartButton
+                    recordId={id}
+                    tableSlug={catalogTableSlug}
+                    name={name}
+                    unitAmount={priceCents}
+                    imageUrl={imageUrl}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         );
       })}

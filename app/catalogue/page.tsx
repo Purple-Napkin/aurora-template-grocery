@@ -26,6 +26,10 @@ import { ProductCardSkeleton } from "@aurora-studio/starter-core";
 import { CatalogueEmptyState } from "@aurora-studio/starter-core";
 import { RecipePageView } from "@/components/RecipePageView";
 import { CatalogueStoreContentRail } from "@/components/CatalogueStoreContentRail";
+import {
+  CONTENT_BLOCK_CARD_SHELL,
+  CONTENT_BLOCK_IMAGE_WELL,
+} from "@/components/ContentBlockProductCard";
 
 const DEFAULT_CATEGORIES: CategoryItem[] = [
   { name: "Bakery Items", slug: "bakery-items" },
@@ -496,53 +500,57 @@ function CatalogueContent() {
                   return (
                     <div
                       key={id}
-                      className="group p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 transition-all duration-200 overflow-hidden min-w-[160px] min-h-[280px] flex flex-col"
+                      className={`group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white min-w-[160px] min-h-[280px] ${CONTENT_BLOCK_CARD_SHELL} hover:-translate-y-0.5 transition-all duration-200`}
                     >
-                      <Link href={`/catalogue/${id}`} className="block">
+                      <Link href={`/catalogue/${id}`} className="block shrink-0">
                         {onSale ? <span className="sr-only">On sale. </span> : null}
-                        <div className="relative aspect-square rounded-lg bg-white dark:bg-white mb-3 overflow-hidden">
+                        <div className={CONTENT_BLOCK_IMAGE_WELL}>
                           <ProductImage
                             src={imageUrl}
-                            className="w-full h-full"
-                            objectFit="contain"
+                            className="absolute inset-0 h-full w-full"
+                            objectFit="cover"
                             thumbnail
                             fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
                           />
                           {onSale ? <ProductSaleBadge /> : null}
                         </div>
-                        {brand && (
-                          <p className="text-xs text-aurora-muted truncate mb-0.5">{brand}</p>
-                        )}
-                        <p className="font-semibold text-sm sm:text-base truncate group-hover:text-aurora-primary transition-colors">
-                          {name}
-                        </p>
-                        {(priceCents != null || (sellByWeight && pricePerUnit != null)) && (
-                          <p className="text-sm mt-1 font-bold text-aurora-primary">
-                            {sellByWeight && pricePerUnit != null
-                              ? formatPrice(Math.round(pricePerUnit * 100), currency) + `/${unit}`
-                              : formatPrice(priceCents!, currency)}
-                          </p>
-                        )}
-                        {rating != null && rating > 0 && (
-                          <p className="text-xs text-aurora-muted mt-1 flex items-center gap-1">
-                            <span className="text-amber-500">★</span>
-                            {rating.toFixed(1)}
-                          </p>
-                        )}
                       </Link>
-                      {priceCents != null && catalogSlug && (
-                        <div className="mt-auto pt-3">
-                          <AddToCartButton
-                            recordId={id}
-                            tableSlug={catalogSlug}
-                            name={name}
-                            unitAmount={priceCents}
-                            sellByWeight={sellByWeight}
-                            unit={unit}
-                            imageUrl={imageUrl}
-                          />
-                        </div>
-                      )}
+                      <div className="flex flex-col flex-1 px-3 sm:px-4 pt-3 pb-4 border-t border-stone-200/90">
+                        <Link href={`/catalogue/${id}`} className="block min-w-0">
+                          {brand && (
+                            <p className="text-xs text-aurora-muted truncate mb-0.5">{brand}</p>
+                          )}
+                          <p className="font-semibold text-sm sm:text-base truncate group-hover:text-aurora-primary transition-colors">
+                            {name}
+                          </p>
+                          {(priceCents != null || (sellByWeight && pricePerUnit != null)) && (
+                            <p className="text-sm mt-1 font-bold text-aurora-primary">
+                              {sellByWeight && pricePerUnit != null
+                                ? formatPrice(Math.round(pricePerUnit * 100), currency) + `/${unit}`
+                                : formatPrice(priceCents!, currency)}
+                            </p>
+                          )}
+                          {rating != null && rating > 0 && (
+                            <p className="text-xs text-aurora-muted mt-1 flex items-center gap-1">
+                              <span className="text-amber-500">★</span>
+                              {rating.toFixed(1)}
+                            </p>
+                          )}
+                        </Link>
+                        {priceCents != null && catalogSlug && (
+                          <div className="mt-auto pt-3">
+                            <AddToCartButton
+                              recordId={id}
+                              tableSlug={catalogSlug}
+                              name={name}
+                              unitAmount={priceCents}
+                              sellByWeight={sellByWeight}
+                              unit={unit}
+                              imageUrl={imageUrl}
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   );
                 })}
@@ -600,44 +608,48 @@ function CatalogueContent() {
                   return (
                     <div
                       key={id}
-                      className="group p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 transition-all overflow-hidden min-w-[160px] min-h-[260px] flex flex-col"
+                      className={`group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white min-w-[160px] min-h-[260px] ${CONTENT_BLOCK_CARD_SHELL}`}
                     >
-                      <Link href={`/catalogue/${id}`} className="block">
+                      <Link href={`/catalogue/${id}`} className="block shrink-0">
                         {onSale ? <span className="sr-only">On sale. </span> : null}
-                        <div className="relative aspect-square rounded-lg bg-white dark:bg-white mb-3 overflow-hidden">
+                        <div className={CONTENT_BLOCK_IMAGE_WELL}>
                           <ProductImage
                             src={imageUrl}
-                            className="w-full h-full"
-                            objectFit="contain"
+                            className="absolute inset-0 h-full w-full"
+                            objectFit="cover"
                             thumbnail
                             fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
                           />
                           {onSale ? <ProductSaleBadge /> : null}
                         </div>
-                        <p className="font-semibold text-sm truncate group-hover:text-aurora-primary transition-colors">
-                          {name}
-                        </p>
-                        {priceCents != null && (
-                          <p className="text-sm mt-1 font-bold text-aurora-primary">
-                            {sellByWeight && pricePerUnit != null
-                              ? formatPrice(Math.round(pricePerUnit * 100), currency) + `/${unit}`
-                              : formatPrice(priceCents, currency)}
-                          </p>
-                        )}
                       </Link>
-                      {priceCents != null && catalogSlug && (
-                        <div className="mt-auto pt-3">
-                          <AddToCartButton
-                            recordId={id}
-                            tableSlug={catalogSlug}
-                            name={name}
-                            unitAmount={priceCents}
-                            sellByWeight={sellByWeight}
-                            unit={unit}
-                            imageUrl={imageUrl}
-                          />
-                        </div>
-                      )}
+                      <div className="flex flex-col flex-1 px-3 sm:px-4 pt-3 pb-4 border-t border-stone-200/90">
+                        <Link href={`/catalogue/${id}`} className="block min-w-0">
+                          <p className="font-semibold text-sm truncate group-hover:text-aurora-primary transition-colors">
+                            {name}
+                          </p>
+                          {priceCents != null && (
+                            <p className="text-sm mt-1 font-bold text-aurora-primary">
+                              {sellByWeight && pricePerUnit != null
+                                ? formatPrice(Math.round(pricePerUnit * 100), currency) + `/${unit}`
+                                : formatPrice(priceCents, currency)}
+                            </p>
+                          )}
+                        </Link>
+                        {priceCents != null && catalogSlug && (
+                          <div className="mt-auto pt-3">
+                            <AddToCartButton
+                              recordId={id}
+                              tableSlug={catalogSlug}
+                              name={name}
+                              unitAmount={priceCents}
+                              sellByWeight={sellByWeight}
+                              unit={unit}
+                              imageUrl={imageUrl}
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   );
                 })}

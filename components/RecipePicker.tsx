@@ -6,6 +6,10 @@ import { useCart } from "@aurora-studio/starter-core";
 import { useMissionAware } from "@/components/MissionAwareHome";
 import { holmesCombosForCart, holmesSelectCombo } from "@aurora-studio/starter-core";
 import { RecipeProductCollage } from "./RecipeProductCollage";
+import {
+  CONTENT_BLOCK_CARD_SHELL,
+  CONTENT_BLOCK_IMAGE_WELL,
+} from "@/components/ContentBlockProductCard";
 
 /**
  * Recipe picker – when cart has 2+ items and Holmes has recipe options, show picker.
@@ -82,29 +86,31 @@ export function RecipePicker() {
         {combos.map((combo) => (
           <div
             key={combo.slug}
-            className="p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 transition-all flex flex-col"
+            className={`flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
           >
-            <div className="aspect-square rounded-lg mb-3 overflow-hidden bg-aurora-surface-hover">
+            <div className={CONTENT_BLOCK_IMAGE_WELL}>
               <RecipeProductCollage
                 imageUrls={combo.productImageUrls ?? []}
-                className="w-full h-full"
+                className="absolute inset-0 h-full w-full"
               />
             </div>
-            <h4 className="font-semibold text-sm truncate mb-2">{combo.title}</h4>
-            <div className="mt-auto flex gap-2">
-              <button
-                type="button"
-                onClick={() => handleSelect(combo)}
-                className="flex-1 px-3 py-2 rounded-lg bg-aurora-primary text-white text-sm font-medium hover:bg-aurora-primary-dark transition-colors"
-              >
-                Select
-              </button>
-              <Link
-                href={`/recipes/${encodeURIComponent(combo.slug)}`}
-                className="px-3 py-2 rounded-lg border border-aurora-border hover:bg-aurora-surface-hover text-sm"
-              >
-                View
-              </Link>
+            <div className="flex flex-col flex-1 px-3 sm:px-4 pt-3 pb-4 border-t border-stone-200/90">
+              <h4 className="font-semibold text-sm truncate mb-2">{combo.title}</h4>
+              <div className="mt-auto flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleSelect(combo)}
+                  className="flex-1 px-3 py-2 rounded-lg bg-aurora-primary text-white text-sm font-medium hover:bg-aurora-primary-dark transition-colors"
+                >
+                  Select
+                </button>
+                <Link
+                  href={`/recipes/${encodeURIComponent(combo.slug)}`}
+                  className="px-3 py-2 rounded-lg border border-aurora-border hover:bg-aurora-surface-hover text-sm"
+                >
+                  View
+                </Link>
+              </div>
             </div>
           </div>
         ))}
