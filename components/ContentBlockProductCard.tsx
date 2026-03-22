@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   ProductImage,
+  ProductSaleBadge,
   getThumbnailImageUrl,
   resolveProductImageUrl,
   useStoreConfigImageBase,
@@ -20,6 +21,7 @@ export type ContentBlockProduct = {
   description?: string;
   category?: string;
   category_slug?: string;
+  on_sale?: boolean;
 };
 
 /**
@@ -265,10 +267,12 @@ export function ContentBlockProductCard({
         className={`group flex flex-col overflow-hidden rounded-xl bg-white ${cardShell}`}
       >
         <Link href={pdp} {...imgMarkers} className={CONTENT_BLOCK_IMAGE_WELL}>
+          {prod.on_sale ? <span className="sr-only">On sale. </span> : null}
           <ProductImage
             {...imgShared}
             className="absolute inset-0 h-full w-full transition-transform duration-200 ease-out group-hover:scale-[1.02]"
           />
+          {prod.on_sale ? <ProductSaleBadge /> : null}
         </Link>
         <div className="flex flex-col border-t border-stone-200/90 bg-[#faf8f5] p-3 sm:p-4">
           <Link href={pdp} className="block min-w-0 text-stone-900">
@@ -286,10 +290,12 @@ export function ContentBlockProductCard({
       className={`group flex flex-col overflow-hidden rounded-xl bg-aurora-surface ${cardShell}`}
     >
       <Link href={pdp} {...imgMarkers} className={CONTENT_BLOCK_IMAGE_WELL}>
+        {prod.on_sale ? <span className="sr-only">On sale. </span> : null}
         <ProductImage
           {...imgShared}
           className="absolute inset-0 z-10 h-full w-full transition-transform duration-200 ease-out group-hover:scale-[1.02]"
         />
+        {prod.on_sale ? <ProductSaleBadge /> : null}
       </Link>
       <div className="flex flex-col border-t border-aurora-border/40 p-3 sm:p-4">
         <Link href={pdp} className="block min-w-0">

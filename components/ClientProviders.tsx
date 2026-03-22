@@ -20,7 +20,12 @@ export function ClientProviders({ children }: { children: ReactNode }) {
   return (
     <StoreProvider>
       <DietaryExclusionsProvider>
-        <StoreConfigProvider>
+        <StoreConfigProvider
+          profileDefaults={{
+            verticalProfile: "inventory_replenishment",
+            dietaryFilteringEnabled: true,
+          }}
+        >
           <AuthProvider>
             <CartProvider>
               <AddToCartFlyProvider>

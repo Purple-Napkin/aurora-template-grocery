@@ -1,8 +1,11 @@
 import Link from "next/link";
-import { createAuroraClient } from "@aurora-studio/starter-core";
-import { AddToCartButton } from "@aurora-studio/starter-core";
-import { ProductImage } from "@aurora-studio/starter-core";
-import { StoreContextBar } from "@aurora-studio/starter-core";
+import {
+  AddToCartButton,
+  ProductImage,
+  ProductSaleBadge,
+  StoreContextBar,
+  createAuroraClient,
+} from "@aurora-studio/starter-core";
 import { StoreContentRails } from "@/components/StoreContentRails";
 
 export const dynamic = "force-dynamic";
@@ -109,19 +112,16 @@ export default async function OffersPage() {
                   key={id}
                   className="p-4 rounded-component bg-aurora-surface/80 border border-aurora-border hover:border-aurora-accent/40 transition-all"
                 >
-                  {isOnSale && (
-                    <span className="inline-block px-2 py-0.5 rounded bg-aurora-accent/20 text-aurora-accent text-xs font-medium mb-2">
-                      On Sale
-                    </span>
-                  )}
                   <Link href={`/catalogue/${id}`}>
-                    <div className="aspect-square rounded-component bg-aurora-surface-hover mb-3 overflow-hidden">
+                    {isOnSale ? <span className="sr-only">On sale. </span> : null}
+                    <div className="relative aspect-square rounded-component bg-aurora-surface-hover mb-3 overflow-hidden">
                       <ProductImage
                         src={imageUrl}
                         className="w-full h-full"
                         thumbnail
                         fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
                       />
+                      {isOnSale ? <ProductSaleBadge>On Sale</ProductSaleBadge> : null}
                     </div>
                     <p className="font-semibold text-sm truncate">{name}</p>
                     {(priceCents != null || (sellByWeight && pricePerUnit != null)) && (

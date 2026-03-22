@@ -8,6 +8,7 @@ import {
   mergeTemplateLogoMask,
   useStore,
   useAuth,
+  useVerticalProfile,
 } from "@aurora-studio/starter-core";
 import { DietaryNeedsDropdown } from "./DietaryNeedsDropdown";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
@@ -19,6 +20,8 @@ export function Nav() {
   const { location, store } = useStore();
   const { user, loading } = useAuth();
   const { excludeDietary } = useDietaryExclusions();
+  const { dietaryFilteringEnabled } = useVerticalProfile();
+  const excludeForSearch = dietaryFilteringEnabled ? excludeDietary : [];
 
   const locationDisplay = location?.address ?? store?.name ?? "Select location";
 
@@ -78,7 +81,7 @@ export function Nav() {
               <SearchDropdown
                 placeholder="Search products"
                 vendorId={store.id}
-                excludeDietary={excludeDietary}
+                excludeDietary={excludeForSearch}
                 getRecipeSuggestion={getRecipeSuggestion}
               />
             ) : (
@@ -87,7 +90,7 @@ export function Nav() {
                   <SearchDropdown
                     placeholder="Select a store to search products…"
                     vendorId={undefined}
-                    excludeDietary={excludeDietary}
+                    excludeDietary={excludeForSearch}
                     getRecipeSuggestion={getRecipeSuggestion}
                   />
                 </span>
@@ -104,7 +107,7 @@ export function Nav() {
               <MapPin className="w-4 h-4 shrink-0 text-aurora-primary/70" />
               <span className="truncate">{locationDisplay}</span>
             </Link>
-            <DietaryNeedsDropdown />
+            {dietaryFilteringEnabled ? <DietaryNeedsDropdown /> : null}
             <div className="px-3 py-1.5 -mx-1 rounded-lg">
               <CartLink />
             </div>

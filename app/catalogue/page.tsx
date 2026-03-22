@@ -20,7 +20,7 @@ import {
   type CategoryItem,
   type SortOption,
 } from "@aurora-studio/starter-core";
-import { ProductImage } from "@aurora-studio/starter-core";
+import { ProductImage, ProductSaleBadge, isRecordOnSale } from "@aurora-studio/starter-core";
 import { SortDropdown } from "@aurora-studio/starter-core";
 import { ProductCardSkeleton } from "@aurora-studio/starter-core";
 import { CatalogueEmptyState } from "@aurora-studio/starter-core";
@@ -491,6 +491,7 @@ function CatalogueContent() {
                   const imageUrl = getImageUrl(record);
                   const brand = getBrand(record);
                   const rating = getRating(record);
+                  const onSale = isRecordOnSale(record as Record<string, unknown>);
 
                   return (
                     <div
@@ -498,7 +499,8 @@ function CatalogueContent() {
                       className="group p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 transition-all duration-200 overflow-hidden min-w-[160px] min-h-[280px] flex flex-col"
                     >
                       <Link href={`/catalogue/${id}`} className="block">
-                        <div className="aspect-square rounded-lg bg-white dark:bg-white mb-3 overflow-hidden">
+                        {onSale ? <span className="sr-only">On sale. </span> : null}
+                        <div className="relative aspect-square rounded-lg bg-white dark:bg-white mb-3 overflow-hidden">
                           <ProductImage
                             src={imageUrl}
                             className="w-full h-full"
@@ -506,6 +508,7 @@ function CatalogueContent() {
                             thumbnail
                             fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
                           />
+                          {onSale ? <ProductSaleBadge /> : null}
                         </div>
                         {brand && (
                           <p className="text-xs text-aurora-muted truncate mb-0.5">{brand}</p>
@@ -593,13 +596,15 @@ function CatalogueContent() {
                         ? Math.round(rawPrice * 100)
                         : undefined;
                   const imageUrl = getImageUrl(record);
+                  const onSale = isRecordOnSale(record as Record<string, unknown>);
                   return (
                     <div
                       key={id}
                       className="group p-4 rounded-xl bg-aurora-surface border border-aurora-border hover:border-aurora-primary/40 transition-all overflow-hidden min-w-[160px] min-h-[260px] flex flex-col"
                     >
                       <Link href={`/catalogue/${id}`} className="block">
-                        <div className="aspect-square rounded-lg bg-white dark:bg-white mb-3 overflow-hidden">
+                        {onSale ? <span className="sr-only">On sale. </span> : null}
+                        <div className="relative aspect-square rounded-lg bg-white dark:bg-white mb-3 overflow-hidden">
                           <ProductImage
                             src={imageUrl}
                             className="w-full h-full"
@@ -607,6 +612,7 @@ function CatalogueContent() {
                             thumbnail
                             fallback={<div className="w-full h-full flex items-center justify-center text-aurora-muted text-4xl">-</div>}
                           />
+                          {onSale ? <ProductSaleBadge /> : null}
                         </div>
                         <p className="font-semibold text-sm truncate group-hover:text-aurora-primary transition-colors">
                           {name}

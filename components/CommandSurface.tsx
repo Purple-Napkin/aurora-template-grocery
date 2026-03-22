@@ -7,6 +7,8 @@ import {
   mergeTemplateLogoMask,
   useStore,
   useAuth,
+  useVerticalProfile,
+  verticalMissionSubtitle,
 } from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
 import { getRecipeSuggestion } from "@/lib/cart-intelligence";
@@ -149,6 +151,8 @@ export function CommandSurface({
   const { store } = useStore();
   const { user } = useAuth();
   const { excludeDietary } = useDietaryExclusions();
+  const { dietaryFilteringEnabled, verticalProfile } = useVerticalProfile();
+  const excludeForSearch = dietaryFilteringEnabled ? excludeDietary : [];
   const homeData = useMissionAware();
   const timeOfDay = getTimeOfDay();
 
@@ -186,9 +190,9 @@ export function CommandSurface({
         <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-aurora-text mb-3">
           {isRecipeMission ? "Or something else?" : `How can we assist you this ${timeOfDay}?`}
         </h1>
-        <p className="text-aurora-muted text-base sm:text-lg mb-6 font-medium">
-          {isRecipeMission ? "Let's get you there fast" : "Pick a mission or search below"}
-        </p>
+      <p className="text-aurora-muted text-base sm:text-lg mb-6 font-medium">
+        {isRecipeMission ? "Let's get you there fast" : verticalMissionSubtitle(verticalProfile)}
+      </p>
 
         {/* Primary: mission quick actions first */}
         <div className="relative z-20 mb-6">
@@ -241,7 +245,7 @@ export function CommandSurface({
                 vendorId={store.id}
                 fullWidth
                 variant="embedded"
-                excludeDietary={excludeDietary}
+                excludeDietary={excludeForSearch}
                 getRecipeSuggestion={getRecipeSuggestion}
               />
             </div>
