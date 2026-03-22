@@ -9,6 +9,7 @@
  * For another tenant, set **`SEED_PRODUCT_IDS`** to comma-separated record UUIDs or the product_list row will resolve empty and be skipped by the API.
  *
  * Requires: AURORA_API_URL (or NEXT_PUBLIC_AURORA_API_URL), AURORA_API_KEY
+ * Optional: PEXELS_API_KEY in monorepo root `.env` for `image_blurb` hero art (falls back to picsum).
  *
  * Usage:
  *   node scripts/seed-store-content-blocks.mjs
@@ -21,8 +22,39 @@
 import { readFileSync, existsSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { loadRootEnv } from "../../scripts/hippo-seed/root-env.mjs";
+import { fetchPexelsImageUrl } from "../../scripts/hippo-seed/pexels.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+function loadCwdEnvLocal() {
+  const cwd = process.cwd();
+  for (const name of [".env.local", ".env"]) {
+    const p = join(cwd, name);
+    if (!existsSync(p)) continue;
+    const text = readFileSync(p, "utf8");
+    for (const line of text.split("\n")) {
+      const t = line.trim();
+      if (!t || t.startsWith("#")) continue;
+      const eq = t.indexOf("=");
+      if (eq <= 0) continue;
+      const key = t.slice(0, eq).trim();
+      let val = t.slice(eq + 1).trim();
+      if (
+        (val.startsWith('"') && val.endsWith('"')) ||
+        (val.startsWith("'") && val.endsWith("'"))
+      ) {
+        val = val.slice(1, -1);
+      }
+      if (process.env[key] === undefined) process.env[key] = val;
+    }
+    break;
+  }
+}
+
+loadRootEnv(import.meta.url);
+loadCwdEnvLocal();
+
 const PREFIX = "seed-cb-";
 
 /** Pantry-focused picks from hippo-grocery search (De Cecco, Barilla, rice, oil, tomatoes). */
@@ -45,6 +77,26 @@ const args = new Set(process.argv.slice(2));
 const dryRun = args.has("--dry-run");
 const skipProvision = args.has("--skip-provision");
 const noClean = args.has("--no-clean");
+
+/** @param {{ weekly: string, about: string }} imgs */
+async function resolveSeedImages() {
+  const key = process.env.PEXELS_API_KEY?.trim();
+  const picsum = (seed, w, h) => `https://picsum.photos/seed/${seed}/${w}/${h}`;
+  if (!key) {
+    return {
+      weekly: picsum("hippo-grocery-weekly", 960, 520),
+      about: picsum("hippo-grocery-about", 960, 600),
+    };
+  }
+  return {
+    weekly:
+      (await fetchPexelsImageUrl("supermarket weekly deals fresh food", key)) ??
+      picsum("hippo-grocery-weekly", 960, 520),
+    about:
+      (await fetchPexelsImageUrl("grocery store interior fresh produce", key)) ??
+      picsum("hippo-grocery-about", 960, 600),
+  };
+}
 
 if (!apiUrl || !apiKey) {
   console.error(
@@ -147,10 +199,10 @@ async function cleanSeedRows() {
   return deleted;
 }
 
-/** @returns {Record<string, unknown>[]} */
-function buildSeeds() {
-  const imgWeekly = "https://picsum.photos/seed/hippo-grocery-weekly/960/520";
-  const imgAbout = "https://picsum.photos/seed/hippo-grocery-about/960/600";
+/** @param {{ weekly: string, about: string }} imgs @returns {Record<string, unknown>[]} */
+function buildSeeds(imgs) {
+  const imgWeekly = imgs.weekly;
+  const imgAbout = imgs.about;
 
   const seeds = [
     // --- Home main feed (wired) — curated order: hero products → brand shelf → editorial → halves → promo ---
@@ -489,7 +541,8 @@ async function main() {
     console.log(`Removed ${n} seed row(s).`);
   }
 
-  const seeds = buildSeeds();
+  const imgs = await resolveSeedImages();
+  const seeds = buildSeeds(imgs);
   console.log(`Inserting ${seeds.length} seed row(s)…`);
 
   for (const row of seeds) {
