@@ -2,6 +2,8 @@
 
 A full-featured retail storefront for Aurora Studio. Showcases Aurora capabilities: Meilisearch search, Holmes mission inference, delivery slots, per-store promotions, and multi-step checkout.
 
+**Live demo:** [grocery.purple-napkin.com](https://grocery.purple-napkin.com) · **Aurora Studio:** [aurora.purple-napkin.com](https://aurora.purple-napkin.com)
+
 **Theme:** Dark mode by default. Set `NEXT_PUBLIC_THEME=light` for a light theme.
 
 ---
@@ -9,7 +11,7 @@ A full-featured retail storefront for Aurora Studio. Showcases Aurora capabiliti
 ## Quick Start
 
 1. **Create or clone:**
-   - **Option A - From Studio:** Sign up at [Aurora](https://aurora.mandeville.digital), create a workspace from **Grocery (example template)** (`aurora-template-grocery`). Studio provisions the base schema; the storefront adds the full schema on first run.
+   - **Option A - From Studio:** Sign up at [Aurora Studio](https://aurora.purple-napkin.com), create a workspace from **Grocery (example template)** (`aurora-template-grocery`). Studio provisions the base schema; the storefront adds the full schema on first run.
    - **Option B - Clone:**
    ```bash
    git clone https://github.com/Purple-Napkin/aurora-template-grocery.git
@@ -108,7 +110,7 @@ Enable Holmes in your tenant commerce config. For standalone deployment, set `NE
 
 ### First-time setup
 
-1. **Create a workspace** in [Aurora Studio](https://aurora.mandeville.digital) from the **Grocery (example template)** entry, or clone this repo and provision schema manually.
+1. **Create a workspace** in [Aurora Studio](https://aurora.purple-napkin.com) from the **Grocery (example template)** entry, or clone this repo and provision schema manually.
 2. **Configure `.env.local`** with `NEXT_PUBLIC_AURORA_API_URL`, `AURORA_API_KEY`, and `NEXT_PUBLIC_TENANT_SLUG` (from Studio → Settings).
 3. **Enable Meilisearch** in Studio → Settings → Search, then run "Sync index" for products.
 4. Run `pnpm dev` and open [http://localhost:3001](http://localhost:3001).
