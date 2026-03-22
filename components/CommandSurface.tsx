@@ -11,6 +11,11 @@ import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { holmesMissionLockCombo } from "@aurora-studio/starter-core";
 import { shouldLockRecipeMissionForMissionPill } from "@/lib/holmes-mission-lock";
 import { CONTENT_BLOCK_CARD_SHELL } from "./ContentBlockProductCard";
+import {
+  fullWidthHeroBandClass,
+  splitHeroImageClampClass,
+  type HeroSize,
+} from "@/lib/commandSurfaceHeroStyles";
 
 const ICON_MAP: Record<string, typeof UtensilsCrossed> = {
   "Dinner in 20 mins": UtensilsCrossed,
@@ -31,9 +36,15 @@ const ICON_MAP: Record<string, typeof UtensilsCrossed> = {
   "Quick meals": UtensilsCrossed,
 };
 
-/** Cold-start quick actions - contextual by time of day */
-function getDefaultQuickActions(timeOfDay: string) {
-  const base = [
+type LocalQuickAction = {
+  label: string;
+  href: string;
+  icon: typeof UtensilsCrossed;
+  authOnly?: boolean;
+};
+
+function getDefaultQuickActions(timeOfDay: string): LocalQuickAction[] {
+  const base: LocalQuickAction[] = [
     { label: "Dinner in 20 mins", href: "/catalogue?q=quick+dinner", icon: UtensilsCrossed },
     { label: "Repeat last shop", href: "/account/orders", icon: RotateCcw, authOnly: true },
     { label: "Healthy options", href: "/catalogue?q=healthy", icon: Apple },
@@ -54,8 +65,66 @@ function getDefaultQuickActions(timeOfDay: string) {
   return base;
 }
 
-/** Hero: logo left, shopping form right. Responsive, elegant. */
-export function CommandSurface({ logoUrl }: { logoUrl?: string | null }) {
+const GROCERY_SPLIT_HERO_LINK_CLASS = `block w-full max-w-[min(85vw,320px)] lg:max-w-full transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-aurora-primary/50 rounded-xl overflow-hidden bg-white dark:bg-aurora-surface p-4 sm:p-6 ${CONTENT_BLOCK_CARD_SHELL}`;
+
+function HeroImageLink({
+  href,
+  heroImageUrl,
+  splitClampClass,
+  fullBleed,
+}: {
+  href: string;
+  heroImageUrl: string | null;
+  splitClampClass: string;
+  fullBleed: boolean;
+}) {
+  if (fullBleed) {
+    return (
+      <Link
+        href={href}
+        className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-b from-aurora-surface to-aurora-bg focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-aurora-primary/50"
+        aria-label="Home"
+      >
+        {heroImageUrl ? (
+          <img
+            src={heroImageUrl}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
+        ) : (
+          <span className="font-display relative z-[1] text-2xl sm:text-4xl font-bold text-aurora-text px-4 text-center">
+            {process.env.NEXT_PUBLIC_SITE_NAME ?? "Store"}
+          </span>
+        )}
+      </Link>
+    );
+  }
+  return (
+    <Link href={href} className={GROCERY_SPLIT_HERO_LINK_CLASS} aria-label="Home">
+      {heroImageUrl ? (
+        <img
+          src={heroImageUrl}
+          alt=""
+          className={`w-full h-auto object-contain drop-shadow-sm ${splitClampClass}`}
+        />
+      ) : (
+        <span className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-aurora-text">
+          {process.env.NEXT_PUBLIC_SITE_NAME ?? "Store"}
+        </span>
+      )}
+    </Link>
+  );
+}
+
+export function CommandSurface({
+  heroImageUrl = null,
+  heroLayout = "split",
+  heroSize = "default",
+}: {
+  heroImageUrl?: string | null;
+  heroLayout?: "split" | "full_width";
+  heroSize?: HeroSize;
+}) {
   const { store } = useStore();
   const { user } = useAuth();
   const { excludeDietary } = useDietaryExclusions();
@@ -169,33 +238,41 @@ export function CommandSurface({ logoUrl }: { logoUrl?: string | null }) {
     </div>
   );
 
+  const splitClamp = splitHeroImageClampClass(heroSize);
+  const displayUrl = heroImageUrl?.trim() || null;
+
+  if (heroLayout === "full_width") {
+    return (
+      <section className="command-surface-hero bg-gradient-to-b from-aurora-surface to-aurora-bg">
+        <div
+          className={`relative w-full overflow-hidden bg-aurora-surface/80 border-b border-aurora-border ${fullWidthHeroBandClass(heroSize)}`}
+        >
+          <HeroImageLink
+            href="/"
+            heroImageUrl={displayUrl}
+            splitClampClass={splitClamp}
+            fullBleed
+          />
+        </div>
+        <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-10 sm:py-12 lg:py-16 flex justify-center lg:justify-start">
+          {formContent}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="command-surface-hero py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-gradient-to-b from-aurora-surface to-aurora-bg">
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-10 lg:gap-12 xl:gap-16">
-        {/* Logo - always on left, with subtle well + texture anchor */}
         <div className="flex-1 min-w-0 order-2 lg:order-1 flex justify-center lg:justify-start w-full lg:min-w-[280px]">
-          <Link
+          <HeroImageLink
             href="/"
-            className={`block w-full max-w-[min(85vw,320px)] lg:max-w-full transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-aurora-primary/50 rounded-xl overflow-hidden bg-white dark:bg-aurora-surface p-4 sm:p-6 ${CONTENT_BLOCK_CARD_SHELL}`}
-            aria-label="Home"
-          >
-            {logoUrl ? (
-              <img
-                src={logoUrl}
-                alt=""
-                className="w-full h-auto object-contain drop-shadow-sm
-                  max-h-[clamp(7rem,40vw,12rem)] sm:max-h-[clamp(9rem,38vw,15rem)] md:max-h-[clamp(11rem,36vw,18rem)]
-                  lg:max-h-[clamp(14rem,55vh,24rem)] xl:max-h-[clamp(16rem,58vh,28rem)] 2xl:max-h-[clamp(18rem,60vh,32rem)]"
-              />
-            ) : (
-              <span className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-aurora-text">
-                {process.env.NEXT_PUBLIC_SITE_NAME ?? "Store"}
-              </span>
-            )}
-          </Link>
+            heroImageUrl={displayUrl}
+            splitClampClass={splitClamp}
+            fullBleed={false}
+          />
         </div>
 
-        {/* Form - right on desktop */}
         <div className="flex-1 min-w-0 order-1 lg:order-2 flex justify-center lg:justify-end w-full lg:min-w-[320px]">
           {formContent}
         </div>
