@@ -9,7 +9,6 @@ import {
   type StoreContentSection,
 } from "@/components/storeContentBlocksUi";
 import { getRecipeTitle } from "@/lib/cart-intelligence";
-import { isHolmesMealProductFallbackSection } from "@/lib/holmes-meal-fallback-sections";
 
 type Props = {
   contentPage: string;
@@ -78,9 +77,6 @@ export function ClientStoreContentRail({
         .then((d) => {
           if (cancelled) return;
           let next = Array.isArray(d?.sections) ? (d.sections as StoreContentSection[]) : [];
-          if (contentPage === "cart") {
-            next = next.filter((s) => !isHolmesMealProductFallbackSection(s));
-          }
           const recipeTheme = getRecipeTitle(urlSearchQ);
           if (contentPage === "catalogue" && recipeTheme) {
             next = next.filter(

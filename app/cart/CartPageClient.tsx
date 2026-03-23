@@ -15,8 +15,6 @@ import { ForgotSuggestions } from "@/components/ForgotSuggestions";
 import { BasketCompositionSummary } from "@/components/BasketCompositionSummary";
 import { ReorderLastShop } from "@/components/ReorderLastShop";
 import { BasketSaverTips } from "@/components/BasketSaverTips";
-import { ClientStoreContentRail } from "@/components/ClientStoreContentRail";
-import { CartTonightRecipes } from "@/components/CartTonightRecipes";
 import { useMissionAware } from "@/components/MissionAwareHome";
 import { ShoppingListTemplates } from "@/components/ShoppingListTemplates";
 import { CartMissionHeader } from "@/components/cart/CartMissionHeader";
@@ -220,12 +218,6 @@ export default function CartPageClient() {
             </>
           )}
 
-          <CartTonightRecipes />
-          <ClientStoreContentRail
-            contentPage="cart"
-            contentRegion="cart_below_bundle"
-            className="mb-8"
-          />
           {!travelHigh && <ForgotSuggestions />}
         </div>
 
