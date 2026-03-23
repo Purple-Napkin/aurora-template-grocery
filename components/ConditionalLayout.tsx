@@ -19,7 +19,7 @@ export function ConditionalLayout({ children }: { children: React.ReactNode }) {
         <IntentPresenceBar />
       </Suspense>
       {/* Persistent store strip (was only on home/offers — restores “Shopping from…” under nav everywhere) */}
-      <StoreContextBar />
+      <StoreContextBar variant="holmes" />
       <Suspense fallback={null}>
         <ActiveMissionBar />
       </Suspense>

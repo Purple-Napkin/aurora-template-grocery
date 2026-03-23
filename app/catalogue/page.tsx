@@ -54,6 +54,8 @@ function getPrice(record: Record<string, unknown>): number | undefined {
 
 function getDisplayName(record: Record<string, unknown>): string {
   const r = record as SearchHit;
+  const fn = r.functional_name ?? record.functional_name;
+  if (typeof fn === "string" && fn.trim()) return fn.trim();
   return String(r.name ?? r.title ?? r.snippet ?? record.id ?? "");
 }
 
