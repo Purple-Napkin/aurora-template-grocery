@@ -824,9 +824,25 @@
         {
           "slug": "region",
           "name": "Region",
-          "field_type": "text",
+          "field_type": "select",
           "required": true,
-          "validation": {}
+          "validation": {
+            "options": [
+              "about_main",
+              "cart_above_lines",
+              "catalogue_above_grid",
+              "catalogue_below_filters",
+              "for_you_below_cart_blocks",
+              "for_you_below_header",
+              "home_main_feed",
+              "offers_below_header",
+              "pdp_below_context",
+              "pdp_below_tabs",
+              "recipe_below_ingredients",
+              "recipe_below_title",
+              "recipes_index_below_header"
+            ]
+          }
         },
         {
           "slug": "width",

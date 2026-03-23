@@ -8,6 +8,8 @@ This folder holds everything that runs **once** when your app starts, so the Aur
 
 | File | Purpose |
 |------|--------|
+| **content-regions.json** | CMS **page / region** slots (same manifest shape as Aurora Studio’s API `init/`). Regenerate with `pnpm run generate:content-regions` (also runs before `pnpm build` via `prebuild`). CLI: `aurora-generate-content-regions` from `@aurora-studio/starter-core` — see [content-regions.md](https://github.com/Purple-Napkin/aurora-starter-core/blob/main/docs/content-regions.md). |
+| **content-regions.schema.json** | JSON Schema for that manifest (copied into `init/` by the generator). |
 | **schema-v2.json** | Enterprise schema (Offers, vendor_products, etc.). Preferred when present. |
 | **schema.json** | Base template schema. Used when schema-v2.json is absent. |
 | **provision.ts** | Logic: load schema-v2.json if exists else schema.json → call API. Used by `register.ts` and `pnpm schema:provision`. |

@@ -1,0 +1,80 @@
+{
+  "$schema": "./content-regions.schema.json",
+  "version": 1,
+  "generatedAt": "2026-03-23T11:55:13.578Z",
+  "legacyAliases": {
+    "hippo-grocery": "aurora-template-grocery",
+    "hippo-hotels": "aurora-template-hotels",
+    "hippo-travel": "aurora-template-travel",
+    "hippo-store": "aurora-template-store"
+  },
+  "templates": {
+    "aurora-template-grocery": [
+      {
+        "page": "about",
+        "region": "about_main",
+        "label": "About — About Main"
+      },
+      {
+        "page": "cart",
+        "region": "cart_above_lines",
+        "label": "Cart — Cart Above Lines"
+      },
+      {
+        "page": "catalogue",
+        "region": "catalogue_above_grid",
+        "label": "Catalogue — Catalogue Above Grid"
+      },
+      {
+        "page": "catalogue",
+        "region": "catalogue_below_filters",
+        "label": "Catalogue — Catalogue Below Filters"
+      },
+      {
+        "page": "for_you",
+        "region": "for_you_below_cart_blocks",
+        "label": "For You — For You Below Cart Blocks"
+      },
+      {
+        "page": "for_you",
+        "region": "for_you_below_header",
+        "label": "For You — For You Below Header"
+      },
+      {
+        "page": "home",
+        "region": "home_main_feed",
+        "label": "Home — Home Main Feed"
+      },
+      {
+        "page": "offers",
+        "region": "offers_below_header",
+        "label": "Offers — Offers Below Header"
+      },
+      {
+        "page": "product_detail",
+        "region": "pdp_below_context",
+        "label": "Product Detail — Pdp Below Context"
+      },
+      {
+        "page": "product_detail",
+        "region": "pdp_below_tabs",
+        "label": "Product Detail — Pdp Below Tabs"
+      },
+      {
+        "page": "recipe",
+        "region": "recipe_below_ingredients",
+        "label": "Recipe — Recipe Below Ingredients"
+      },
+      {
+        "page": "recipe",
+        "region": "recipe_below_title",
+        "label": "Recipe — Recipe Below Title"
+      },
+      {
+        "page": "recipe_index",
+        "region": "recipes_index_below_header",
+        "label": "Recipe Index — Recipes Index Below Header"
+      }
+    ]
+  }
+}

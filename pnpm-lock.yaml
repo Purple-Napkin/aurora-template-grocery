@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@aurora-studio/sdk':
-        specifier: ^0.2.37
-        version: 0.2.37
+        specifier: ^0.2.40
+        version: 0.2.40
       '@aurora-studio/starter-core':
-        specifier: ^0.1.31
-        version: 0.1.31(@aurora-studio/sdk@0.2.37)(lucide-react@0.454.0(react@19.2.4))(next@15.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: ^0.1.37
+        version: 0.1.37(@aurora-studio/sdk@0.2.40)(lucide-react@0.454.0(react@19.2.4))(next@15.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
@@ -73,14 +73,15 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@aurora-studio/sdk@0.2.37':
-    resolution: {integrity: sha512-M6OjF3y3QoZinmoVnhJvhCva441k8IzXt56uFulggtgunsF3t9pW/izvertCemO6EAwiauIGOK77VCXCqNNe5A==}
+  '@aurora-studio/sdk@0.2.40':
+    resolution: {integrity: sha512-Koo/g4AFH4YISbuHHq9EGnWEXwaBRkgJR6QefOLuGk96pmYJXAmmJKUtZaM4042Sy2Pcb6q1GwRZu9luJtV6Nw==}
     engines: {node: '>=18'}
 
-  '@aurora-studio/starter-core@0.1.31':
-    resolution: {integrity: sha512-mQ3T0AUa+WyfrWGGsYGSavJIlKx3cBvkZzrM0e7aQDwUGKQFNZOTtyStAK1QYyBDtJ8lXz2BctmfTrTFeAvEcA==}
+  '@aurora-studio/starter-core@0.1.37':
+    resolution: {integrity: sha512-kivqoIiW5BmbDNrZCLPMZHeSv0VGOVX7WB29fHVpJarMz+BN55SGQv0s9IKmGnB52Wa12KYCvQpTtAu2OhGFMA==}
+    hasBin: true
     peerDependencies:
-      '@aurora-studio/sdk': ^0.2.37
+      '@aurora-studio/sdk': ^0.2.40
       lucide-react: '>=0.400'
       next: '>=14'
       react: ^18 || ^19
@@ -1872,11 +1873,11 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@aurora-studio/sdk@0.2.37': {}
+  '@aurora-studio/sdk@0.2.40': {}
 
-  '@aurora-studio/starter-core@0.1.31(@aurora-studio/sdk@0.2.37)(lucide-react@0.454.0(react@19.2.4))(next@15.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@aurora-studio/starter-core@0.1.37(@aurora-studio/sdk@0.2.40)(lucide-react@0.454.0(react@19.2.4))(next@15.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
-      '@aurora-studio/sdk': 0.2.37
+      '@aurora-studio/sdk': 0.2.40
       lucide-react: 0.454.0(react@19.2.4)
       next: 15.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react: 19.2.4

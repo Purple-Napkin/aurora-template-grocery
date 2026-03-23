@@ -10,6 +10,8 @@ import {
   useStoreConfigImageBase,
   formatPrice,
   toCents,
+  getStoreConfig,
+  AddToCartButton,
 } from "@aurora-studio/starter-core";
 
 export type ContentBlockProduct = {
@@ -204,6 +206,48 @@ function CardMeta({
   );
 }
 
+function AddToCartRow({
+  prod,
+  resolvedImageUrl,
+}: {
+  prod: ContentBlockProduct;
+  resolvedImageUrl: string | null;
+}) {
+  const [tableSlug, setTableSlug] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getStoreConfig()
+      .then((c) => {
+        if (cancelled) return;
+        const slug = (c as { catalogTableSlug?: string })?.catalogTableSlug?.trim();
+        setTableSlug(slug && c?.enabled ? slug : null);
+      })
+      .catch(() => {
+        if (!cancelled) setTableSlug(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const cents = prod.price != null ? toCents(Number(prod.price)) : undefined;
+  if (!tableSlug || cents == null || cents <= 0) return null;
+
+  return (
+    <div className="mt-3 border-t border-stone-200/70 pt-3 dark:border-aurora-border/45">
+      <AddToCartButton
+        recordId={prod.id}
+        tableSlug={tableSlug}
+        name={prod.name}
+        unitAmount={cents}
+        imageUrl={resolvedImageUrl ?? prod.image_url ?? null}
+        className="w-full h-11 rounded-xl bg-aurora-primary text-white text-sm font-semibold hover:bg-aurora-primary-dark transition-colors"
+      />
+    </div>
+  );
+}
+
 export function ContentBlockProductCard({
   prod,
   currency = "GBP",
@@ -278,6 +322,7 @@ export function ContentBlockProductCard({
             <TitlePrice prod={prod} currency={currency} titleClassName="text-stone-900" />
           </Link>
           <CardMeta prod={prod} variant="split" />
+          <AddToCartRow prod={prod} resolvedImageUrl={resolved} />
         </div>
       </div>
     );
@@ -301,6 +346,7 @@ export function ContentBlockProductCard({
           <TitlePrice prod={prod} currency={currency} />
         </Link>
         <CardMeta prod={prod} variant="radial" />
+        <AddToCartRow prod={prod} resolvedImageUrl={resolved} />
       </div>
     </div>
   );
