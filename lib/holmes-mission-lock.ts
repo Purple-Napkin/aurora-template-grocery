@@ -4,7 +4,7 @@
 export function shouldLockRecipeMissionForMissionPill(label: string, href: string): boolean {
   const l = label.toLowerCase();
   const h = href.toLowerCase();
-  if (/\/recipes\/?$/i.test(h) || h === "/recipes") return true;
+  if (/\/for-you\/recipes/i.test(h) || /\/recipes\/?$/i.test(h) || h === "/recipes") return true;
   if (
     /\bsnack\b|top[\s-]*up|under\s*£|repeat\s*last|travel|packing|face\s*wipes|adapter/i.test(l)
   )

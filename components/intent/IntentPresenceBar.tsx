@@ -12,7 +12,11 @@ import {
   isMissionBarDismissed,
 } from "@/lib/mission-bar";
 import { holmesMissionLockClear } from "@aurora-studio/starter-core";
-import { isCookingMissionKey, isTravelLikeMission } from "@/lib/intent-mission";
+import {
+  alignedMissionTrustLine,
+  isCookingMissionKey,
+  isTravelLikeMission,
+} from "@/lib/intent-mission";
 
 function setDismissed(value: boolean) {
   try {
@@ -60,11 +64,12 @@ export function IntentPresenceBar() {
 
   if (!showBar) return null;
 
-  const summary =
-    activeMission.summary?.trim() ||
-    (items.length > 0
-      ? "Based on items in your basket and recent activity."
-      : "Based on your search and browsing.");
+  const summary = alignedMissionTrustLine(
+    activeMission.key,
+    activeMission.label,
+    activeMission.summary,
+    items.length > 0
+  );
 
   const missionCta = () => {
     if (isTravelLikeMission(activeMission.key)) {
@@ -80,7 +85,7 @@ export function IntentPresenceBar() {
 
   /** Subline is the main “ideas” CTA for meal/cooking missions (API copy often reads like “Here are ideas for your meal”). */
   const summaryHref = isCookingMissionKey(activeMission.key)
-    ? "/recipes"
+    ? "/for-you/recipes"
     : isTravelLikeMission(activeMission.key)
       ? "/catalogue?q=travel+essentials"
       : null;

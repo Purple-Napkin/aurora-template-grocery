@@ -190,7 +190,7 @@ function CardMeta({
       <div
         className={`flex flex-wrap items-center gap-x-1.5 gap-y-0.5 border-t pt-1.5 text-[0.6875rem] leading-tight ${variant === "split" ? "border-stone-200/70" : "border-aurora-border/45"}`}
       >
-        <Link href="/recipes" className={linkCls}>
+        <Link href="/for-you/recipes" className={linkCls}>
           Used in recipes
         </Link>
         <span className={muted} aria-hidden>

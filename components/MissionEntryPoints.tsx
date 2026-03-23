@@ -62,7 +62,7 @@ export function MissionEntryPoints() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {missions.map((m) => {
               const Icon = m.icon;
-              const href = m.label === "Recipe ideas" ? "/recipes" : m.href;
+              const href = m.label === "Recipe ideas" ? "/for-you/recipes" : m.href;
               return (
                 <Link
                   key={m.label}

@@ -14,7 +14,11 @@ import {
   setMissionBarCollapsed,
 } from "@/lib/mission-bar";
 import { holmesMissionLockClear } from "@aurora-studio/starter-core";
-import { isCookingMissionKey, isTravelLikeMission } from "@/lib/intent-mission";
+import {
+  alignedMissionTrustLine,
+  isCookingMissionKey,
+  isTravelLikeMission,
+} from "@/lib/intent-mission";
 
 function setDismissed(value: boolean) {
   try {
@@ -90,12 +94,18 @@ export function ActiveMissionBar() {
     window.dispatchEvent(new CustomEvent("holmes:missionBarReset"));
   };
 
+  const trustLine = alignedMissionTrustLine(
+    activeMission.key,
+    activeMission.label,
+    activeMission.summary,
+    hasCartItems
+  );
   const headline =
-    activeMission.summary?.trim() ||
+    trustLine ||
     `Looks like you might be focused on: ${activeMission.label}`;
 
   const whyText =
-    activeMission.summary?.trim() ||
+    trustLine ||
     "Based on your basket, search terms, and how you’re browsing the store.";
 
   const primaryCta = () => {
@@ -167,7 +177,7 @@ export function ActiveMissionBar() {
               </Link>
               {isCookingMissionKey(activeMission.key) && (
                 <Link
-                  href="/recipes"
+                  href="/for-you/recipes"
                   className="block text-xs text-aurora-muted hover:text-aurora-primary font-medium"
                 >
                   View recipes (optional) →

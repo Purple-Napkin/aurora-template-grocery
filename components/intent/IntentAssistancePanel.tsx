@@ -6,6 +6,7 @@ import { useMissionAware } from "@/components/MissionAwareHome";
 import { useCart } from "@aurora-studio/starter-core";
 import { Sparkles } from "lucide-react";
 import { CONTENT_BLOCK_CARD_SHELL } from "@/components/ContentBlockProductCard";
+import { alignedMissionTrustLine } from "@/lib/intent-mission";
 
 /**
  * Homepage-only: low-confidence gentle prompt when the cart has items but we are not in medium/high mode UI.
@@ -21,9 +22,10 @@ export function IntentAssistancePanel() {
   if (band === "medium" || band === "high") return null;
   if (items.length === 0) return null;
 
-  const hint =
-    data?.activeMission?.summary?.trim() ||
-    "Explore ideas based on what you’ve picked, or head to checkout when you’re ready.";
+  const am = data?.activeMission;
+  const hint = am
+    ? alignedMissionTrustLine(am.key, am.label, am.summary, items.length > 0)
+    : "Explore ideas based on what you’ve picked, or head to checkout when you’re ready.";
 
   return (
     <section className="mb-6" aria-label="Basket assistance">

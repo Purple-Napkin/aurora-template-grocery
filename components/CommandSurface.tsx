@@ -122,7 +122,7 @@ export function CommandSurface({
 
   const formContent = (
     <div
-      className={`relative z-10 w-full max-w-xl rounded-xl bg-white overflow-hidden dark:bg-aurora-surface ${CONTENT_BLOCK_CARD_SHELL}`}
+      className={`relative z-10 w-full max-w-xl rounded-xl bg-white overflow-visible dark:bg-aurora-surface ${CONTENT_BLOCK_CARD_SHELL}`}
     >
       <div className="p-5 sm:p-6 lg:p-8">
         {isRecipeMission && (
@@ -158,7 +158,7 @@ export function CommandSurface({
           <div className="flex flex-wrap gap-3">
             {quickActions.map((action) => {
               const Icon = action.icon;
-              const href = action.label === "Recipe ideas" ? "/recipes" : action.href;
+              const href = action.label === "Recipe ideas" ? "/for-you/recipes" : action.href;
               return (
                 <Link
                   key={action.label}
@@ -183,7 +183,7 @@ export function CommandSurface({
           </p>
           {store ? (
             <div
-              className="rounded-xl border border-aurora-border bg-white dark:bg-aurora-bg shadow-sm focus-within:border-aurora-primary/60 focus-within:ring-1 focus-within:ring-aurora-primary/25 transition-all max-w-md overflow-hidden"
+              className="rounded-xl border border-aurora-border bg-white dark:bg-aurora-bg shadow-sm focus-within:border-aurora-primary/60 focus-within:ring-1 focus-within:ring-aurora-primary/25 transition-all max-w-md overflow-visible relative z-30"
               data-command-search
             >
               <SearchDropdown
