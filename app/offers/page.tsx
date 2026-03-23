@@ -3,7 +3,6 @@ import {
   AddToCartButton,
   ProductImage,
   ProductSaleBadge,
-  StoreContextBar,
   createAuroraClient,
 } from "@aurora-studio/starter-core";
 import { StoreContentRails } from "@/components/StoreContentRails";
@@ -82,7 +81,6 @@ export default async function OffersPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <StoreContextBar />
       <div className="py-12 px-4 sm:px-6">
         <StoreContentRails contentPage="offers" contentRegion="offers_below_header" className="mb-8" />
         <h1 className="text-2xl font-bold mb-2">Offers</h1>

@@ -1,4 +1,3 @@
-import { StoreContextBar } from "@aurora-studio/starter-core";
 import { HeroCommandSurface } from "@/components/HeroCommandSurface";
 import { HolmesContextualWell } from "@/components/HolmesContextualWell";
 import { MissionEntryPoints } from "@/components/MissionEntryPoints";
@@ -18,18 +17,15 @@ export default async function HomePage() {
   return (
     <>
       <HolmesHomeRefresher />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <StoreContextBar />
-        </div>
 
-        {/* Hero + command surface - actionable intent capture with real retail warmth (z-10 so dropdown overlays Mission section) */}
-        <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] z-10">
+        {/* Full-bleed hero: avoid z-10 here — it stacked above the feed and swallowed clicks on basket CTAs/cards below */}
+        <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
           <MissionAwareHero>
             <HeroCommandSurface />
           </MissionAwareHero>
         </div>
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-0">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
           <IntentAssistancePanel />
           <HolmesContextualWell />
 

@@ -341,8 +341,8 @@ button.checkout-btn:active {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: top;
   display: block;
 }
 [data-holmes="basket-bundle"] [data-holmes-bundle-card-fallback] {
@@ -448,8 +448,8 @@ button.checkout-btn:active {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: top;
   display: block;
 }
 [data-holmes="home-sections"] [data-holmes-home-card-fallback] {
@@ -551,8 +551,8 @@ button.checkout-btn:active {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: top;
   display: block;
 }
 [data-holmes="recommendations"] [data-holmes-rec-card-fallback] {
@@ -627,8 +627,8 @@ button.checkout-btn:active {
 [data-holmes="catalogue-list"] [data-holmes-catalogue-card-image] img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: top;
   display: block;
 }
 [data-holmes="catalogue-list"] [data-holmes-catalogue-card-fallback] {
