@@ -24,6 +24,7 @@ import { ProductImage, ProductSaleBadge, isRecordOnSale } from "@aurora-studio/s
 import { SortDropdown } from "@aurora-studio/starter-core";
 import { ProductCardSkeleton } from "@aurora-studio/starter-core";
 import { CatalogueEmptyState } from "@aurora-studio/starter-core";
+import { ExampleDataCatalogueCTA } from "@/components/ExampleDataCatalogueCTA";
 import { RecipePageView } from "@/components/RecipePageView";
 import { CatalogueStoreContentRail } from "@/components/CatalogueStoreContentRail";
 import {
@@ -460,12 +461,13 @@ function CatalogueContent() {
             ) : null}
 
             {!loading && hits.length === 0 && !recipeTitle ? (
-              <div className="w-full flex-1 flex items-start justify-center">
+              <div className="w-full flex-1 flex flex-col items-center">
                 <CatalogueEmptyState
                   hasCategory={!!category}
                   hasStore={!!store}
                   categories={categoriesWithProducts}
                 />
+                <ExampleDataCatalogueCTA />
               </div>
             ) : null}
 

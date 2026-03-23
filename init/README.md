@@ -1,35 +1,46 @@
-# Init - first-run provisioning
+# Init — provisioning and seed data
 
-This folder holds everything that runs **once** when your app starts, so the Aurora tenant has the right schema without manual setup.
+This folder holds **committed** artefacts for first-run setup: marketplace **schema**, **catalogue** JSON, CMS / SQL seeds, and content-region manifests.
 
-**Template ID:** `aurora-template-grocery` (registered in Aurora Studio Template Registry). When deploying via Studio → Deploy to Vercel, the tenant may already be provisioned from onboarding; schema provision is idempotent and adds any missing tables.
+**Template ID:** `aurora-template-grocery` (Aurora Studio Template Registry). Schema provision is **idempotent** (merges missing tables/columns).
 
-## What’s here
+## Files
 
 | File | Purpose |
 |------|--------|
-| **content-regions.json** | CMS **page / region** slots (same manifest shape as Aurora Studio’s API `init/`). Regenerate with `pnpm run generate:content-regions` (also runs before `pnpm build` via `prebuild`). CLI: `aurora-generate-content-regions` from `@aurora-studio/starter-core` — see [content-regions.md](https://github.com/Purple-Napkin/aurora-starter-core/blob/main/docs/content-regions.md). |
-| **content-regions.schema.json** | JSON Schema for that manifest (copied into `init/` by the generator). |
-| **schema-v2.json** | Enterprise schema (Offers, vendor_products, etc.). Preferred when present. |
-| **schema.json** | Base template schema. Used when schema-v2.json is absent. |
-| **provision.ts** | Logic: load schema-v2.json if exists else schema.json → call API. Used by `register.ts` and `pnpm schema:provision`. |
-| **register.ts** | Next.js instrumentation hook: calls `runFirstRunProvision()` on server start. Root `instrumentation.ts` only re-exports this (Next.js requires that file at project root). |
+| **schema.json** | Marketplace table/field definitions for `POST /v1/provision-schema` (`pnpm schema:provision` or startup sync in `provision.ts`). |
+| **catalog-seed.json** | Vendors, zones, categories, products — applied with `pnpm seed:apply` / `pnpm seed:catalog:apply`. |
+| **seed-cms.sql** | `store_content_blocks` rows — POSTed via `apply-seed.mjs` as part of `pnpm seed:apply`. |
+| **content-regions.json** | CMS page/region slots. Regenerate: `pnpm run generate:content-regions` (also `prebuild`). See [starter-core content-regions](https://github.com/Purple-Napkin/aurora-starter-core/blob/main/docs/content-regions.md). |
+| **content-regions.schema.json** | JSON Schema for the manifest (from the generator). |
+| **provision.ts** | `loadSchema()`, `runFirstRunProvision()`, `runPendingSchemaMigration()` — used by `init/register.ts` (Next.js instrumentation). |
+| **register.ts** | Re-exported from root `instrumentation.ts`. |
+
+## Commands (template root)
+
+| Command | When |
+|---------|------|
+| `pnpm schema:provision` | First time or after schema changes — pushes `init/schema.json` to the API. |
+| `pnpm seed:apply` | Load demo catalogue + CMS (uses `init/catalog-seed.json` and SQL seeds). |
+| `pnpm seed:catalog:apply` | Catalogue JSON only. |
+
+### Updating `catalog-seed.json` or `schema.json` (maintainers)
+
+Normal development does not require this — the repo already ships committed `init/` data.
+
+- **Catalogue:** With `.env.local` pointing at the Aurora API and API key for the tenant you want to snapshot, run from the template root: `node scripts/catalog-seed.mjs export`. Inspect `seedMeta` in the output before committing.
+- **Schema:** Use Aurora Studio (Data Builder) to align changes with `init/schema.json`, or edit the JSON carefully; then run `pnpm schema:provision` against a test tenant if needed.
 
 ## When it runs
 
-- **On server start:** Next.js runs root `instrumentation.ts` → `init/register.ts` → `runFirstRunProvision()`. Skips if env vars are missing. Provision is idempotent - only adds missing tables.
-- **Manually:** `pnpm schema:provision` (see `scripts/provision-schema.mjs`) reads `init/schema-v2.json` (or `schema.json`) and calls the same API.
+- **Server start:** `instrumentation.ts` → `runFirstRunProvision()` then `runPendingSchemaMigration()` if `AURORA_API_URL` and `AURORA_API_KEY` are set. Skip with `AURORA_SKIP_STARTUP_SYNC=1` (e.g. CI).
+- **Studio onboarding:** workspace may already be provisioned; storefront sync still merges any missing tables.
 
-## Provision flows
+## Env
 
-1. **Studio onboarding** - User creates workspace from **Grocery (example template)** (`aurora-template-grocery`). Studio calls `POST /api/tenants/:slug/provision` with `templateId: "aurora-template-grocery"`.
-2. **Storefront first run** - This init runs `provisionSchema` via `register.ts` or `schema:provision`. Adds full schema; idempotent with Studio-provisioned tables.
+- `AURORA_API_URL` or `NEXT_PUBLIC_AURORA_API_URL`
+- `AURORA_API_KEY`
 
-## Env vars
+## Base
 
-- `AURORA_API_URL` or `NEXT_PUBLIC_AURORA_API_URL` - Aurora API base URL.
-- `AURORA_API_KEY` - Tenant API key (Aurora Studio → Settings → API Keys).
-
-## Base (marketplace vs not)
-
-In `provision.ts`, `AURORA_BASE` is set to `"marketplace-base"` (multi-vendor: vendors, products, etc.). For a non-marketplace app (blog, CRM), change it to `"base"`.
+`provision.ts` uses `AURORA_BASE = "marketplace-base"` (multi-vendor). For a non-marketplace app, switch to `"base"`.

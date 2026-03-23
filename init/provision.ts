@@ -2,7 +2,8 @@
  * First-run schema provisioning for Aurora.
  *
  * Checks if the tenant already has tables; if not, provisions the schema from
- * init/schema.json via POST /v1/provision-schema. Used by init/register.ts (Next.js
+ * init/schema.json (tables + optional reports/workflows) via POST /v1/provision-schema.
+ * Used by init/register.ts (Next.js
  * instrumentation) and can be called from scripts.
  */
 
@@ -109,14 +110,15 @@ export async function tenantHasTables(baseUrl: string, apiKey: string): Promise<
   return Array.isArray(tables) && tables.length > 0;
 }
 
-/** Load schema from init/. Prefers schema-v2.json (enterprise/Offers) when it exists. */
+/** Load marketplace schema from init/schema.json. */
 export function loadSchema(): SchemaShape {
   const fs = require("fs") as typeof import("node:fs");
   const path = require("path") as typeof import("node:path");
-  const schemaV2Path = path.join(process.cwd(), "init", "schema-v2.json");
   const schemaPath = path.join(process.cwd(), "init", "schema.json");
-  const pathToUse = fs.existsSync(schemaV2Path) ? schemaV2Path : schemaPath;
-  const raw = fs.readFileSync(pathToUse, "utf8");
+  if (!fs.existsSync(schemaPath)) {
+    throw new Error("Missing init/schema.json — restore from git or copy from a fresh template clone.");
+  }
+  const raw = fs.readFileSync(schemaPath, "utf8");
   const parsed = JSON.parse(raw);
   return typeof parsed.tables !== "undefined" ? parsed : { tables: parsed };
 }

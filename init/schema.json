@@ -1,33 +1,55 @@
 {
+  "exportedAt": "2026-03-23T18:44:53.534Z",
   "tables": [
     {
       "slug": "vendors",
       "name": "Vendors",
+      "display_field": null,
+      "display_expression": null,
       "icon": "Store",
+      "description": null,
       "fields": [
         {
           "slug": "name",
           "name": "Name",
           "field_type": "text",
-          "required": true
+          "required": true,
+          "validation": {}
         },
         {
           "slug": "email",
           "name": "Email",
           "field_type": "text",
-          "required": false
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "location",
+          "name": "Location",
+          "field_type": "location",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "map_pin_icon",
+          "name": "Map pin icon",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
         },
         {
           "slug": "address",
           "name": "Address",
           "field_type": "text",
-          "required": false
+          "required": false,
+          "validation": {}
         },
         {
           "slug": "image_url",
           "name": "Image URL",
           "field_type": "text",
-          "required": false
+          "required": false,
+          "validation": {}
         },
         {
           "slug": "status",
@@ -45,118 +67,266 @@
       ]
     },
     {
-      "slug": "zones",
-      "name": "Pick Zones",
-      "icon": "MapPin",
+      "slug": "vendor_products",
+      "name": "Vendor Products",
+      "display_field": null,
+      "display_expression": null,
+      "icon": "Package",
+      "description": null,
       "fields": [
-        {
-          "slug": "slug",
-          "name": "Slug",
-          "field_type": "text",
-          "required": true
-        },
-        {
-          "slug": "name",
-          "name": "Name",
-          "field_type": "text",
-          "required": true
-        },
-        {
-          "slug": "sort_order",
-          "name": "Pick sequence",
-          "field_type": "number",
-          "required": false
-        },
         {
           "slug": "vendor_id",
           "name": "Vendor",
           "field_type": "relation",
-          "required": false,
-          "relation_table_slug": "vendors"
-        }
-      ]
-    },
-    {
-      "slug": "categories",
-      "name": "Categories",
-      "icon": "Folder",
-      "fields": [
-        {
-          "slug": "name",
-          "name": "Name",
-          "field_type": "text",
-          "required": true
+          "required": true,
+          "relation_table_slug": "vendors",
+          "relation_type": "belongs_to",
+          "validation": {}
         },
         {
-          "slug": "slug",
-          "name": "Slug",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "zone_id",
-          "name": "Pick zone",
+          "slug": "product_id",
+          "name": "Product",
           "field_type": "relation",
+          "required": true,
+          "relation_table_slug": "products",
+          "relation_type": "belongs_to",
+          "validation": {}
+        },
+        {
+          "slug": "price",
+          "name": "Price",
+          "field_type": "currency",
           "required": false,
-          "relation_table_slug": "zones"
+          "validation": {}
+        },
+        {
+          "slug": "stock_quantity",
+          "name": "Stock",
+          "field_type": "number",
+          "required": false,
+          "validation": {}
         }
       ]
     },
     {
       "slug": "products",
       "name": "Products",
+      "display_field": null,
+      "display_expression": null,
       "icon": "Package",
+      "description": null,
       "fields": [
         {
           "slug": "name",
-          "name": "Name",
+          "name": "name",
           "field_type": "text",
-          "required": true
+          "required": false,
+          "validation": {}
         },
         {
-          "slug": "description",
-          "name": "Description",
+          "slug": "brand",
+          "name": "brand",
           "field_type": "text",
-          "required": false
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "country_of_origin",
+          "name": "country_of_origin",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "trade_category_leaf",
+          "name": "Trade category",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "net_content",
+          "name": "net_content",
+          "field_type": "number",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "net_content_unit",
+          "name": "net_content_unit",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "sold_by",
+          "name": "sold_by",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "priced_by",
+          "name": "priced_by",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "picked_by",
+          "name": "picked_by",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "is_variable_unit",
+          "name": "is_variable_unit",
+          "field_type": "boolean",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "unit_price_display",
+          "name": "Unit price display",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "variable_trade_item_type_code",
+          "name": "Variable trade item type code",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "functional_name",
+          "name": "functional_name",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "variant_name",
+          "name": "variant_name",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "attributes",
+          "name": "attributes",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
         },
         {
           "slug": "price",
-          "name": "Price",
+          "name": "price",
           "field_type": "currency",
-          "required": false
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "image_url",
+          "name": "image_url",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
         },
         {
           "slug": "sale_price",
           "name": "Sale Price",
           "field_type": "currency",
-          "required": false
+          "required": false,
+          "validation": {}
         },
         {
-          "slug": "on_sale",
-          "name": "On Sale",
-          "field_type": "boolean",
-          "required": false
-        },
-        {
-          "slug": "sku",
-          "name": "SKU",
+          "slug": "features",
+          "name": "Features (JSON array)",
           "field_type": "text",
-          "required": false
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "tags",
+          "name": "Tags (comma-separated)",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
         },
         {
           "slug": "ean",
           "name": "EAN / Barcode",
           "field_type": "text",
           "required": false,
-          "validation": {
-            "pattern": "EAN-8, EAN-13, or UPC-A"
-          }
+          "validation": {}
         },
         {
           "slug": "sell_by_weight",
           "name": "Sell by weight",
           "field_type": "boolean",
-          "required": false
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "description",
+          "name": "Description",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "storage_instructions",
+          "name": "Storage Instructions",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "weight",
+          "name": "Weight",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "subcategory",
+          "name": "Subcategory",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "vendor_id",
+          "name": "Vendor",
+          "field_type": "relation",
+          "required": false,
+          "relation_table_slug": "vendors",
+          "relation_type": "belongs_to",
+          "validation": {}
+        },
+        {
+          "slug": "price_per_unit",
+          "name": "Price per unit",
+          "field_type": "currency",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "on_sale",
+          "name": "On Sale",
+          "field_type": "boolean",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "sku",
+          "name": "SKU",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
         },
         {
           "slug": "unit",
@@ -173,168 +343,494 @@
           }
         },
         {
-          "slug": "price_per_unit",
-          "name": "Price per unit",
-          "field_type": "currency",
-          "required": false
-        },
-        {
-          "slug": "image_url",
-          "name": "Image URL",
-          "field_type": "text",
-          "required": false
-        },
-        {
           "slug": "stock_quantity",
           "name": "Stock",
           "field_type": "number",
-          "required": false
-        },
-        {
-          "slug": "subcategory",
-          "name": "Subcategory",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "weight",
-          "name": "Weight",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "storage_instructions",
-          "name": "Storage Instructions",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "features",
-          "name": "Features (JSON array)",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "tags",
-          "name": "Tags (comma-separated)",
-          "field_type": "text",
-          "required": false
+          "required": false,
+          "validation": {}
         },
         {
           "slug": "category_id",
           "name": "Category",
           "field_type": "relation",
           "required": false,
-          "relation_table_slug": "categories"
+          "relation_table_slug": "categories",
+          "relation_type": "belongs_to",
+          "validation": {}
+        },
+        {
+          "slug": "dietary_tags",
+          "name": "Dietary tags",
+          "field_type": "multi_select",
+          "required": false,
+          "validation": {
+            "options": [
+              "meat",
+              "dairy",
+              "alcohol",
+              "animal_products"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "slug": "orders",
+      "name": "Orders",
+      "display_field": null,
+      "display_expression": null,
+      "icon": "ShoppingCart",
+      "description": null,
+      "fields": [
+        {
+          "slug": "payment_status",
+          "name": "Payment status",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "delivery_date",
+          "name": "Delivery date",
+          "field_type": "date",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "user_id",
+          "name": "User ID",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "delivery_notes",
+          "name": "Delivery notes",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "shipping_address",
+          "name": "Shipping address",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "total",
+          "name": "Total",
+          "field_type": "currency",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "status",
+          "name": "Status",
+          "field_type": "select",
+          "required": false,
+          "validation": {
+            "options": [
+              "pending",
+              "paid",
+              "shipped",
+              "cancelled"
+            ]
+          }
+        },
+        {
+          "slug": "delivery_slot",
+          "name": "Delivery slot",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "stripe_session_id",
+          "name": "Stripe session",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "customer_email",
+          "name": "Customer email",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        }
+      ]
+    },
+    {
+      "slug": "product_substitutions",
+      "name": "Product Substitutions",
+      "display_field": null,
+      "display_expression": null,
+      "icon": "List",
+      "description": null,
+      "fields": [
+        {
+          "slug": "product_id",
+          "name": "Original product",
+          "field_type": "relation",
+          "required": true,
+          "relation_table_slug": "products",
+          "relation_type": "belongs_to",
+          "validation": {}
+        },
+        {
+          "slug": "substitute_product_id",
+          "name": "Allowed substitute",
+          "field_type": "relation",
+          "required": true,
+          "relation_table_slug": "products",
+          "relation_type": "belongs_to",
+          "validation": {}
+        }
+      ]
+    },
+    {
+      "slug": "addresses",
+      "name": "Addresses",
+      "display_field": null,
+      "display_expression": null,
+      "icon": "MapPin",
+      "description": null,
+      "fields": [
+        {
+          "slug": "is_default",
+          "name": "Default address",
+          "field_type": "boolean",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "country",
+          "name": "Country",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "city",
+          "name": "City",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "postal_code",
+          "name": "Postal code",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "type",
+          "name": "Type",
+          "field_type": "select",
+          "required": false,
+          "validation": {
+            "options": [
+              "shipping",
+              "billing"
+            ]
+          }
+        },
+        {
+          "slug": "user_id",
+          "name": "User ID",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "line1",
+          "name": "Address line 1",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        }
+      ]
+    },
+    {
+      "slug": "order_items",
+      "name": "Order Items",
+      "display_field": null,
+      "display_expression": null,
+      "icon": "List",
+      "description": null,
+      "fields": [
+        {
+          "slug": "order_id",
+          "name": "Order",
+          "field_type": "relation",
+          "required": false,
+          "relation_table_slug": "orders",
+          "relation_type": "belongs_to",
+          "validation": {}
+        },
+        {
+          "slug": "product_id",
+          "name": "Product",
+          "field_type": "relation",
+          "required": false,
+          "relation_table_slug": "products",
+          "relation_type": "belongs_to",
+          "validation": {}
+        },
+        {
+          "slug": "status",
+          "name": "Status",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "out_of_stock",
+          "name": "Out of stock",
+          "field_type": "boolean",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "picked_by",
+          "name": "Picked by",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "quantity",
+          "name": "Quantity",
+          "field_type": "number",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "picked_at",
+          "name": "Picked at",
+          "field_type": "datetime",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "price",
+          "name": "Price",
+          "field_type": "currency",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "substitution_reason",
+          "name": "Substitution reason",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "substituted_product_id",
+          "name": "Substituted product",
+          "field_type": "relation",
+          "required": false,
+          "relation_table_slug": "products",
+          "relation_type": "belongs_to",
+          "validation": {}
+        }
+      ]
+    },
+    {
+      "slug": "zones",
+      "name": "Pick Zones",
+      "display_field": null,
+      "display_expression": null,
+      "icon": "MapPin",
+      "description": null,
+      "fields": [
+        {
+          "slug": "slug",
+          "name": "Slug",
+          "field_type": "text",
+          "required": true,
+          "validation": {}
+        },
+        {
+          "slug": "name",
+          "name": "Name",
+          "field_type": "text",
+          "required": true,
+          "validation": {}
+        },
+        {
+          "slug": "sort_order",
+          "name": "Pick sequence",
+          "field_type": "number",
+          "required": false,
+          "validation": {}
         },
         {
           "slug": "vendor_id",
           "name": "Vendor",
           "field_type": "relation",
           "required": false,
-          "relation_table_slug": "vendors"
+          "relation_table_slug": "vendors",
+          "relation_type": "belongs_to",
+          "validation": {}
         }
       ]
     },
     {
-      "slug": "promotions",
-      "name": "Promotions",
-      "icon": "Tag",
+      "slug": "categories",
+      "name": "Categories",
+      "display_field": null,
+      "display_expression": null,
+      "icon": "Folder",
+      "description": null,
       "fields": [
         {
           "slug": "name",
           "name": "Name",
           "field_type": "text",
-          "required": true
+          "required": true,
+          "validation": {}
         },
         {
-          "slug": "description",
-          "name": "Description",
+          "slug": "slug",
+          "name": "Slug",
           "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "discount_type",
-          "name": "Discount Type",
-          "field_type": "select",
           "required": false,
-          "validation": {
-            "options": [
-              "percent",
-              "fixed",
-              "bogo"
-            ]
-          }
+          "validation": {}
         },
         {
-          "slug": "discount_value",
-          "name": "Discount Value",
-          "field_type": "number",
-          "required": false
-        },
-        {
-          "slug": "start_date",
-          "name": "Start Date",
-          "field_type": "date",
-          "required": false
-        },
-        {
-          "slug": "end_date",
-          "name": "End Date",
-          "field_type": "date",
-          "required": false
-        },
-        {
-          "slug": "min_order",
-          "name": "Min Order (cents)",
-          "field_type": "currency",
-          "required": false
-        },
-        {
-          "slug": "product_ids",
-          "name": "Product IDs (JSON array)",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "vendor_id",
-          "name": "Vendor",
+          "slug": "zone_id",
+          "name": "Pick zone",
           "field_type": "relation",
           "required": false,
-          "relation_table_slug": "vendors"
+          "relation_table_slug": "zones",
+          "relation_type": "belongs_to",
+          "validation": {}
         }
       ]
     },
     {
       "slug": "hero_banners",
       "name": "Hero Banners",
+      "display_field": null,
+      "display_expression": null,
       "icon": "Image",
+      "description": null,
       "fields": [
-        { "slug": "title", "name": "Title", "field_type": "text", "required": false },
-        { "slug": "subtitle", "name": "Subtitle", "field_type": "text", "required": false },
-        { "slug": "image_url", "name": "Image URL", "field_type": "text", "required": false },
-        { "slug": "link_url", "name": "Link URL", "field_type": "text", "required": false },
-        { "slug": "sort_order", "name": "Sort Order", "field_type": "number", "required": false }
+        {
+          "slug": "title",
+          "name": "Title",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "subtitle",
+          "name": "Subtitle",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "image_url",
+          "name": "Image URL",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "link_url",
+          "name": "Link URL",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "sort_order",
+          "name": "Sort Order",
+          "field_type": "number",
+          "required": false,
+          "validation": {}
+        }
       ]
     },
     {
       "slug": "site_images",
       "name": "Site Images",
+      "display_field": null,
+      "display_expression": null,
       "icon": "Image",
+      "description": null,
       "fields": [
-        { "slug": "name", "name": "Name", "field_type": "text", "required": true },
-        { "slug": "image_url", "name": "Image URL", "field_type": "text", "required": false },
-        { "slug": "usage", "name": "Usage", "field_type": "text", "required": false }
+        {
+          "slug": "name",
+          "name": "Name",
+          "field_type": "text",
+          "required": true,
+          "validation": {}
+        },
+        {
+          "slug": "image_url",
+          "name": "Image URL",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "usage",
+          "name": "Usage",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        }
       ]
     },
     {
       "slug": "store_content_blocks",
       "name": "Store content blocks",
+      "display_field": null,
+      "display_expression": null,
       "icon": "Layout",
+      "description": "Editorial rails per page and region (Hippo grocery). Holmes injects separately via template mounts.",
       "fields": [
-        { "slug": "slug", "name": "Slug", "field_type": "text", "required": true },
-        { "slug": "sort_order", "name": "Sort order", "field_type": "number", "required": false },
-        { "slug": "page", "name": "Page", "field_type": "select", "required": true, "validation": { "options": ["home", "catalogue", "for_you", "product_detail", "recipe", "recipe_index", "checkout", "cart", "offers", "promotions", "about"] } },
+        {
+          "slug": "slug",
+          "name": "Slug",
+          "field_type": "text",
+          "required": true,
+          "validation": {}
+        },
+        {
+          "slug": "sort_order",
+          "name": "Sort order",
+          "field_type": "number",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "page",
+          "name": "Page",
+          "field_type": "select",
+          "required": true,
+          "validation": {
+            "options": [
+              "home",
+              "catalogue",
+              "for_you",
+              "product_detail",
+              "recipe",
+              "recipe_index",
+              "checkout",
+              "cart",
+              "offers",
+              "promotions",
+              "about"
+            ]
+          }
+        },
         {
           "slug": "region",
           "name": "Region",
@@ -355,445 +851,185 @@
               "recipe_below_ingredients",
               "recipe_below_title",
               "recipes_index_below_header"
-            ]
+            ],
+            "optionsByPage": {
+              "cart": [
+                "cart_above_lines"
+              ],
+              "home": [
+                "home_main_feed"
+              ],
+              "about": [
+                "about_main"
+              ],
+              "offers": [
+                "offers_below_header"
+              ],
+              "recipe": [
+                "recipe_below_ingredients",
+                "recipe_below_title"
+              ],
+              "for_you": [
+                "for_you_below_cart_blocks",
+                "for_you_below_header"
+              ],
+              "catalogue": [
+                "catalogue_above_grid",
+                "catalogue_below_filters"
+              ],
+              "recipe_index": [
+                "recipes_index_below_header"
+              ],
+              "product_detail": [
+                "pdp_below_context",
+                "pdp_below_tabs"
+              ]
+            },
+            "regionOptionLabels": {
+              "about_main": "About — About Main",
+              "home_main_feed": "Home — Home Main Feed",
+              "pdp_below_tabs": "Product Detail — Pdp Below Tabs",
+              "cart_above_lines": "Cart — Cart Above Lines",
+              "pdp_below_context": "Product Detail — Pdp Below Context",
+              "recipe_below_title": "Recipe — Recipe Below Title",
+              "offers_below_header": "Offers — Offers Below Header",
+              "catalogue_above_grid": "Catalogue — Catalogue Above Grid",
+              "for_you_below_header": "For You — For You Below Header",
+              "catalogue_below_filters": "Catalogue — Catalogue Below Filters",
+              "recipe_below_ingredients": "Recipe — Recipe Below Ingredients",
+              "for_you_below_cart_blocks": "For You — For You Below Cart Blocks",
+              "recipes_index_below_header": "Recipe Index — Recipes Index Below Header"
+            },
+            "contentRegionPageField": "page"
           }
         },
-        { "slug": "width", "name": "Width", "field_type": "select", "required": false, "validation": { "options": ["full", "half"] } },
-        { "slug": "block_kind", "name": "Block kind", "field_type": "select", "required": true, "validation": { "options": ["product_list", "search_terms", "blurb", "image_blurb"] } },
-        { "slug": "title", "name": "Title", "field_type": "text", "required": false },
-        { "slug": "subtitle", "name": "Subtitle", "field_type": "text", "required": false },
-        { "slug": "body", "name": "Body", "field_type": "text", "required": false },
-        { "slug": "image_url", "name": "Image URL", "field_type": "text", "required": false },
-        { "slug": "link_url", "name": "Link URL", "field_type": "text", "required": false },
-        { "slug": "link_label", "name": "Link label", "field_type": "text", "required": false },
-        { "slug": "product_ids", "name": "Product IDs (comma-separated)", "field_type": "text", "required": false },
-        { "slug": "search_terms", "name": "Search terms (comma-separated)", "field_type": "text", "required": false },
-        { "slug": "time_of_day", "name": "Time of day", "field_type": "select", "required": false, "validation": { "options": ["morning", "afternoon", "evening"] } },
-        { "slug": "day_of_week", "name": "Day of week", "field_type": "select", "required": false, "validation": { "options": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] } },
-        { "slug": "holiday_key", "name": "Holiday key", "field_type": "text", "required": false },
-        { "slug": "category_slug", "name": "Category slug", "field_type": "text", "required": false }
-      ]
-    },
-    {
-      "slug": "orders",
-      "name": "Orders",
-      "icon": "ShoppingCart",
-      "fields": [
         {
-          "slug": "user_id",
-          "name": "User ID",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "customer_email",
-          "name": "Customer email",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "status",
-          "name": "Status",
+          "slug": "width",
+          "name": "Width",
           "field_type": "select",
           "required": false,
           "validation": {
             "options": [
-              "pending",
-              "paid",
-              "shipped",
-              "cancelled"
+              "full",
+              "half"
             ]
           }
         },
         {
-          "slug": "total",
-          "name": "Total",
-          "field_type": "currency",
-          "required": false
-        },
-        {
-          "slug": "stripe_session_id",
-          "name": "Stripe session",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "payment_status",
-          "name": "Payment status",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "delivery_date",
-          "name": "Delivery date",
-          "field_type": "date",
-          "required": false
-        },
-        {
-          "slug": "delivery_slot",
-          "name": "Delivery slot",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "shipping_address",
-          "name": "Shipping address",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "delivery_notes",
-          "name": "Delivery notes",
-          "field_type": "text",
-          "required": false
-        }
-      ]
-    },
-    {
-      "slug": "order_items",
-      "name": "Order Items",
-      "icon": "List",
-      "fields": [
-        {
-          "slug": "order_id",
-          "name": "Order",
-          "field_type": "relation",
-          "required": false,
-          "relation_table_slug": "orders"
-        },
-        {
-          "slug": "product_id",
-          "name": "Product",
-          "field_type": "relation",
-          "required": false,
-          "relation_table_slug": "products"
-        },
-        {
-          "slug": "quantity",
-          "name": "Quantity",
-          "field_type": "number",
-          "required": false
-        },
-        {
-          "slug": "price",
-          "name": "Price",
-          "field_type": "currency",
-          "required": false
-        },
-        {
-          "slug": "status",
-          "name": "Status",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "out_of_stock",
-          "name": "Out of stock",
-          "field_type": "boolean",
-          "required": false
-        },
-        {
-          "slug": "substituted_product_id",
-          "name": "Substituted product",
-          "field_type": "relation",
-          "required": false,
-          "relation_table_slug": "products"
-        },
-        {
-          "slug": "substitution_reason",
-          "name": "Substitution reason",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "picked_at",
-          "name": "Picked at",
-          "field_type": "datetime",
-          "required": false
-        },
-        {
-          "slug": "picked_by",
-          "name": "Picked by",
-          "field_type": "text",
-          "required": false
-        }
-      ]
-    },
-    {
-      "slug": "product_substitutions",
-      "name": "Product Substitutions",
-      "icon": "List",
-      "fields": [
-        {
-          "slug": "product_id",
-          "name": "Original product",
-          "field_type": "relation",
+          "slug": "block_kind",
+          "name": "Block kind",
+          "field_type": "select",
           "required": true,
-          "relation_table_slug": "products"
+          "validation": {
+            "options": [
+              "product_list",
+              "search_terms",
+              "blurb",
+              "image_blurb"
+            ]
+          }
         },
         {
-          "slug": "substitute_product_id",
-          "name": "Allowed substitute",
-          "field_type": "relation",
-          "required": true,
-          "relation_table_slug": "products"
-        }
-      ]
-    },
-    {
-      "slug": "addresses",
-      "name": "Addresses",
-      "icon": "MapPin",
-      "fields": [
-        {
-          "slug": "user_id",
-          "name": "User ID",
+          "slug": "title",
+          "name": "Title",
           "field_type": "text",
-          "required": false
+          "required": false,
+          "validation": {}
         },
         {
-          "slug": "type",
-          "name": "Type",
+          "slug": "subtitle",
+          "name": "Subtitle",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "image_url",
+          "name": "Image URL",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "link_url",
+          "name": "Link URL",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "link_label",
+          "name": "Link label",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "product_ids",
+          "name": "Product IDs (comma-separated)",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "search_terms",
+          "name": "Search terms (comma-separated, OR)",
+          "field_type": "text",
+          "required": false,
+          "validation": {}
+        },
+        {
+          "slug": "time_of_day",
+          "name": "Time of day",
           "field_type": "select",
           "required": false,
           "validation": {
             "options": [
-              "shipping",
-              "billing"
+              "morning",
+              "afternoon",
+              "evening"
             ]
           }
         },
         {
-          "slug": "line1",
-          "name": "Address line 1",
-          "field_type": "text",
-          "required": false
+          "slug": "day_of_week",
+          "name": "Day of week",
+          "field_type": "select",
+          "required": false,
+          "validation": {
+            "options": [
+              "mon",
+              "tue",
+              "wed",
+              "thu",
+              "fri",
+              "sat",
+              "sun"
+            ]
+          }
         },
         {
-          "slug": "city",
-          "name": "City",
+          "slug": "holiday_key",
+          "name": "Holiday key",
           "field_type": "text",
-          "required": false
+          "required": false,
+          "validation": {}
         },
         {
-          "slug": "postal_code",
-          "name": "Postal code",
+          "slug": "category_slug",
+          "name": "Category slug (catalogue page only)",
           "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "country",
-          "name": "Country",
-          "field_type": "text",
-          "required": false
-        },
-        {
-          "slug": "is_default",
-          "name": "Default address",
-          "field_type": "boolean",
-          "required": false
+          "required": false,
+          "validation": {}
         }
       ]
-    }
-  ],
-  "reports": [
-    {
-      "name": "Orders by status",
-      "description": "Count of orders grouped by status",
-      "config": {
-        "type": "table",
-        "tableSlug": "orders",
-        "groupBy": [
-          "status"
-        ],
-        "aggregates": [
-          {
-            "field": "id",
-            "fn": "count"
-          }
-        ],
-        "sort": "status",
-        "order": "asc",
-        "limit": 50
-      }
-    },
-    {
-      "name": "Products low in stock",
-      "description": "Products with stock below 10",
-      "config": {
-        "type": "sql",
-        "sql": "SELECT name, sku, stock_quantity FROM products WHERE tenant_id = $tenant_id$ AND (stock_quantity IS NULL OR stock_quantity < 10) ORDER BY stock_quantity ASC NULLS LAST LIMIT 100"
-      }
-    },
-    {
-      "name": "Revenue by vendor",
-      "description": "Total order value grouped by vendor",
-      "config": {
-        "type": "sql",
-        "sql": "SELECT v.name AS vendor_name, COALESCE(SUM(oi.quantity * oi.price), 0)::numeric AS total_revenue\n          FROM order_items oi\n          JOIN orders o ON o.id = oi.order_id AND o.tenant_id = oi.tenant_id\n          JOIN products p ON p.id = oi.product_id AND p.tenant_id = oi.tenant_id\n          LEFT JOIN vendors v ON v.id = p.vendor_id AND v.tenant_id = p.tenant_id\n          WHERE oi.tenant_id = $tenant_id$ AND o.status = 'paid'\n          GROUP BY v.id, v.name\n          ORDER BY total_revenue DESC\n          LIMIT 50"
-      }
-    }
-  ],
-  "workflows": [
-    {
-      "name": "Send email on order.paid",
-      "definition": {
-        "nodes": [
-          {
-            "id": "trigger-1",
-            "type": "trigger",
-            "data": {
-              "trigger_type": "event",
-              "trigger_event_type": "order.paid"
-            },
-            "position": {
-              "x": 0,
-              "y": 0
-            }
-          },
-          {
-            "id": "email-1",
-            "type": "email",
-            "data": {
-              "to_mode": "from_record",
-              "to_field": "customer_email",
-              "subject": "Order confirmed",
-              "body": "Thank you for your order. Order ID: {{record.id}}"
-            },
-            "position": {
-              "x": 240,
-              "y": 0
-            }
-          }
-        ],
-        "edges": [
-          {
-            "id": "e1",
-            "source": "trigger-1",
-            "target": "email-1"
-          }
-        ]
-      }
-    },
-    {
-      "name": "Notify on inventory.low",
-      "definition": {
-        "nodes": [
-          {
-            "id": "trigger-1",
-            "type": "trigger",
-            "data": {
-              "trigger_type": "event",
-              "trigger_event_type": "inventory.low"
-            },
-            "position": {
-              "x": 0,
-              "y": 0
-            }
-          },
-          {
-            "id": "email-1",
-            "type": "email",
-            "data": {
-              "to_mode": "users",
-              "users_role_filter": "owner,admin",
-              "subject": "Low stock alert",
-              "body": "Product {{record.name}} ({{record.sku}}) is low in stock. Current: {{record.stock_quantity}}"
-            },
-            "position": {
-              "x": 240,
-              "y": 0
-            }
-          }
-        ],
-        "edges": [
-          {
-            "id": "e1",
-            "source": "trigger-1",
-            "target": "email-1"
-          }
-        ]
-      }
-    },
-    {
-      "name": "Process inbound orders webhook",
-      "definition": {
-        "nodes": [
-          {
-            "id": "trigger-1",
-            "type": "trigger",
-            "data": {
-              "trigger_type": "webhook",
-              "webhook_path": "orders"
-            },
-            "position": {
-              "x": 0,
-              "y": 0
-            }
-          },
-          {
-            "id": "email-1",
-            "type": "email",
-            "data": {
-              "to_mode": "users",
-              "users_role_filter": "owner,admin",
-              "subject": "Inbound orders webhook received",
-              "body": "An external system sent an orders webhook. Check workflow run logs for payload details."
-            },
-            "position": {
-              "x": 240,
-              "y": 0
-            }
-          }
-        ],
-        "edges": [
-          {
-            "id": "e1",
-            "source": "trigger-1",
-            "target": "email-1"
-          }
-        ]
-      }
-    },
-    {
-      "name": "Process inbound inventory webhook",
-      "definition": {
-        "nodes": [
-          {
-            "id": "trigger-1",
-            "type": "trigger",
-            "data": {
-              "trigger_type": "webhook",
-              "webhook_path": "inventory"
-            },
-            "position": {
-              "x": 0,
-              "y": 0
-            }
-          },
-          {
-            "id": "email-1",
-            "type": "email",
-            "data": {
-              "to_mode": "users",
-              "users_role_filter": "owner,admin",
-              "subject": "Inbound inventory webhook received",
-              "body": "An external system sent an inventory webhook. Check workflow run logs for payload details."
-            },
-            "position": {
-              "x": 240,
-              "y": 0
-            }
-          }
-        ],
-        "edges": [
-          {
-            "id": "e1",
-            "source": "trigger-1",
-            "target": "email-1"
-          }
-        ]
-      }
     }
   ]
 }

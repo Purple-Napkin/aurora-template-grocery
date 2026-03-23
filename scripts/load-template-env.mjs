@@ -1,7 +1,7 @@
 /**
- * Load env for template scripts without a monorepo `scripts/template-seed` dependency.
- * 1) Parent-of-template `../..` `.env` (optional monorepo root) when keys unset.
- * 2) Template root `.env.local` / `.env` (first file found).
+ * Load env for template scripts.
+ * 1) Template root `.env.local` / `.env` (first file found).
+ * 2) Optional `../../.env` (parent of template folder) for keys still unset — useful when several apps share one machine-level file.
  */
 import { readFileSync, existsSync } from "fs";
 import { dirname, join } from "path";
@@ -37,7 +37,7 @@ export function loadTemplateRootEnv(scriptUrl) {
   }
 }
 
-/** Optional monorepo root `.env` at `template/../../.env` (aurora/ when layout is aurora/aurora-template-grocery). */
+/** Optional `.env` at `template/../../.env` (two levels above `scripts/`). */
 export function loadMonorepoRootEnv(scriptUrl) {
   const scriptDir = dirname(fileURLToPath(scriptUrl));
   const rootEnv = join(scriptDir, "..", "..", ".env");
@@ -45,7 +45,7 @@ export function loadMonorepoRootEnv(scriptUrl) {
   parseEnvFile(readFileSync(rootEnv, "utf8"));
 }
 
-/** Template `.env.local` first, then monorepo root `.env` for keys still unset. */
+/** Template `.env.local` / `.env` first, then optional `../../.env`. */
 export function loadAllTemplateEnv(scriptUrl) {
   loadTemplateRootEnv(scriptUrl);
   loadMonorepoRootEnv(scriptUrl);

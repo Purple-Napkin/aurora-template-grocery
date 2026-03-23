@@ -11,8 +11,8 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "schema:provision": "node scripts/provision-schema.mjs",
-    "seed:apply": "node scripts/apply-seed.mjs",
-    "catalog:enrich": "node scripts/enrich-grocery-catalog.mjs"
+    "seed:apply": "node scripts/catalog-seed.mjs apply && node scripts/apply-seed.mjs",
+    "seed:catalog:apply": "node scripts/catalog-seed.mjs apply"
   },
   "dependencies": {
     "@aurora-studio/sdk": "^0.2.42",

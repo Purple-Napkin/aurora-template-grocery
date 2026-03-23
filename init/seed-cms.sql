@@ -1,82 +1,6 @@
--- Aurora template (grocery) — catalog + store_content_blocks (deterministic UUIDs)
--- Apply after tenant schema + tables exist (pnpm schema:provision or Studio).
---
--- From this app directory with .env.local (same as storefront):
---   pnpm seed:apply
--- The API resolves your tenant from AURORA_API_KEY and substitutes __TENANT_UUID__ / __TENANT_SCHEMA__.
---
--- Re-run safe for tenant catalogue: we do NOT delete vendors, zones, categories, or products.
--- Those rows are upserted by id so your own SKUs/categories are never dropped.
--- Template demo products are only overwritten on conflict if the row still has sku LIKE 'SEED-TEMPLATE-GROCERY-%'
--- (if you repurposed a seed row and changed the SKU, the seed script leaves your row alone).
--- We still replace CMS rows whose slug starts with seed-cb-grocery- so template copy stays in sync.
--- After apply: reindex Meilisearch for the tenant.
-
 BEGIN;
 
 DELETE FROM __TENANT_SCHEMA__.store_content_blocks WHERE tenant_id = '__TENANT_UUID__'::uuid AND slug LIKE 'seed-cb-grocery-%';
-
-INSERT INTO __TENANT_SCHEMA__.vendors (id, tenant_id, name, email, status, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000001'::uuid, '__TENANT_UUID__'::uuid, 'Seed — Example Grocery supply', 'seed-grocery@example.com', 'active', now(), now())
-ON CONFLICT (id) DO UPDATE SET
-  tenant_id = EXCLUDED.tenant_id,
-  name = EXCLUDED.name,
-  email = EXCLUDED.email,
-  status = EXCLUDED.status,
-  updated_at = now();
-
-INSERT INTO __TENANT_SCHEMA__.zones (id, tenant_id, slug, name, sort_order, vendor_id, created_at, updated_at)
-VALUES ('a1000000-0000-4000-8000-000000000002'::uuid, '__TENANT_UUID__'::uuid, 'template-grocery-seed-zone', 'Supermarket floor', 1, 'a1000000-0000-4000-8000-000000000001'::uuid, now(), now())
-ON CONFLICT (id) DO UPDATE SET
-  tenant_id = EXCLUDED.tenant_id,
-  slug = EXCLUDED.slug,
-  name = EXCLUDED.name,
-  sort_order = EXCLUDED.sort_order,
-  vendor_id = EXCLUDED.vendor_id,
-  updated_at = now();
-
-INSERT INTO __TENANT_SCHEMA__.categories (id, tenant_id, name, slug, zone_id, created_at, updated_at)
-VALUES
-  ('a1000000-0000-4000-8000-000000000011'::uuid, '__TENANT_UUID__'::uuid, 'Vegetables', 'template-grocery-vegetables', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now()),
-  ('a1000000-0000-4000-8000-000000000012'::uuid, '__TENANT_UUID__'::uuid, 'Beverages', 'template-grocery-beverages', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now()),
-  ('a1000000-0000-4000-8000-000000000013'::uuid, '__TENANT_UUID__'::uuid, 'Snacks & pantry', 'template-grocery-snacks', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now()),
-  ('a1000000-0000-4000-8000-000000000014'::uuid, '__TENANT_UUID__'::uuid, 'Bakery', 'template-grocery-bakery-items', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now()),
-  ('a1000000-0000-4000-8000-000000000015'::uuid, '__TENANT_UUID__'::uuid, 'Health & travel', 'template-grocery-health-travel', 'a1000000-0000-4000-8000-000000000002'::uuid, now(), now())
-ON CONFLICT (id) DO UPDATE SET
-  tenant_id = EXCLUDED.tenant_id,
-  name = EXCLUDED.name,
-  slug = EXCLUDED.slug,
-  zone_id = EXCLUDED.zone_id,
-  updated_at = now();
-
-INSERT INTO __TENANT_SCHEMA__.products (id, tenant_id, name, description, price, sku, ean, stock_quantity, image_url, category_id, vendor_id, tags, created_at, updated_at)
-VALUES
-  ('a1000000-0000-4000-8000-000000000021'::uuid, '__TENANT_UUID__'::uuid, 'Organic Cherry Tomato 250g', 'Salads and quick sauces.', 2.49, 'SEED-TEMPLATE-GROCERY-01', '05012345678905', 80, 'https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000011'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'hero, new_arrival', now(), now()),
-  ('a1000000-0000-4000-8000-000000000022'::uuid, '__TENANT_UUID__'::uuid, 'Peeled Plum Tomatoes 4x400g', 'Passata-ready pantry line.', 3.99, 'SEED-TEMPLATE-GROCERY-02', '05012345678912', 60, 'https://images.pexels.com/photos/5945562/pexels-photo-5945562.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000011'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, NULL, now(), now()),
-  ('a1000000-0000-4000-8000-000000000023'::uuid, '__TENANT_UUID__'::uuid, 'Cloudy Apple Juice 6x330ml', 'Fridge-friendly multipack.', 4.50, 'SEED-TEMPLATE-GROCERY-03', '05012345678929', 40, 'https://images.pexels.com/photos/1435735/pexels-photo-1435735.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000012'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, NULL, now(), now()),
-  ('a1000000-0000-4000-8000-000000000024'::uuid, '__TENANT_UUID__'::uuid, 'Organic Spaghetti 500g', 'Cupboard staple for quick dinners.', 2.20, 'SEED-TEMPLATE-GROCERY-04', '05012345678936', 100, 'https://images.pexels.com/photos/143133/pexels-photo-143133.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000013'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'seasonal', now(), now()),
-  ('a1000000-0000-4000-8000-000000000025'::uuid, '__TENANT_UUID__'::uuid, 'Pasta Sauce Basilico 400g', 'Pairs with dried pasta nights.', 2.80, 'SEED-TEMPLATE-GROCERY-05', '05012345678943', 90, 'https://images.pexels.com/photos/5945562/pexels-photo-5945562.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000013'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, NULL, now(), now()),
-  ('a1000000-0000-4000-8000-000000000026'::uuid, '__TENANT_UUID__'::uuid, 'Artisan Sourdough Loaf', 'Baked daily — freeze half for toast.', 3.40, 'SEED-TEMPLATE-GROCERY-06', '05012345678950', 35, 'https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000014'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, NULL, now(), now()),
-  ('a1000000-0000-4000-8000-000000000027'::uuid, '__TENANT_UUID__'::uuid, 'SPF 50 Face Sunscreen 50ml', 'Travel-size UV protection — cabin-bag friendly.', 8.99, 'SEED-TEMPLATE-GROCERY-07', '05012345678967', 45, 'https://images.pexels.com/photos/4465121/pexels-photo-4465121.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000015'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'travel, sunscreen', now(), now()),
-  ('a1000000-0000-4000-8000-000000000028'::uuid, '__TENANT_UUID__'::uuid, 'Fabric Plasters Assorted 40 Pack', 'First-aid travel kit staple.', 2.75, 'SEED-TEMPLATE-GROCERY-08', '05012345678974', 70, 'https://images.pexels.com/photos/7269873/pexels-photo-7269873.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000015'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'travel, plasters', now(), now()),
-  ('a1000000-0000-4000-8000-000000000029'::uuid, '__TENANT_UUID__'::uuid, 'Antibacterial Hand Gel 100ml', 'Quick sanitise before snacks on the go.', 1.95, 'SEED-TEMPLATE-GROCERY-09', '05012345678981', 120, 'https://images.pexels.com/photos/3786157/pexels-photo-3786157.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000015'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'travel, hand gel', now(), now()),
-  ('a1000000-0000-4000-8000-00000000002a'::uuid, '__TENANT_UUID__'::uuid, 'Semi-Skimmed Milk 2L', 'Fridge essential for tea, cereal, and top-up shops.', 1.85, 'SEED-TEMPLATE-GROCERY-10', '05012345678998', 200, 'https://images.pexels.com/photos/416471/pexels-photo-416471.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000012'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'essentials, top_up', now(), now()),
-  ('a1000000-0000-4000-8000-00000000002b'::uuid, '__TENANT_UUID__'::uuid, 'Free-Range Eggs Large 6', 'Breakfast and baking staple.', 2.10, 'SEED-TEMPLATE-GROCERY-11', '05012345679001', 150, 'https://images.pexels.com/photos/162712/egg-white-food-protein-162712.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'a1000000-0000-4000-8000-000000000013'::uuid, 'a1000000-0000-4000-8000-000000000001'::uuid, 'essentials, top_up', now(), now())
-ON CONFLICT (id) DO UPDATE SET
-  tenant_id = EXCLUDED.tenant_id,
-  name = EXCLUDED.name,
-  description = EXCLUDED.description,
-  price = EXCLUDED.price,
-  sku = EXCLUDED.sku,
-  ean = EXCLUDED.ean,
-  stock_quantity = EXCLUDED.stock_quantity,
-  image_url = EXCLUDED.image_url,
-  category_id = EXCLUDED.category_id,
-  vendor_id = EXCLUDED.vendor_id,
-  tags = EXCLUDED.tags,
-  updated_at = now()
-WHERE __TENANT_SCHEMA__.products.sku LIKE 'SEED-TEMPLATE-GROCERY-%';
-
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
 VALUES ('b2000001-0000-4000-8000-000000000001'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-home-main-products', 0, 'home', 'home_main_feed', 'full', 'product_list', 'Pantry picks we stock for busy weeks', 'Organic pasta, passata-ready tomatoes, rice, and oil — one pass down the middle aisles.', NULL, NULL, NULL, NULL, 'a1000000-0000-4000-8000-000000000024,a1000000-0000-4000-8000-000000000025,a1000000-0000-4000-8000-000000000022,a1000000-0000-4000-8000-000000000021,a1000000-0000-4000-8000-000000000023,a1000000-0000-4000-8000-000000000026', NULL, NULL, NULL, NULL, NULL, now(), now());
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
@@ -132,4 +56,3 @@ VALUES ('b2000019-0000-4000-8000-000000000019'::uuid, '__TENANT_UUID__'::uuid, '
 INSERT INTO __TENANT_SCHEMA__.store_content_blocks (id, tenant_id, slug, sort_order, page, region, width, block_kind, title, subtitle, body, image_url, link_url, link_label, product_ids, search_terms, time_of_day, day_of_week, holiday_key, category_slug, created_at, updated_at)
 VALUES ('b200001a-0000-4000-8000-00000000001a'::uuid, '__TENANT_UUID__'::uuid, 'seed-cb-grocery-about', 1, 'about', 'about_main', 'full', 'image_blurb', 'Example Grocery', NULL, 'We combine Aurora catalogue data, Holmes personalisation, and these CMS blocks so your team can merchandise without redeploying the app. Replace the image with your store front, team, or local growers.', 'https://images.pexels.com/photos/264507/pexels-photo-264507.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', '/catalogue', 'Start shopping', NULL, NULL, NULL, NULL, NULL, NULL, now(), now());
 
-COMMIT;
