@@ -107,7 +107,7 @@ These are **raw materials**. Holmes decides *when* and *what* to show based on i
 1. **Mission-driven (default)** when confidence is high — full mission bar, mission-first command surface, recipe/combo guidance, bundle pickers, and structural layout changes.
 2. **Signal-priority (“classic Holmes”)** when the user dismisses or opts out of mission framing — **no** requirement to show named missions, but Holmes **still** uses signals to **prioritise categories and products**, surface **suggestions**, **tidbits**, **guardrails**, **offers**, **prefetch**, and **bundled/combo** surfaces.
 
-Spec and acceptance criteria: [holmes-next-steps-mission-mode.md](../../aurora-studio/docs/holmes-next-steps-mission-mode.md) (in Aurora Studio repo).
+Spec and acceptance criteria: [HOLMES-WHITEPAPER.md](../../aurora-studio/docs/HOLMES-WHITEPAPER.md) (in Aurora Studio repo).
 
 ---
 

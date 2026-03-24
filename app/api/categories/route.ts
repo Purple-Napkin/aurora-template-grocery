@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAuroraClient } from "@aurora-studio/starter-core";
-import { search } from "@aurora-studio/starter-core";
+import { getCategories, getStoreConfig, search } from "@aurora-studio/starter-core";
 
 const DEFAULT_CATEGORIES: { name: string; slug: string; image_url?: string }[] = [
   { name: "Bakery Items", slug: "bakery-items" },
@@ -17,19 +16,16 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const vendorId = searchParams.get("vendorId")?.trim() || undefined;
 
-    const aurora = createAuroraClient();
-    const config = await aurora.store.config();
-    const categorySlug = (config as { categoryTableSlug?: string }).categoryTableSlug;
-
+    const config = await getStoreConfig();
     let categories: { name: string; slug: string; image_url?: string }[] = DEFAULT_CATEGORIES;
 
-    if (config.enabled && categorySlug) {
-      const { data } = await aurora.tables(categorySlug).records.list({ limit: 20 });
-      if (data?.length) {
-        categories = data.map((r: Record<string, unknown>) => ({
-          name: String(r.name ?? r.slug ?? r.id ?? ""),
-          slug: String(r.slug ?? r.name ?? r.id ?? "").toLowerCase().replace(/\s+/g, "-"),
-          image_url: (r.image_url ?? r.image ?? r.thumbnail ?? r.photo) ? String(r.image_url ?? r.image ?? r.thumbnail ?? r.photo) : undefined,
+    if (config?.enabled) {
+      const { categories: cached } = await getCategories();
+      if (cached?.length) {
+        categories = cached.map((c) => ({
+          name: c.name ?? c.slug ?? "",
+          slug: (c.slug ?? c.name ?? "").toLowerCase().replace(/\s+/g, "-"),
+          image_url: c.image_url,
         }));
       }
     }

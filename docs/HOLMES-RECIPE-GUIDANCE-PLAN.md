@@ -10,7 +10,7 @@
 | Multi-combo API + picker + `holmesSelectCombo` | **Shipped** – `combos-for-cart`, `RecipePicker` pattern in ecom template |
 | Category restriction to selected combo (`restrictCategoriesToCombo`) | **Planned** – see template + `home-personalization` follow-up |
 
-**Next product slice:** [Holmes mission mode vs signal-priority](../../aurora-studio/docs/holmes-next-steps-mission-mode.md) – dismiss full mission UX while keeping inference-driven prioritisation, hints, and bundles.
+**Next product slice:** [Holmes whitepaper](../../aurora-studio/docs/HOLMES-WHITEPAPER.md) – mission-driven UX, inference-driven prioritisation, hints, and bundles.
 
 ---
 
