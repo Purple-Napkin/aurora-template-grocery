@@ -11,7 +11,6 @@ import {
 import { AffinityToast } from "@/components/AffinityToast";
 import { ConditionalLayout } from "@/components/ConditionalLayout";
 import { DietaryExclusionsProvider } from "@/components/DietaryExclusionsContext";
-import { HolmesDevTools } from "@/components/HolmesDevTools";
 import { MissionAwareHomeProvider } from "@/components/MissionAwareHome";
 import { VeggieBuddy } from "@/components/VeggieBuddy";
 
@@ -34,7 +33,6 @@ export function ClientProviders({ children }: { children: ReactNode }) {
                 </MissionAwareHomeProvider>
                 <AffinityToast />
                 <VeggieBuddy />
-                <HolmesDevTools />
               </AddToCartFlyProvider>
             </CartProvider>
           </AuthProvider>

@@ -13,7 +13,7 @@ import {
   isMissionBarCollapsed,
   setMissionBarCollapsed,
 } from "@/lib/mission-bar";
-import { holmesMissionLockClear } from "@aurora-studio/starter-core";
+import { holmesFullSessionReset } from "@aurora-studio/starter-core";
 import {
   alignedMissionTrustLine,
   isCookingMissionKey,
@@ -89,9 +89,7 @@ export function ActiveMissionBar() {
   const handleReset = () => {
     setDismissed(false);
     setDismissedState(false);
-    holmesMissionLockClear();
-    missionData?.refresh?.();
-    window.dispatchEvent(new CustomEvent("holmes:missionBarReset"));
+    holmesFullSessionReset();
   };
 
   const trustLine = alignedMissionTrustLine(
@@ -199,8 +197,8 @@ export function ActiveMissionBar() {
               type="button"
               onClick={handleReset}
               className="p-2 rounded-lg text-aurora-muted hover:text-aurora-text hover:bg-aurora-surface-hover/80 transition-colors"
-              aria-label="Not what I'm doing"
-              title="Not what I'm doing"
+              aria-label="Reset Holmes session — clears basket and browsing state, then reloads"
+              title="Reset Holmes session — clears basket, session data, and starts a fresh Holmes session (reloads)"
             >
               <RotateCcw className="w-4 h-4" />
             </button>

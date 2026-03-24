@@ -185,7 +185,7 @@ function CardMeta({
         )
       ) : null}
       {desc ? (
-        <p className={`line-clamp-1 text-[0.6875rem] leading-snug ${muted}`}>
+        <p className={`line-clamp-2 text-[0.6875rem] leading-snug ${muted}`}>
           {desc}
         </p>
       ) : null}

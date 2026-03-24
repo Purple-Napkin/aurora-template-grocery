@@ -11,7 +11,7 @@ import {
   MISSION_BAR_DISMISS_KEY,
   isMissionBarDismissed,
 } from "@/lib/mission-bar";
-import { holmesMissionLockClear } from "@aurora-studio/starter-core";
+import { holmesFullSessionReset } from "@aurora-studio/starter-core";
 import {
   alignedMissionTrustLine,
   isCookingMissionKey,
@@ -102,9 +102,7 @@ export function IntentPresenceBar() {
   const handleReset = () => {
     setDismissed(false);
     setDismissedState(false);
-    holmesMissionLockClear();
-    missionData?.refresh?.();
-    window.dispatchEvent(new CustomEvent("holmes:missionBarReset"));
+    holmesFullSessionReset();
   };
 
   return (
@@ -156,8 +154,8 @@ export function IntentPresenceBar() {
             type="button"
             onClick={handleReset}
             className="p-2 rounded-lg text-emerald-200 hover:bg-white/10 transition-colors"
-            aria-label="Not what I’m doing"
-            title="Not what I’m doing"
+            aria-label="Reset Holmes session — clears basket and browsing state, then reloads"
+            title="Reset Holmes session — clears basket, session data, and starts a fresh Holmes session (reloads)"
           >
             <RotateCcw className="w-4 h-4" />
           </button>

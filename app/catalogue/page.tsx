@@ -70,6 +70,16 @@ function getRating(record: Record<string, unknown>): number | null {
   return r != null ? Number(r) : null;
 }
 
+/** Listing copy from search/Meili/Redis; avoid showing snippet when it duplicates the title. */
+function getCardDescription(record: Record<string, unknown>): string | null {
+  const raw = record.description ?? record.summary;
+  if (typeof raw === "string" && raw.trim()) return raw.trim();
+  const sn = record.snippet;
+  const name = String(record.name ?? record.title ?? "").trim();
+  if (typeof sn === "string" && sn.trim() && sn.trim() !== name) return sn.trim();
+  return null;
+}
+
 function CatalogueContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -500,6 +510,7 @@ function CatalogueContent() {
                   const brand = getBrand(record);
                   const rating = getRating(record);
                   const onSale = isRecordOnSale(record as Record<string, unknown>);
+                  const cardDesc = getCardDescription(record as Record<string, unknown>);
 
                   return (
                     <div
@@ -527,6 +538,11 @@ function CatalogueContent() {
                           <p className="font-semibold text-sm sm:text-base truncate group-hover:text-aurora-primary transition-colors">
                             {name}
                           </p>
+                          {cardDesc ? (
+                            <p className="text-xs text-aurora-muted mt-1 line-clamp-2 leading-snug">
+                              {cardDesc}
+                            </p>
+                          ) : null}
                           {(priceCents != null || (sellByWeight && pricePerUnit != null)) && (
                             <p className="text-sm mt-1 font-bold text-aurora-primary">
                               {sellByWeight && pricePerUnit != null
@@ -609,6 +625,7 @@ function CatalogueContent() {
                         : undefined;
                   const imageUrl = getImageUrl(record);
                   const onSale = isRecordOnSale(record as Record<string, unknown>);
+                  const cardDesc = getCardDescription(record as Record<string, unknown>);
                   return (
                     <div
                       key={id}
@@ -632,6 +649,11 @@ function CatalogueContent() {
                           <p className="font-semibold text-sm truncate group-hover:text-aurora-primary transition-colors">
                             {name}
                           </p>
+                          {cardDesc ? (
+                            <p className="text-xs text-aurora-muted mt-1 line-clamp-2 leading-snug">
+                              {cardDesc}
+                            </p>
+                          ) : null}
                           {priceCents != null && (
                             <p className="text-sm mt-1 font-bold text-aurora-primary">
                               {sellByWeight && pricePerUnit != null
