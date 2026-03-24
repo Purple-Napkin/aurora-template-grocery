@@ -110,17 +110,13 @@ export async function tenantHasTables(baseUrl: string, apiKey: string): Promise<
   return Array.isArray(tables) && tables.length > 0;
 }
 
-/** Load marketplace schema from init/schema.json. */
+/** Load marketplace schema. Static import ensures Vercel/serverless includes schema.json in the bundle. */
+import schemaJson from "./schema.json";
+
 export function loadSchema(): SchemaShape {
-  const fs = require("fs") as typeof import("node:fs");
-  const path = require("path") as typeof import("node:path");
-  const schemaPath = path.join(process.cwd(), "init", "schema.json");
-  if (!fs.existsSync(schemaPath)) {
-    throw new Error("Missing init/schema.json — restore from git or copy from a fresh template clone.");
-  }
-  const raw = fs.readFileSync(schemaPath, "utf8");
-  const parsed = JSON.parse(raw);
-  return typeof parsed.tables !== "undefined" ? parsed : { tables: parsed };
+  const parsed = schemaJson as Record<string, unknown>;
+  if (typeof parsed.tables !== "undefined") return parsed as SchemaShape;
+  return { tables: (parsed as unknown) as unknown[] };
 }
 
 /** POST schema to Aurora; returns the API response. */

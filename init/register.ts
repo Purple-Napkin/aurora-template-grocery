@@ -6,7 +6,10 @@ import { runFirstRunProvision } from "./provision";
 
 export async function register() {
   if (process.env.NEXT_RUNTIME !== "nodejs") return;
-  console.log("[aurora] instrumentation: begin");
+  // Diagnostic: pid + timestamp to see if multiple processes (replicas) or repeated calls per process
+  console.log(
+    `[aurora] instrumentation: begin pid=${process.pid} ts=${Date.now()}`
+  );
   try {
     await runFirstRunProvision();
   } catch (err) {

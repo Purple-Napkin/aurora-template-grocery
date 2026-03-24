@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@aurora-studio/sdk": "^0.2.46",
-    "@aurora-studio/starter-core": "^0.1.48",
+    "@aurora-studio/starter-core": "^0.1.49",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.454.0",
     "next": "15.0.7",
