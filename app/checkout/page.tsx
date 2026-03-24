@@ -42,13 +42,13 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (location) {
-      getDeliverySlots(location.lat, location.lng)
+      getDeliverySlots(location.lat, location.lng, store?.id ? { vendorId: store.id } : undefined)
         .then((r) => setSlots(r.data ?? []))
         .catch(() => setSlots([]));
     } else {
       setSlots([]);
     }
-  }, [location]);
+  }, [location, store?.id]);
 
   useEffect(() => {
     try {

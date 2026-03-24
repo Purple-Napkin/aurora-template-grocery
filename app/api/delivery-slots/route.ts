@@ -16,7 +16,8 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const result = await getDeliverySlots(lat, lng);
+    const vendorId = searchParams.get("vendor_id") ?? searchParams.get("vendorId") ?? undefined;
+    const result = await getDeliverySlots(lat, lng, vendorId ? { vendorId } : undefined);
     return NextResponse.json(result);
   } catch (e) {
     const message = e instanceof Error ? e.message : "Failed to load delivery slots";
