@@ -9,6 +9,7 @@ import {
   shouldFullRecipeHomeTakeover,
   shouldMediumRecipeCompletionRail,
 } from "@/lib/intent-mission";
+import { fetchHomePersonalizationDeduped } from "@/lib/fetch-home-personalization-deduped";
 export type QuickAction = { label: string; href: string };
 export type Mission = { label: string; href: string };
 export type ShoppingListTemplate = { slug: string; label: string; description?: string; searchTerms: string[] };
@@ -66,10 +67,8 @@ export function MissionAwareHomeProvider({
     const fetchData = () => {
       const sid =
         (window as { holmes?: { getSessionId?: () => string } }).holmes?.getSessionId?.() ?? "";
-      fetch(
-        `/api/holmes/home-personalization?sid=${encodeURIComponent(sid)}&page=home&region=home_main_feed${excludeDietary.length ? `&excludeDietary=${encodeURIComponent(excludeDietary.join(","))}` : ""}`
-      )
-        .then((r) => r.json())
+      const url = `/api/holmes/home-personalization?sid=${encodeURIComponent(sid)}&page=home&region=home_main_feed${excludeDietary.length ? `&excludeDietary=${encodeURIComponent(excludeDietary.join(","))}` : ""}`;
+      fetchHomePersonalizationDeduped(url)
         .then((d) => {
           if (cancelled) return;
           const am = d.activeMission;

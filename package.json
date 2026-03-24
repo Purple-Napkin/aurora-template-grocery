@@ -15,8 +15,8 @@
     "seed:catalog:apply": "node scripts/catalog-seed.mjs apply"
   },
   "dependencies": {
-    "@aurora-studio/sdk": "^0.2.47",
-    "@aurora-studio/starter-core": "^0.1.53",
+    "@aurora-studio/sdk": "^0.2.48",
+    "@aurora-studio/starter-core": "^0.1.54",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.454.0",
     "next": "15.0.7",

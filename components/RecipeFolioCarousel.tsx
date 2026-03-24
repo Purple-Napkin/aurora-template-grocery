@@ -13,20 +13,30 @@ import { ProductImage } from "@aurora-studio/starter-core";
 import { formatPrice, toCents } from "@aurora-studio/starter-core";
 import type { SearchHit } from "@aurora-studio/starter-core";
 
-type Combo = { slug: string; title: string; productImageUrls?: string[] };
+type Combo = { slug: string; title: string; image_url?: string | null; productImageUrls?: string[] };
 
 /** Rank recipes by cart match: best fit (meal) first, then cart ingredient matches, then rest. */
 function rankRecipesByCart(
-  recipes: Array<{ slug: string; title: string; description: string | null }>,
+  recipes: Array<{
+    slug: string;
+    title: string;
+    description: string | null;
+    image_url?: string | null;
+  }>,
   cartNames: string[],
   meal: string | null
-): Array<{ slug: string; title: string }> {
+): Array<{ slug: string; title: string; image_url?: string | null }> {
   const cartWords = new Set(
     cartNames.flatMap((n) => n.toLowerCase().split(/\s+/)).filter((w) => w.length >= 2)
   );
   const mealLower = meal?.toLowerCase() ?? "";
 
-  const score = (r: { slug: string; title: string; description: string | null }) => {
+  const score = (r: {
+    slug: string;
+    title: string;
+    description: string | null;
+    image_url?: string | null;
+  }) => {
     let s = 0;
     const slugLower = r.slug.toLowerCase();
     const titleLower = (r.title ?? "").toLowerCase();
@@ -44,12 +54,13 @@ function rankRecipesByCart(
 
   return [...recipes]
     .sort((a, b) => score(b) - score(a))
-    .map((r) => ({ slug: r.slug, title: r.title }));
+    .map((r) => ({ slug: r.slug, title: r.title, image_url: r.image_url ?? null }));
 }
 
 type RecipeData = {
   title: string;
   description: string | null;
+  image_url: string | null;
   ingredients: Array<{ name: string; quantity?: string; unit?: string }>;
   instructions: string | null;
   products: SearchHit[];
@@ -92,7 +103,12 @@ export function RecipeFolioCarousel({
     const recipePoolLimit = hintNames.length > 0 ? 50 : 24;
 
     const rankFromPool = (
-      recipes: Array<{ slug: string; title: string; description: string | null }>
+      recipes: Array<{
+        slug: string;
+        title: string;
+        description: string | null;
+        image_url?: string | null;
+      }>
     ) => {
       const meal = getMealToComplete(rankNames)?.meal ?? null;
       if (hintNames.length > 0) {
@@ -107,7 +123,13 @@ export function RecipeFolioCarousel({
           if (cancelled) return;
           if (recipes?.length) {
             const ranked = rankFromPool(recipes);
-            setCombos(ranked.map((r) => ({ slug: r.slug, title: r.title })));
+            setCombos(
+              ranked.map((r) => ({
+                slug: r.slug,
+                title: r.title,
+                image_url: r.image_url,
+              }))
+            );
             return;
           }
           return holmesRecentRecipes(recipePoolLimit, undefined, dietaryOpts);
@@ -115,7 +137,13 @@ export function RecipeFolioCarousel({
         .then((res) => {
           if (!res || cancelled || !res.recipes?.length) return;
           const ranked = rankFromPool(res.recipes);
-          setCombos(ranked.map((r) => ({ slug: r.slug, title: r.title })));
+          setCombos(
+            ranked.map((r) => ({
+              slug: r.slug,
+              title: r.title,
+              image_url: r.image_url,
+            }))
+          );
         })
         .catch(() => {});
 
@@ -194,6 +222,7 @@ export function RecipeFolioCarousel({
             ? {
                 title: rec.title,
                 description: rec.description,
+                image_url: rec.image_url?.trim() ? rec.image_url.trim() : null,
                 ingredients: rec.ingredients ?? [],
                 instructions: rec.instructions,
                 products: (prodRes.products ?? []) as SearchHit[],
@@ -349,6 +378,17 @@ export function RecipeFolioCarousel({
               <h1 className="text-3xl sm:text-4xl font-semibold text-aurora-text" style={{ fontFamily: "Caveat, cursive" }}>
                 {recipe.title}
               </h1>
+              {recipe.image_url && (
+                <div className="mt-4 aspect-video w-full max-w-xl rounded-lg overflow-hidden border border-aurora-border bg-aurora-surface-hover">
+                  <ProductImage
+                    src={recipe.image_url}
+                    className="w-full h-full"
+                    objectFit="cover"
+                    thumbnail
+                    fallback={<span className="text-aurora-muted text-sm p-4"> </span>}
+                  />
+                </div>
+              )}
               {recipe.description && (
                 <p className="text-xl text-aurora-muted" style={{ fontFamily: "Caveat, cursive" }}>
                   {recipe.description}

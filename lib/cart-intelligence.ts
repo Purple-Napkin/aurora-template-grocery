@@ -118,19 +118,33 @@ const LIGHT_RECIPE_HINT_TOKENS = new Set([
  * primary list when any recipe matches that bar — otherwise results drift to anything mentioning "olive oil".
  */
 export function rankRecipesByIngredientHints(
-  recipes: Array<{ slug: string; title: string; description: string | null }>,
+  recipes: Array<{
+    slug: string;
+    title: string;
+    description: string | null;
+    image_url?: string | null;
+  }>,
   hints: string[],
   mealFromCart: string | null
-): Array<{ slug: string; title: string }> {
+): Array<{ slug: string; title: string; image_url?: string | null }> {
   const cleaned = hints.map((h) => h.trim()).filter((h) => h.length >= 2);
   if (cleaned.length === 0) {
-    return recipes.map((r) => ({ slug: r.slug, title: r.title }));
+    return recipes.map((r) => ({
+      slug: r.slug,
+      title: r.title,
+      image_url: r.image_url ?? null,
+    }));
   }
   const theme = cleaned[0]!.toLowerCase();
   const rest = cleaned.slice(1).map((h) => h.toLowerCase());
   const mealLower = mealFromCart?.toLowerCase() ?? "";
 
-  const score = (r: { slug: string; title: string; description: string | null }) => {
+  const score = (r: {
+    slug: string;
+    title: string;
+    description: string | null;
+    image_url?: string | null;
+  }) => {
     let s = 0;
     const slug = r.slug.toLowerCase();
     const title = (r.title ?? "").toLowerCase();
@@ -171,7 +185,11 @@ export function rankRecipesByIngredientHints(
   const strong = sorted.filter(themeInHead);
   const relaxed = sorted.filter(themeAnywhere);
   const chosen = strong.length > 0 ? strong : relaxed.length > 0 ? relaxed : sorted;
-  return chosen.map((r) => ({ slug: r.slug, title: r.title }));
+  return chosen.map((r) => ({
+    slug: r.slug,
+    title: r.title,
+    image_url: r.image_url ?? null,
+  }));
 }
 
 /** Extract recipe title from search query for catalogue - matches "paella", "spaghetti", "pasta", etc. */

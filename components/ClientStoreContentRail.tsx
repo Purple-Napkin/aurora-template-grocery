@@ -9,6 +9,7 @@ import {
   type StoreContentSection,
 } from "@/components/storeContentBlocksUi";
 import { getRecipeTitle } from "@/lib/cart-intelligence";
+import { fetchHomePersonalizationDeduped } from "@/lib/fetch-home-personalization-deduped";
 
 type Props = {
   contentPage: string;
@@ -72,8 +73,7 @@ export function ClientStoreContentRail({
       if (contentPage === "catalogue" && urlSearchQ) {
         url += `&catalogueSearchQuery=${encodeURIComponent(urlSearchQ)}`;
       }
-      fetch(url)
-        .then((r) => r.json())
+      fetchHomePersonalizationDeduped(url)
         .then((d) => {
           if (cancelled) return;
           let next = Array.isArray(d?.sections) ? (d.sections as StoreContentSection[]) : [];

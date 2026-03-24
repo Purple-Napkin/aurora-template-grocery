@@ -3,14 +3,37 @@
 import { ProductImage } from "@aurora-studio/starter-core";
 import { ChefHat } from "lucide-react";
 
-/** Collage of 2 or 4 product images for recipe cards. Falls back to chef hat when empty. */
+/** Prefer recipe/combo hero `imageUrl` (holmes_recipes.image_url); else product thumbnail collage. */
 export function RecipeProductCollage({
+  imageUrl,
   imageUrls,
   className = "",
 }: {
+  imageUrl?: string | null;
   imageUrls: string[];
   className?: string;
 }) {
+  const hero = imageUrl?.trim();
+  if (hero) {
+    return (
+      <div
+        className={`h-full w-full overflow-hidden bg-white dark:bg-white [&_img]:!object-top ${className}`}
+      >
+        <ProductImage
+          src={hero}
+          className="h-full w-full"
+          objectFit="cover"
+          thumbnail
+          fallback={
+            <div className="flex h-full w-full items-center justify-center">
+              <ChefHat className="h-12 w-12 text-aurora-primary/60" aria-hidden />
+            </div>
+          }
+        />
+      </div>
+    );
+  }
+
   const urls = imageUrls.filter((u): u is string => !!u).slice(0, 4);
 
   if (urls.length === 0) {

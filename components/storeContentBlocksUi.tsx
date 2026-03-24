@@ -38,6 +38,7 @@ export type RecipeWithProducts = {
   slug: string;
   title: string;
   description: string | null;
+  image_url?: string | null;
   productImageUrls?: string[];
 };
 
@@ -382,6 +383,7 @@ export function RecipeIdeasRail({
               className={CONTENT_BLOCK_IMAGE_WELL}
             >
               <RecipeProductCollage
+                imageUrl={r.image_url}
                 imageUrls={r.productImageUrls ?? []}
                 className="absolute inset-0 h-full w-full"
               />

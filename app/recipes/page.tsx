@@ -22,16 +22,22 @@ export default async function RecipesInterstitialPage() {
 
   const { recipes } = await holmesRecentRecipes(24, getTimeOfDay(), dietaryOpts);
 
-  const recipesWithProducts = await Promise.all(
+  type RecipeRow = (typeof recipes)[number] & {
+    image_url?: string | null;
+    productImageUrls: string[];
+  };
+
+  const recipesWithProducts: RecipeRow[] = await Promise.all(
     recipes.map(async (r) => {
+      const image_url = (r as { image_url?: string | null }).image_url ?? null;
       try {
         const { products } = await holmesRecipeProducts(r.slug, 4, dietaryOpts);
         const imageUrls = (products ?? [])
           .map((p) => (p as { image_url?: string }).image_url)
           .filter((u): u is string => !!u);
-        return { ...r, productImageUrls: imageUrls };
+        return { ...r, image_url, productImageUrls: imageUrls };
       } catch {
-        return { ...r, productImageUrls: [] as string[] };
+        return { ...r, image_url, productImageUrls: [] as string[] };
       }
     })
   );
@@ -87,6 +93,7 @@ export default async function RecipesInterstitialPage() {
               >
                 <div className={CONTENT_BLOCK_IMAGE_WELL}>
                   <RecipeProductCollage
+                    imageUrl={r.image_url}
                     imageUrls={r.productImageUrls ?? []}
                     className="absolute inset-0 h-full w-full"
                   />

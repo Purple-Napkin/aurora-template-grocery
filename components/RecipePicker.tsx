@@ -18,7 +18,9 @@ import {
 export function RecipePicker() {
   const { items } = useCart();
   const missionData = useMissionAware();
-  const [combos, setCombos] = useState<Array<{ slug: string; title: string; productImageUrls?: string[] }>>([]);
+  const [combos, setCombos] = useState<
+    Array<{ slug: string; title: string; image_url?: string | null; productImageUrls?: string[] }>
+  >([]);
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
@@ -90,6 +92,7 @@ export function RecipePicker() {
           >
             <div className={CONTENT_BLOCK_IMAGE_WELL}>
               <RecipeProductCollage
+                imageUrl={combo.image_url}
                 imageUrls={combo.productImageUrls ?? []}
                 className="absolute inset-0 h-full w-full"
               />
