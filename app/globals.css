@@ -1,43 +1,45 @@
 @import "leaflet/dist/leaflet.css";
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,450;0,500;0,600;0,700;1,400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,650;0,9..144,700;1,9..144,400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap");
 
-/* Grocery vertical — fresh greens, appetite-friendly promo (P2-06 refine) */
+/* Grocery vertical — calm concierge palette: muted sage, warm paper, soft depth */
 :root,
 [data-theme="light"] {
-  --aurora-bg: #f6f7f5;
-  --aurora-surface: #ffffff;
-  --aurora-surface-hover: #eef4f0;
-  --aurora-border: #d4e0d9;
-  --aurora-muted: #4b5a52;
-  --aurora-text: #0f172a;
-  --aurora-primary: #15803d;
-  --aurora-primary-dark: #14532d;
-  --aurora-accent: #15803d;
-  --aurora-promo: #ea580c;
+  --aurora-bg: #f1f3ef;
+  --aurora-surface: #fcfcfa;
+  --aurora-surface-hover: #e8ede8;
+  --aurora-border: rgba(72, 98, 82, 0.14);
+  --aurora-muted: #5a665e;
+  --aurora-text: #171c18;
+  --aurora-primary: #2f5d45;
+  --aurora-primary-dark: #1e3d2d;
+  --aurora-accent: #2f5d45;
+  --aurora-promo: #c45c2a;
   --aurora-error: #ef4444;
   --font-display: "Fraunces", "Manrope", "Plus Jakarta Sans", system-ui, serif;
   --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
-  --pattern-cream: rgba(244, 251, 247, 0.92);
-  --pattern-warm: rgba(220, 237, 228, 0.55);
+  --pattern-cream: rgba(252, 252, 248, 0.94);
+  --pattern-warm: rgba(210, 228, 216, 0.45);
+  --aurora-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --aurora-duration: 220ms;
 }
 
 [data-theme="dark"] {
-  --aurora-bg: #0a0f0c;
-  --aurora-surface: rgba(28, 48, 36, 0.92);
-  --aurora-surface-hover: rgba(40, 72, 52, 0.85);
-  --aurora-border: rgba(134, 180, 152, 0.2);
-  --aurora-muted: rgba(236, 253, 245, 0.65);
-  --aurora-text: #ecfdf5;
-  --aurora-primary: #34d399;
-  --aurora-primary-dark: #10b981;
-  --aurora-accent: #34d399;
-  --aurora-promo: #fb923c;
+  --aurora-bg: #0b100d;
+  --aurora-surface: rgba(24, 40, 32, 0.88);
+  --aurora-surface-hover: rgba(36, 58, 46, 0.82);
+  --aurora-border: rgba(120, 168, 142, 0.18);
+  --aurora-muted: rgba(232, 245, 238, 0.62);
+  --aurora-text: #e8f5ec;
+  --aurora-primary: #5ee9a8;
+  --aurora-primary-dark: #34d399;
+  --aurora-accent: #5ee9a8;
+  --aurora-promo: #fbbf77;
   --aurora-error: #f87171;
-  --pattern-cream: rgba(16, 30, 22, 0.97);
-  --pattern-warm: rgba(12, 40, 28, 0.55);
+  --pattern-cream: rgba(14, 26, 20, 0.96);
+  --pattern-warm: rgba(10, 36, 26, 0.5);
 }
 
 /* Fallback pin icon: no border/background so inline SVG is the only visible part */
@@ -138,6 +140,12 @@
 
 body {
   font-family: var(--font-body);
+  background-color: var(--aurora-bg);
+  background-image:
+    radial-gradient(ellipse 130% 90% at 0% -15%, rgba(47, 93, 69, 0.07), transparent 52%),
+    radial-gradient(ellipse 90% 70% at 100% 0%, rgba(176, 152, 120, 0.055), transparent 48%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(47, 93, 69, 0.035), transparent 55%);
+  background-attachment: fixed;
 }
 
 /* Home command surface: short green band, then page bg (dark mode reads cleaner as near-black) */
@@ -156,12 +164,12 @@ body {
 }
 
 @keyframes holmes-fade-in {
-  from { opacity: 0; transform: translateY(4px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 [data-holmes].holmes-content-loaded > * {
-  animation: holmes-fade-in 0.35s ease-out forwards;
+  animation: holmes-fade-in var(--aurora-duration) var(--aurora-ease-out) forwards;
 }
 
 @keyframes cart-badge-pop {
@@ -215,7 +223,54 @@ body {
 }
 
 .animate-page-enter {
-  animation: page-enter 0.25s ease-out;
+  animation: page-enter var(--aurora-duration) var(--aurora-ease-out);
+}
+
+/* Nav search — inset, prominent field (SearchDropdown default variant) */
+[data-grocery-search="nav"] .relative > div.flex.w-full.items-center.rounded-lg {
+  min-height: 2.75rem;
+  border-radius: 1rem !important;
+  border-color: color-mix(in srgb, var(--aurora-border) 85%, transparent) !important;
+  background: color-mix(in srgb, var(--aurora-surface) 88%, transparent) !important;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.65),
+    0 1px 2px rgba(23, 28, 24, 0.04);
+  transition:
+    box-shadow var(--aurora-duration) var(--aurora-ease-out),
+    border-color var(--aurora-duration) var(--aurora-ease-out),
+    transform var(--aurora-duration) var(--aurora-ease-out);
+}
+[data-grocery-search="nav"] .relative > div.flex.w-full.items-center.rounded-lg:focus-within {
+  border-color: color-mix(in srgb, var(--aurora-primary) 32%, var(--aurora-border)) !important;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.75),
+    0 0 0 1px color-mix(in srgb, var(--aurora-primary) 18%, transparent),
+    0 10px 36px rgba(47, 93, 69, 0.1);
+}
+[data-theme="dark"] [data-grocery-search="nav"] .relative > div.flex.w-full.items-center.rounded-lg {
+  background: color-mix(in srgb, var(--aurora-surface) 75%, transparent) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 2px 12px rgba(0, 0, 0, 0.25);
+}
+[data-theme="dark"] [data-grocery-search="nav"] .relative > div.flex.w-full.items-center.rounded-lg:focus-within {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 1px color-mix(in srgb, var(--aurora-primary) 28%, transparent),
+    0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* Hero command search — slightly taller, editorial type */
+[data-command-search] input[type="search"] {
+  min-height: 2.75rem;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+}
+[data-command-search] .flex.h-10 {
+  height: 2.75rem;
+}
+[data-command-search] .flex.h-10.w-10 {
+  width: 2.75rem;
 }
 
 .skeleton-shimmer {
@@ -401,21 +456,23 @@ button.checkout-btn:active {
   margin-bottom: 2rem;
 }
 [data-holmes="home-sections"] [data-holmes-home-section-title] {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-size: 1.35rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
   font-family: var(--font-display);
   color: var(--aurora-text);
 }
 [data-holmes="home-sections"] [data-holmes-home-section-grid] {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 1.25rem;
   align-items: stretch;
 }
 @media (min-width: 640px) {
   [data-holmes="home-sections"] [data-holmes-home-section-grid] {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
   }
 }
 /* Layout/chrome comes from Tailwind (CONTENT_BLOCK_CARD_SHELL etc.); keep only link semantics. */

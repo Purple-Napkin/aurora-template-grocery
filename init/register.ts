@@ -1,23 +1,18 @@
 /**
- * Next.js instrumentation hook: runs once when the server starts (Node.js only).
- * Merges init/schema via POST /v1/provision-schema, then POST /v1/run-schema-migration (DDL + views).
+ * Next.js instrumentation hook: runs when the server starts (Node.js only).
+ * If the tenant has no tables yet, POST /v1/provision-schema registers init/schema. Otherwise
+ * no-op — DDL is applied via Studio / migration workers, not on every storefront boot.
  */
 import { runFirstRunProvision } from "./provision";
 
 export async function register() {
   if (process.env.NEXT_RUNTIME !== "nodejs") return;
-  // Diagnostic: pid + timestamp to see if multiple processes (replicas) or repeated calls per process
   console.log(
     `[aurora] instrumentation: begin pid=${process.pid} ts=${Date.now()}`
   );
   try {
     await runFirstRunProvision();
   } catch (err) {
-    console.warn(
-      "[aurora] instrumentation: unexpected error",
-      err instanceof Error ? err.message : err
-    );
-  } finally {
-    console.log("[aurora] instrumentation: end");
+    console.warn("[aurora] First-run provision skipped:", err instanceof Error ? err.message : err);
   }
 }

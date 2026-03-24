@@ -15,7 +15,6 @@ import { RecipeMissionHero } from "./RecipeMissionHero";
 import { getTimeOfDay } from "@aurora-studio/starter-core";
 import { holmesMissionLockCombo } from "@aurora-studio/starter-core";
 import { shouldLockRecipeMissionForMissionPill } from "@/lib/holmes-mission-lock";
-import { CONTENT_BLOCK_CARD_SHELL } from "./ContentBlockProductCard";
 import { shouldFullRecipeHomeTakeover } from "@/lib/intent-mission";
 import { resolveHeroFromMission } from "@/lib/hero-intent";
 import { IntentHeroPanel } from "@/components/intent/IntentHeroPanel";
@@ -118,13 +117,13 @@ export function CommandSurface({
   );
 
   const missionChipClass =
-    "inline-flex min-h-[2.75rem] items-center gap-2.5 px-5 py-3 rounded-xl bg-[#faf8f5] dark:bg-aurora-bg border border-stone-200/90 dark:border-aurora-border shadow-sm hover:border-aurora-primary/40 hover:shadow-md transition-all text-sm font-semibold text-aurora-text";
+    "inline-flex min-h-[3rem] items-center gap-2.5 px-6 py-3.5 rounded-full bg-white/75 backdrop-blur-md dark:bg-white/[0.06] border border-white/80 dark:border-white/10 text-sm font-medium text-aurora-text shadow-[0_2px_14px_rgba(27,67,50,0.06)] transition-[transform,box-shadow,border-color] duration-luxury ease-concierge hover:-translate-y-0.5 hover:border-aurora-primary/22 hover:shadow-[0_8px_28px_rgba(47,93,69,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-primary/25 focus-visible:ring-offset-2 focus-visible:ring-offset-aurora-bg";
 
   const formContent = (
     <div
-      className={`relative z-10 w-full max-w-xl rounded-xl bg-white overflow-visible dark:bg-aurora-surface ${CONTENT_BLOCK_CARD_SHELL}`}
-    >
-      <div className="p-5 sm:p-6 lg:p-8">
+      className="relative z-10 w-full max-w-xl rounded-[1.35rem] overflow-visible border border-aurora-border/28 bg-white/82 backdrop-blur-xl dark:bg-aurora-surface/78 dark:border-aurora-border/22 shadow-[0_4px_24px_rgba(27,67,50,0.07),0_24px_64px_rgba(27,67,50,0.05)] dark:shadow-[0_8px_40px_rgba(0,0,0,0.35)]"
+      >
+      <div className="p-6 sm:p-8 lg:p-10">
         {isRecipeMission && (
           <div className="mb-6">
             <RecipeMissionHero
@@ -134,28 +133,28 @@ export function CommandSurface({
             />
           </div>
         )}
-        <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-aurora-text mb-3">
+        <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold tracking-[-0.02em] text-aurora-text mb-4">
           {isRecipeMission ? "Or something else?" : hero.title}
         </h1>
       {isRecipeMission ? (
-        <p className="text-aurora-muted text-base sm:text-lg mb-6 font-medium">
+        <p className="text-aurora-muted text-base sm:text-lg mb-7 font-normal leading-relaxed">
           Let’s get you there fast
         </p>
       ) : hero.caption ? (
-        <div className="text-aurora-muted text-base sm:text-lg mb-6 font-medium space-y-1">
+        <div className="text-aurora-muted text-base sm:text-lg mb-7 font-normal leading-relaxed space-y-1.5">
           <p>{hero.subtitle}</p>
           <p className="text-sm text-aurora-muted/90">{hero.caption}</p>
         </div>
       ) : (
-        <p className="text-aurora-muted text-base sm:text-lg mb-6 font-medium">{hero.subtitle}</p>
+        <p className="text-aurora-muted text-base sm:text-lg mb-7 font-normal leading-relaxed">{hero.subtitle}</p>
       )}
 
         {/* Primary: mission quick actions first */}
-        <div className="relative z-20 mb-6">
-          <p className="text-xs font-semibold text-aurora-muted uppercase tracking-widest mb-3">
+        <div className="relative z-20 mb-8">
+          <p className="text-[0.6875rem] font-medium text-aurora-muted/90 uppercase tracking-[0.14em] mb-4">
             Start here
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3.5">
             {quickActions.map((action) => {
               const Icon = action.icon;
               const href = action.label === "Recipe ideas" ? "/for-you/recipes" : action.href;
@@ -178,12 +177,12 @@ export function CommandSurface({
 
         {/* Secondary: search as tool, not entry point */}
         <div className="relative z-10">
-          <p className="text-xs font-semibold text-aurora-muted uppercase tracking-widest mb-2">
+          <p className="text-[0.6875rem] font-medium text-aurora-muted/90 uppercase tracking-[0.14em] mb-3">
             Search the store
           </p>
           {store ? (
             <div
-              className="rounded-xl border border-aurora-border bg-white dark:bg-aurora-bg shadow-sm focus-within:border-aurora-primary/60 focus-within:ring-1 focus-within:ring-aurora-primary/25 transition-all max-w-md overflow-visible relative z-30"
+              className="rounded-2xl max-w-lg border border-aurora-border/40 bg-[color-mix(in_srgb,var(--aurora-surface)_92%,var(--aurora-bg))] dark:bg-aurora-bg/90 shadow-inset-well dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_2px_12px_rgba(0,0,0,0.2)] focus-within:border-aurora-primary/28 focus-within:shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_0_0_1px_color-mix(in_srgb,var(--aurora-primary)_16%,transparent),0_12px_40px_rgba(47,93,69,0.11)] transition-[box-shadow,border-color] duration-luxury ease-concierge overflow-visible relative z-30 pl-1 py-0.5"
               data-command-search
             >
               <SearchDropdown
@@ -198,7 +197,7 @@ export function CommandSurface({
           ) : (
             <Link
               href="/location"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-dashed border-aurora-border bg-aurora-surface/80 text-aurora-muted hover:text-aurora-text hover:border-aurora-primary/40 transition-all text-sm"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-dashed border-aurora-border/60 bg-white/60 backdrop-blur-sm text-aurora-muted hover:text-aurora-text hover:border-aurora-primary/35 transition-[color,border-color,box-shadow] duration-luxury ease-concierge text-sm"
             >
               <Search className="w-4 h-4 shrink-0" />
               <span>Set location to search</span>
@@ -213,13 +212,13 @@ export function CommandSurface({
     return (
       <section className="command-surface-hero bg-gradient-to-b from-aurora-surface to-aurora-bg">
         <div
-          className={`relative w-full overflow-hidden bg-aurora-surface/80 border-b border-aurora-border ${fullWidthHeroBandClass(heroSize)}`}
+          className={`relative w-full overflow-hidden bg-aurora-surface/75 border-b border-aurora-border/50 ${fullWidthHeroBandClass(heroSize)}`}
         >
           <div className="absolute inset-0">
             <IntentHeroPanel hero={hero} edgeToEdge />
           </div>
         </div>
-        <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-10 sm:py-12 lg:py-16 flex justify-center lg:justify-start">
+        <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-12 sm:py-14 lg:py-20 flex justify-center lg:justify-start">
           {formContent}
         </div>
       </section>

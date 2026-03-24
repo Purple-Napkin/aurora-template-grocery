@@ -4,6 +4,8 @@ This folder holds **committed** artefacts for first-run setup: marketplace **sch
 
 **Template ID:** `aurora-template-grocery` (Aurora Studio Template Registry). Schema provision is **idempotent** (merges missing tables/columns).
 
+**Other marketplace templates** (store, hotels, travel) use the same `init/provision.ts` / `init/register.ts` behaviour; this README is the canonical description for all of them.
+
 ## Files
 
 | File | Purpose |
@@ -13,7 +15,7 @@ This folder holds **committed** artefacts for first-run setup: marketplace **sch
 | **seed-cms.sql** | `store_content_blocks` rows — POSTed via `apply-seed.mjs` as part of `pnpm seed:apply`. |
 | **content-regions.json** | CMS page/region slots. Regenerate: `pnpm run generate:content-regions` (also `prebuild`). See [starter-core content-regions](https://github.com/Purple-Napkin/aurora-starter-core/blob/main/docs/content-regions.md). |
 | **content-regions.schema.json** | JSON Schema for the manifest (from the generator). |
-| **provision.ts** | `loadSchema()`, `runFirstRunProvision()`, `runPendingSchemaMigration()` — used by `init/register.ts` (Next.js instrumentation). |
+| **provision.ts** | `loadSchema()`, `runFirstRunProvision()`, `tenantHasTables()`, `provisionSchema()`, `runPendingSchemaMigration()` (manual/scripts only for migration). Used by `init/register.ts` (Next.js instrumentation). |
 | **register.ts** | Re-exported from root `instrumentation.ts`. |
 
 ## Commands (template root)
@@ -33,13 +35,16 @@ Normal development does not require this — the repo already ships committed `i
 
 ## When it runs
 
-- **Server start:** `instrumentation.ts` → `runFirstRunProvision()` then `runPendingSchemaMigration()` if `AURORA_API_URL` and `AURORA_API_KEY` are set. Skip with `AURORA_SKIP_STARTUP_SYNC=1` (e.g. CI).
-- **Studio onboarding:** workspace may already be provisioned; storefront sync still merges any missing tables.
+- **Server start (`instrumentation.ts` → `runFirstRunProvision`):** Runs only on Node. If `AURORA_SKIP_STARTUP_SYNC=1`, or `AURORA_API_URL` / `NEXT_PUBLIC_AURORA_API_URL` or `AURORA_API_KEY` is missing, it does nothing (use the skip flag in CI without an API).
+- **Tenant already has tables** (typical after Studio onboarding): calls `GET /v1/tables` first; if any table exists, **no further requests** — PostgreSQL DDL for ongoing changes is **not** driven from the storefront on every deploy. Studio records **`tenant_schema_migration_requests`**; workers apply **`runSchemaMigration`**.
+- **Tenant has no tables** (API-key-only / greenfield): calls **`POST /v1/provision-schema`** once to register `init/schema.json`. The storefront does **not** call **`POST /v1/run-schema-migration`** on boot.
+- **Manual immediate DDL:** call **`runPendingSchemaMigration()`** from a script, or **`POST /v1/run-schema-migration`** yourself, when you need to force-apply metadata to Postgres without waiting for the migration worker.
 
 ## Env
 
 - `AURORA_API_URL` or `NEXT_PUBLIC_AURORA_API_URL`
 - `AURORA_API_KEY`
+- `AURORA_SKIP_STARTUP_SYNC=1` — skip startup sync (e.g. CI)
 
 ## Base
 

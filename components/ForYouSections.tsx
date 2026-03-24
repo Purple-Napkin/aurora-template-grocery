@@ -46,9 +46,11 @@ export async function ForYouSections() {
 
   if (sections.length === 0 && !hasRecipes) {
     return (
-      <section className="space-y-6">
-        <h2 className="text-xl font-bold">Recipe ideas</h2>
-        <p className="text-aurora-muted text-sm">
+      <section className="space-y-4">
+        <h2 className="font-display text-xl font-semibold tracking-[-0.02em] text-aurora-text sm:text-2xl">
+          Recipe ideas
+        </h2>
+        <p className="text-aurora-muted text-sm leading-relaxed max-w-md">
           Add items to your basket to see personalized suggestions.
         </p>
       </section>
@@ -57,21 +59,21 @@ export async function ForYouSections() {
 
   if (sections.length === 0) {
     return (
-      <div className="space-y-10">
+      <div className="space-y-12">
         <RecipeIdeasRail recipesWithProducts={recipesWithProducts} withHolmesMarkers={false} />
       </div>
     );
   }
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-12 sm:space-y-14">
       <RecipeIdeasRail recipesWithProducts={recipesWithProducts} withHolmesMarkers={false} />
       <GroupedStoreContentSections
         sections={sections}
         currency={currencyCode}
         recipesWithProducts={recipesWithProducts}
         withHolmesMarkers={false}
-        pairGridClassName="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 last:mb-0"
+        pairGridClassName="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-10 last:mb-0"
       />
     </div>
   );

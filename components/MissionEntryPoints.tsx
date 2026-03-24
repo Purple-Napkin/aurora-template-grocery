@@ -7,7 +7,7 @@ import { holmesMissionLockCombo } from "@aurora-studio/starter-core";
 import { shouldLockRecipeMissionForMissionPill } from "@/lib/holmes-mission-lock";
 import {
   CONTENT_BLOCK_CARD_FOOTER_BAND,
-  CONTENT_BLOCK_CARD_SHELL,
+  CONTENT_BLOCK_PANEL_SHELL,
 } from "./ContentBlockProductCard";
 import { LiveSignalsRow } from "./LiveSignalsRow";
 
@@ -47,19 +47,19 @@ export function MissionEntryPoints() {
     : DEFAULT_MISSIONS;
 
   return (
-    <section className="py-8">
+    <section className="py-10 sm:py-12">
       <div
-        className={`rounded-xl bg-white overflow-hidden dark:bg-aurora-surface ${CONTENT_BLOCK_CARD_SHELL}`}
+        className={`rounded-[1.35rem] bg-white/85 backdrop-blur-md overflow-hidden dark:bg-aurora-surface/85 ${CONTENT_BLOCK_PANEL_SHELL}`}
       >
-        <div className="p-5 sm:p-6">
-          <h2 className="font-display text-xl sm:text-2xl font-bold text-aurora-text mb-1">
+        <div className="p-6 sm:p-8">
+          <h2 className="font-display text-xl sm:text-2xl font-semibold tracking-[-0.02em] text-aurora-text mb-2">
             Shop by mission
           </h2>
-          <p className="text-sm text-aurora-muted mb-5 max-w-2xl">
+          <p className="text-sm text-aurora-muted mb-7 max-w-2xl leading-relaxed">
             Pick a path — we&apos;ll adapt aisles and suggestions as we learn what you&apos;re trying to do. No
             single mode is forced.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {missions.map((m) => {
               const Icon = m.icon;
               const href = m.label === "Recipe ideas" ? "/for-you/recipes" : m.href;
@@ -70,9 +70,9 @@ export function MissionEntryPoints() {
                   onClick={() => {
                     if (shouldLockRecipeMissionForMissionPill(m.label, href)) holmesMissionLockCombo();
                   }}
-                  className="group flex items-center gap-3 px-4 py-3.5 rounded-xl bg-gradient-to-br from-[#fafdfb] to-[#f0f7f3] dark:from-aurora-bg dark:to-aurora-surface border border-stone-200/90 dark:border-aurora-border/80 shadow-sm hover:border-aurora-primary/45 hover:shadow-md transition-all font-semibold text-aurora-text text-sm sm:text-base"
+                  className="group flex items-center gap-3.5 px-5 py-4 rounded-2xl bg-gradient-to-br from-white/90 to-[color-mix(in_srgb,var(--aurora-bg)_40%,white)] dark:from-aurora-bg/80 dark:to-aurora-surface/90 border border-aurora-border/35 dark:border-aurora-border/40 shadow-[0_2px_12px_rgba(27,67,50,0.05)] font-medium text-aurora-text text-sm sm:text-base transition-[transform,box-shadow,border-color] duration-luxury ease-concierge hover:-translate-y-0.5 hover:border-aurora-primary/20 hover:shadow-card-lift"
                 >
-                  <span className="flex items-center justify-center w-11 h-11 rounded-xl bg-[#14532d]/10 text-[#14532d] dark:bg-aurora-primary/15 dark:text-aurora-primary group-hover:bg-[#14532d]/15 transition-colors">
+                  <span className="flex items-center justify-center w-11 h-11 rounded-2xl bg-aurora-primary/10 text-aurora-primary dark:bg-aurora-primary/14 dark:text-aurora-primary transition-[background-color] duration-luxury ease-concierge group-hover:bg-aurora-primary/14">
                     <Icon className="w-5 h-5" />
                   </span>
                   <span className="text-left leading-snug">{m.label}</span>

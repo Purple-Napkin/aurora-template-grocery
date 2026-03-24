@@ -24,12 +24,11 @@ function shortHttpBody(text: string): string {
 }
 
 /**
- * Apply PostgreSQL DDL + listing views for the API key tenant (picks up Studio metadata changes).
- * POST /v1/run-schema-migration — safe to call on every process start.
+ * POST /v1/run-schema-migration — apply DDL immediately for this tenant (manual / scripts).
+ * Storefront instrumentation does **not** call this on boot: Studio queues work via
+ * `tenant_schema_migration_requests` and workers apply migrations.
  *
- * **404:** Older Aurora API builds omit this route; `provision-schema` still runs migrations at the
- * end of each import. Log once and continue. Otherwise ensure `AURORA_API_URL` is the API origin
- * (not the Next storefront) and deploy an API that includes `POST /v1/run-schema-migration`.
+ * **404:** Older Aurora API builds omit this route. Ensure `AURORA_API_URL` is the API origin.
  */
 export async function runPendingSchemaMigration(baseUrl: string, apiKey: string): Promise<void> {
   const res = await fetch(`${baseUrl.replace(/\/$/, "")}/v1/run-schema-migration`, {
@@ -46,57 +45,46 @@ export async function runPendingSchemaMigration(baseUrl: string, apiKey: string)
     const text = await res.text();
     throw new Error(`${res.status}: ${shortHttpBody(text)}`);
   }
-  console.log("[aurora] run-schema-migration: ok");
 }
 
 /**
- * Startup sync: merge init/schema into Aurora metadata, then run pending DB migrations.
+ * Server startup (instrumentation): register `init/schema.json` in Aurora **only** when the
+ * API-key tenant has no tables yet (self-serve / API-key-only bootstrap). If Studio already
+ * provisioned the workspace, this is a no-op. Ongoing DDL is **not** triggered here: Studio
+ * records `tenant_schema_migration_requests` and workers run `runSchemaMigration`.
+ *
  * Requires AURORA_API_URL (or NEXT_PUBLIC_AURORA_API_URL) and AURORA_API_KEY.
  * Set AURORA_SKIP_STARTUP_SYNC=1 to skip (e.g. CI without API).
  */
 export async function runFirstRunProvision(): Promise<void> {
-  if (process.env.AURORA_SKIP_STARTUP_SYNC === "1") {
-    console.log("[aurora] startup sync skipped (AURORA_SKIP_STARTUP_SYNC=1)");
-    return;
-  }
+  if (process.env.AURORA_SKIP_STARTUP_SYNC === "1") return;
 
   const apiUrl = process.env.AURORA_API_URL ?? process.env.NEXT_PUBLIC_AURORA_API_URL;
   const apiKey = process.env.AURORA_API_KEY;
 
-  if (!apiUrl || !apiKey) {
-    console.log(
-      "[aurora] startup sync skipped (set AURORA_API_URL and AURORA_API_KEY, or AURORA_SKIP_STARTUP_SYNC=1 in CI)"
-    );
-    return;
-  }
+  if (!apiUrl || !apiKey) return;
 
   const baseUrl = apiUrl.replace(/\/$/, "");
-  console.log("[aurora] startup sync →", baseUrl);
 
   try {
-    // Idempotent: importSchemaForTenant merges (skips existing tables/fields).
+    const hasTables = await tenantHasTables(baseUrl, apiKey);
+    if (hasTables) {
+      console.log(
+        "[aurora] startup sync skipped (tenant has tables; schema migrations via Studio / worker)"
+      );
+      return;
+    }
+
     const schema = loadSchema();
     const result = await provisionSchema(baseUrl, apiKey, schema);
-
-    if (result.tablesCreated > 0) {
-      console.log("[aurora] provision-schema: ok (new tables)", result.message ?? "");
-    } else {
-      console.log("[aurora] provision-schema: ok (metadata merged, no new tables)");
-    }
-  } catch (err) {
-    console.warn(
-      "[aurora] provision-schema failed:",
-      err instanceof Error ? err.message : err
+    console.log(
+      "[aurora] provision-schema:",
+      result.tablesCreated > 0
+        ? (result.message ?? "new tables")
+        : (result.message ?? "metadata merged")
     );
-  }
-
-  try {
-    await runPendingSchemaMigration(baseUrl, apiKey);
   } catch (err) {
-    console.warn(
-      "[aurora] run-schema-migration failed:",
-      err instanceof Error ? err.message : err
-    );
+    console.warn("[aurora] provision-schema:", err instanceof Error ? err.message : err);
   }
 }
 

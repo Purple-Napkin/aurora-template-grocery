@@ -96,10 +96,14 @@ function probeImageLayout(absoluteUrl: string): Promise<CardLayoutMode> {
 }
 
 const cardShell =
-  "border border-aurora-border/55 shadow-sm shadow-black/[0.04] transition-[box-shadow,border-color] duration-200 ease-out hover:border-aurora-primary/22 hover:shadow-md hover:shadow-black/[0.06] dark:border-aurora-border/40 dark:shadow-none dark:ring-1 dark:ring-inset dark:ring-white/[0.06] dark:hover:shadow-lg dark:hover:shadow-black/35";
+  "border border-aurora-border/35 shadow-card-rest transition-[box-shadow,border-color,transform] duration-luxury ease-concierge hover:-translate-y-0.5 hover:border-aurora-primary/16 hover:shadow-card-lift focus-within:ring-2 focus-within:ring-aurora-primary/18 focus-within:ring-offset-2 focus-within:ring-offset-aurora-bg dark:border-aurora-border/30 dark:shadow-[0_8px_28px_rgba(0,0,0,0.32)] dark:hover:shadow-[0_14px_40px_rgba(0,0,0,0.42)] dark:focus-within:ring-offset-aurora-bg";
 
 /** Shared chrome for product grid + adaptive/inspiration link cards (split-style). */
 export const CONTENT_BLOCK_CARD_SHELL = cardShell;
+
+/** Large surfaces (mission panel, lists) — depth without hover lift. */
+export const CONTENT_BLOCK_PANEL_SHELL =
+  "border border-aurora-border/28 shadow-card-rest dark:border-aurora-border/30 dark:shadow-[0_8px_32px_rgba(0,0,0,0.32)]";
 
 /** Top image band: full card width, rounded with card via `overflow-hidden`; images use `object-cover` + top anchor. */
 export const CONTENT_BLOCK_IMAGE_WELL =
@@ -107,7 +111,7 @@ export const CONTENT_BLOCK_IMAGE_WELL =
 
 /** Bottom band matching split `ContentBlockProductCard` meta area. */
 export const CONTENT_BLOCK_CARD_FOOTER_BAND =
-  "border-t border-stone-200/90 bg-white dark:bg-white p-3 sm:p-4";
+  "bg-[color-mix(in_srgb,var(--aurora-bg)_18%,white)] dark:bg-white/[0.04] p-4 sm:p-5 shadow-[inset_0_1px_0_0_rgba(0,0,0,0.04)] dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]";
 
 function relatedSearchQuery(prod: ContentBlockProduct): string {
   const fromCat = prod.category?.trim().split(/\s+/)[0];
@@ -160,8 +164,8 @@ function CardMeta({
       : "font-semibold text-aurora-primary hover:underline";
   const pillCls =
     variant === "split"
-      ? "inline-flex max-w-full rounded-full bg-stone-200/70 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wide text-stone-800 ring-1 ring-stone-300/50"
-      : "inline-flex max-w-full rounded-full bg-aurora-primary/12 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wide text-aurora-primary ring-1 ring-aurora-primary/25";
+      ? "inline-flex max-w-full rounded-full bg-stone-200/55 px-2.5 py-1 text-[0.625rem] font-semibold uppercase tracking-wider text-stone-700/90"
+      : "inline-flex max-w-full rounded-full bg-aurora-primary/10 px-2.5 py-1 text-[0.625rem] font-semibold uppercase tracking-wider text-aurora-primary";
 
   const desc = prod.description?.trim();
   const cat = prod.category?.trim();
@@ -190,7 +194,7 @@ function CardMeta({
         </p>
       ) : null}
       <div
-        className={`flex flex-wrap items-center gap-x-1.5 gap-y-0.5 border-t pt-1.5 text-[0.6875rem] leading-tight ${variant === "split" ? "border-stone-200/70" : "border-aurora-border/45"}`}
+        className={`mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 pt-2 text-[0.6875rem] leading-tight text-aurora-muted/90 ${variant === "split" ? "" : ""}`}
       >
         <Link href="/for-you/recipes" className={linkCls}>
           Used in recipes
@@ -235,14 +239,14 @@ function AddToCartRow({
   if (!tableSlug || cents == null || cents <= 0) return null;
 
   return (
-    <div className="mt-3 border-t border-stone-200/70 pt-3 dark:border-aurora-border/45">
+    <div className="mt-4 pt-3 shadow-[inset_0_1px_0_0_rgba(0,0,0,0.05)] dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]">
       <AddToCartButton
         recordId={prod.id}
         tableSlug={tableSlug}
         name={prod.name}
         unitAmount={cents}
         imageUrl={resolvedImageUrl ?? prod.image_url ?? null}
-        className="w-full h-11 rounded-xl bg-aurora-primary text-white text-sm font-semibold hover:bg-aurora-primary-dark transition-colors"
+        className="w-full h-11 rounded-2xl bg-aurora-primary text-white text-sm font-semibold shadow-sm shadow-aurora-primary/15 transition-[background-color,box-shadow,transform] duration-luxury ease-concierge hover:bg-aurora-primary-dark hover:shadow-md hover:shadow-aurora-primary/20 active:scale-[0.99]"
       />
     </div>
   );
@@ -307,17 +311,17 @@ export function ContentBlockProductCard({
     return (
       <div
         {...cardMarkers}
-        className={`group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white ${cardShell}`}
+        className={`group flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-white ${cardShell}`}
       >
         <Link href={pdp} {...imgMarkers} className={CONTENT_BLOCK_IMAGE_WELL}>
           {prod.on_sale ? <span className="sr-only">On sale. </span> : null}
           <ProductImage
             {...imgShared}
-            className="absolute inset-0 h-full w-full transition-transform duration-200 ease-out group-hover:scale-[1.02]"
+            className="absolute inset-0 h-full w-full transition-transform duration-luxury ease-concierge group-hover:scale-[1.02]"
           />
           {prod.on_sale ? <ProductSaleBadge /> : null}
         </Link>
-        <div className="flex flex-col border-t border-stone-200/90 bg-white dark:bg-white p-3 sm:p-4">
+        <div className="flex flex-col bg-white dark:bg-white p-4 sm:p-5">
           <Link href={pdp} className="block min-w-0 text-stone-900">
             <TitlePrice prod={prod} currency={currency} titleClassName="text-stone-900" />
           </Link>
@@ -331,13 +335,13 @@ export function ContentBlockProductCard({
   return (
     <div
       {...cardMarkers}
-      className={`group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white ${cardShell}`}
+      className={`group flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-white ${cardShell}`}
     >
       <Link href={pdp} {...imgMarkers} className={CONTENT_BLOCK_IMAGE_WELL}>
         {prod.on_sale ? <span className="sr-only">On sale. </span> : null}
         <ProductImage
           {...imgShared}
-          className="absolute inset-0 z-10 h-full w-full transition-transform duration-200 ease-out group-hover:scale-[1.02]"
+          className="absolute inset-0 z-10 h-full w-full transition-transform duration-luxury ease-concierge group-hover:scale-[1.02]"
         />
         {prod.on_sale ? <ProductSaleBadge /> : null}
       </Link>

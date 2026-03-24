@@ -26,7 +26,7 @@ export function LiveSignalsRow({ embedded = false }: LiveSignalsRowProps) {
   const link = (
     <Link
       href={signal.href}
-      className="flex items-center gap-2 text-sm text-aurora-muted hover:text-aurora-primary transition-colors"
+      className="flex items-center gap-2 text-sm text-aurora-muted hover:text-aurora-primary transition-[color] duration-luxury ease-concierge"
     >
       <TrendingUp className="w-4 h-4 text-aurora-primary shrink-0" />
       <span>{signal.label}</span>

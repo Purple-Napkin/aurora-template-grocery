@@ -32,6 +32,20 @@ const config: Config = {
         card: "16px",
         component: "12px",
       },
+      transitionDuration: {
+        luxury: "220ms",
+      },
+      transitionTimingFunction: {
+        concierge: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
+      boxShadow: {
+        "card-rest":
+          "0 2px 8px rgba(27, 67, 50, 0.05), 0 14px 42px rgba(27, 67, 50, 0.045)",
+        "card-lift":
+          "0 6px 20px rgba(27, 67, 50, 0.08), 0 22px 52px rgba(47, 93, 69, 0.09)",
+        "inset-well":
+          "inset 0 1px 2px rgba(255, 255, 255, 0.65), 0 1px 2px rgba(23, 28, 24, 0.04)",
+      },
     },
   },
   plugins: [],

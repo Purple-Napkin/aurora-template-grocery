@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCart } from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "@/components/DietaryExclusionsContext";
 import { ProductImage } from "@aurora-studio/starter-core";
-import { CONTENT_BLOCK_CARD_SHELL } from "./ContentBlockProductCard";
+import { CONTENT_BLOCK_PANEL_SHELL } from "./ContentBlockProductCard";
 
 type Props = {
   /** Pass when on product detail page */
@@ -83,13 +83,13 @@ export function HolmesContextualWell({ currentProductId, variant = "default" }: 
           : `We have bundle suggestions for your cart${comboTitle ? ` — “${comboTitle}”` : ""}.`;
     return (
       <div
-        className={`mb-6 rounded-xl bg-white overflow-hidden dark:bg-aurora-surface p-4 sm:p-5 ${CONTENT_BLOCK_CARD_SHELL}`}
+        className={`mb-8 rounded-[1.25rem] bg-white/88 backdrop-blur-sm dark:bg-aurora-surface/85 p-5 sm:p-6 ${CONTENT_BLOCK_PANEL_SHELL}`}
       >
         <p className="text-sm text-aurora-text mb-2">{cartCopy}</p>
         {variant === "cart" ? (
           <a
             href="#basket-bundle"
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-aurora-primary/15 text-aurora-primary text-sm font-medium hover:bg-aurora-primary/25 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-aurora-primary/12 text-aurora-primary text-sm font-medium transition-[background-color] duration-luxury ease-concierge hover:bg-aurora-primary/18"
             onClick={(e) => {
               e.preventDefault();
               document.getElementById("basket-bundle")?.scrollIntoView({ behavior: "smooth" });
@@ -100,7 +100,7 @@ export function HolmesContextualWell({ currentProductId, variant = "default" }: 
         ) : variant === "for-you" ? null : (
           <Link
             href="/for-you"
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-aurora-primary/15 text-aurora-primary text-sm font-medium hover:bg-aurora-primary/25 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-aurora-primary/12 text-aurora-primary text-sm font-medium transition-[background-color] duration-luxury ease-concierge hover:bg-aurora-primary/18"
           >
             View ideas
           </Link>
@@ -113,7 +113,7 @@ export function HolmesContextualWell({ currentProductId, variant = "default" }: 
 
   return (
     <div
-      className={`mb-6 rounded-xl bg-white overflow-hidden dark:bg-aurora-surface p-4 sm:p-5 ${CONTENT_BLOCK_CARD_SHELL}`}
+      className={`mb-8 rounded-[1.25rem] bg-white/88 backdrop-blur-sm dark:bg-aurora-surface/85 p-5 sm:p-6 ${CONTENT_BLOCK_PANEL_SHELL}`}
     >
       <p className="text-sm text-aurora-text mb-2">{hint}</p>
       {products.length > 0 && (
@@ -122,7 +122,7 @@ export function HolmesContextualWell({ currentProductId, variant = "default" }: 
             <Link
               key={p.id}
               href={p.url}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-aurora-primary/15 text-aurora-primary text-sm font-medium hover:bg-aurora-primary/25 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-aurora-primary/12 text-aurora-primary text-sm font-medium transition-[background-color] duration-luxury ease-concierge hover:bg-aurora-primary/18"
             >
               <span className="w-6 h-6 rounded overflow-hidden shrink-0">
                 <ProductImage

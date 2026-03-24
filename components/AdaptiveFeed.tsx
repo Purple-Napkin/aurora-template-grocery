@@ -113,7 +113,7 @@ export function AdaptiveFeed({
 
   if (!sections) {
     return (
-      <div ref={ref} data-holmes="home-sections" className="py-6">
+      <div ref={ref} data-holmes="home-sections" className="py-8 sm:py-10">
         {children}
       </div>
     );
@@ -143,19 +143,21 @@ export function AdaptiveFeed({
     if (sec.type === "inspiration") {
       if (!sec.cards?.length) return null;
       return (
-        <section key={key} className="space-y-3 min-w-0">
+        <section key={key} className="space-y-5 min-w-0">
           <div>
-            <h2 className="text-lg font-bold text-aurora-text">{sec.title}</h2>
+            <h2 className="font-display text-lg font-semibold tracking-[-0.02em] text-aurora-text sm:text-xl">
+              {sec.title}
+            </h2>
             {sec.subtitle && (
-              <p className="text-sm text-aurora-muted mt-0.5">{sec.subtitle}</p>
+              <p className="text-sm text-aurora-muted mt-2 leading-relaxed max-w-2xl">{sec.subtitle}</p>
             )}
           </div>
-          <div className="grid grid-cols-2 items-start gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
+          <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-3 lg:grid-cols-4 sm:gap-5">
             {sec.cards.map((card, j) => (
               <Link
                 key={j}
                 href={card.linkUrl || "/catalogue"}
-                className={`flex flex-col overflow-hidden rounded-xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
+                className={`flex flex-col overflow-hidden rounded-2xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
               >
                 <div className={CONTENT_BLOCK_IMAGE_WELL}>
                   <ProductImage
@@ -184,14 +186,29 @@ export function AdaptiveFeed({
 
     if (sec.products && sec.products.length > 0) {
       return (
-        <section key={key} className="space-y-3 min-w-0">
-          <div className="flex items-baseline justify-between gap-2">
-            <h2 className="font-display text-lg sm:text-xl font-bold text-aurora-text">{sec.title}</h2>
+        <section key={key} className="space-y-5 min-w-0">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+            <div className="min-w-0">
+              {sec.type === "for_you" ? (
+                <p className="text-[0.6875rem] font-medium text-aurora-muted/90 uppercase tracking-[0.16em] mb-1.5">
+                  Curated
+                </p>
+              ) : null}
+              <h2
+                className={
+                  sec.type === "for_you"
+                    ? "font-display text-xl font-semibold tracking-[-0.02em] text-aurora-text sm:text-2xl"
+                    : "font-display text-lg font-semibold tracking-[-0.02em] text-aurora-text sm:text-xl"
+                }
+              >
+                {sec.title}
+              </h2>
+            </div>
             {trustSignal && (
-              <span className="text-xs text-aurora-muted font-medium shrink-0">{trustSignal}</span>
+              <span className="text-xs text-aurora-muted/90 font-medium shrink-0">{trustSignal}</span>
             )}
           </div>
-          <div className="grid grid-cols-2 items-start gap-3 sm:grid-cols-3 lg:grid-cols-5 sm:gap-4">
+          <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-3 lg:grid-cols-5 sm:gap-5">
             {sec.products.map((prod) => (
               <ContentBlockProductCard
                 key={prod.id}
@@ -207,19 +224,21 @@ export function AdaptiveFeed({
 
     if (sec.cards && sec.cards.length > 0) {
       return (
-        <section key={key} className="space-y-3 min-w-0">
-          <div className="flex items-baseline justify-between gap-2">
-            <h2 className="text-lg font-bold text-aurora-text">{sec.title}</h2>
+        <section key={key} className="space-y-5 min-w-0">
+          <div className="flex items-baseline justify-between gap-4">
+            <h2 className="font-display text-lg font-semibold tracking-[-0.02em] text-aurora-text sm:text-xl">
+              {sec.title}
+            </h2>
             {trustSignal && (
-              <span className="text-xs text-aurora-muted font-medium">{trustSignal}</span>
+              <span className="text-xs text-aurora-muted/90 font-medium">{trustSignal}</span>
             )}
           </div>
-          <div className="grid grid-cols-2 items-start gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
+          <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-3 lg:grid-cols-4 sm:gap-5">
             {sec.cards.map((card, j) => (
               <Link
                 key={j}
                 href={card.linkUrl || "/catalogue"}
-                className={`flex flex-col overflow-hidden rounded-xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
+                className={`flex flex-col overflow-hidden rounded-2xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
               >
                 <div className={CONTENT_BLOCK_IMAGE_WELL}>
                   <ProductImage
@@ -253,20 +272,20 @@ export function AdaptiveFeed({
 
   const recipeHolmesRail =
     recipes.length > 0 && !suppressRecipeForward ? (
-      <section className="space-y-3 pt-6 border-t border-aurora-border/80">
-        <h2 className="font-display text-lg sm:text-xl font-bold text-aurora-text flex items-center gap-2">
+      <section className="space-y-5 pt-10 mt-4">
+        <h2 className="font-display text-lg sm:text-xl font-semibold tracking-[-0.02em] text-aurora-text flex items-center gap-3">
           <ChefHat className="w-5 h-5 text-aurora-primary shrink-0" aria-hidden />
           Common next steps
         </h2>
-        <p className="text-sm text-aurora-muted max-w-2xl">
+        <p className="text-sm text-aurora-muted max-w-2xl leading-relaxed">
           Recipes — optional inspiration when you&apos;re cooking, not the main shop story.
         </p>
-        <div className="grid grid-cols-2 items-start gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
+        <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-3 lg:grid-cols-4 sm:gap-5">
           {recipes.slice(0, 4).map((r) => (
             <Link
               key={r.id}
               href={`/recipes/${encodeURIComponent(r.slug)}`}
-              className={`flex flex-col overflow-hidden rounded-xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
+              className={`flex flex-col overflow-hidden rounded-2xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
             >
               <div className={CONTENT_BLOCK_IMAGE_WELL}>
                 <RecipeProductCollage
@@ -286,8 +305,8 @@ export function AdaptiveFeed({
     ) : null;
 
   return (
-    <div ref={ref} data-holmes="home-sections" className="py-6">
-      <div className="space-y-10">
+    <div ref={ref} data-holmes="home-sections" className="py-8 sm:py-10">
+      <div className="space-y-12 sm:space-y-14">
         {grouped.map((g, gi) => {
           if (g.mode === "pair") {
             return (

@@ -78,7 +78,7 @@ export function BlurbBlock({
     return (
       <SectionShell
         withHolmesMarkers={withHolmesMarkers}
-        className="mb-10 last:mb-0 rounded-xl bg-white border border-aurora-border overflow-hidden shadow-sm"
+        className="mb-12 last:mb-0 rounded-[1.25rem] bg-white/92 backdrop-blur-sm border border-aurora-border/35 overflow-hidden shadow-card-rest"
       >
         <div className="relative w-full h-44 sm:h-52 md:h-60 bg-white [&_img]:!object-top">
           <ProductImage
@@ -131,14 +131,14 @@ export function BlurbBlock({
   return (
     <SectionShell
       withHolmesMarkers={withHolmesMarkers}
-      className="mb-10 last:mb-0 rounded-2xl bg-aurora-surface border border-aurora-border/80 shadow-sm overflow-hidden ring-1 ring-black/[0.04] dark:ring-white/[0.06]"
+      className="mb-12 last:mb-0 rounded-[1.35rem] bg-aurora-surface/95 backdrop-blur-sm border border-aurora-border/30 shadow-card-rest overflow-hidden dark:border-aurora-border/25"
     >
       <div
-        className="h-1 w-full bg-gradient-to-r from-aurora-primary/85 via-teal-500/55 to-aurora-primary/35"
+        className="h-0.5 w-full bg-gradient-to-r from-aurora-primary/40 via-teal-600/25 to-aurora-primary/20"
         aria-hidden
       />
       {sec.imageUrl ? (
-        <div className="mx-4 mt-4 rounded-xl overflow-hidden border border-aurora-border/60 aspect-video max-h-52 shadow-inner">
+        <div className="mx-4 mt-4 rounded-2xl overflow-hidden border border-aurora-border/35 aspect-video max-h-52 shadow-[inset_0_2px_8px_rgba(0,0,0,0.04)]">
           <ProductImage
             src={sec.imageUrl}
             className="w-full h-full object-cover"
@@ -157,7 +157,7 @@ export function BlurbBlock({
         >
           <div className="flex gap-3 sm:gap-4 items-start">
             <div
-              className="flex shrink-0 rounded-xl bg-gradient-to-br from-aurora-primary/14 to-aurora-primary/5 p-2 sm:p-2.5 text-aurora-primary ring-1 ring-aurora-primary/20 shadow-sm"
+              className="flex shrink-0 rounded-2xl bg-gradient-to-br from-aurora-primary/12 to-aurora-primary/5 p-2 sm:p-2.5 text-aurora-primary shadow-[0_2px_12px_rgba(47,93,69,0.08)]"
               aria-hidden
             >
               <ShoppingBasket className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={2} />
@@ -166,7 +166,7 @@ export function BlurbBlock({
               {title ? (
                 <h2
                   {...(withHolmesMarkers ? { "data-holmes-home-section-title": true } : {})}
-                  className="text-lg sm:text-xl font-bold text-aurora-text leading-snug tracking-tight"
+                  className="text-lg sm:text-xl font-semibold text-aurora-text leading-snug tracking-[-0.02em]"
                 >
                   {title}
                 </h2>
@@ -195,7 +195,7 @@ export function BlurbBlock({
               <Link
                 {...(withHolmesMarkers ? { "data-holmes-home-section-link": true } : {})}
                 href={href}
-                className="inline-flex items-center gap-1.5 rounded-full bg-aurora-primary/12 px-4 py-2.5 text-sm font-semibold text-aurora-primary ring-1 ring-aurora-primary/15 hover:bg-aurora-primary/18 hover:ring-aurora-primary/25 transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-full bg-aurora-primary/10 px-4 py-2.5 text-sm font-medium text-aurora-primary hover:bg-aurora-primary/15 transition-[background-color] duration-luxury ease-concierge"
               >
                 {label}
                 <span aria-hidden>→</span>
@@ -227,13 +227,23 @@ export function ProductGridSection({
 }) {
   if (!sec.products?.length) return null;
   const headerLink = sec.linkHref?.trim();
+  const curated = sec.type === "for_you";
   return (
-    <SectionShell withHolmesMarkers={withHolmesMarkers} className="mb-10 last:mb-0">
-      <div className="mb-6 flex flex-col gap-4 sm:mb-7 sm:flex-row sm:items-end sm:justify-between">
-        <div className="min-w-0 flex-1 space-y-1">
+    <SectionShell withHolmesMarkers={withHolmesMarkers} className="mb-12 last:mb-0">
+      <div className="mb-8 flex flex-col gap-4 sm:mb-9 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0 flex-1 space-y-2">
+          {curated ? (
+            <p className="text-[0.6875rem] font-medium text-aurora-muted/90 uppercase tracking-[0.16em]">
+              Curated
+            </p>
+          ) : null}
           <h2
             {...(withHolmesMarkers ? { "data-holmes-home-section-title": true } : {})}
-            className="text-xl font-bold tracking-tight text-aurora-text sm:text-2xl"
+            className={
+              curated
+                ? "font-display text-2xl font-semibold tracking-[-0.02em] text-aurora-text sm:text-3xl"
+                : "text-xl font-semibold tracking-tight text-aurora-text sm:text-2xl"
+            }
           >
             {sec.title}
           </h2>
@@ -260,7 +270,7 @@ export function ProductGridSection({
       </div>
       <div
         {...(withHolmesMarkers ? { "data-holmes-home-section-grid": true } : {})}
-        className="grid grid-cols-2 items-start gap-4 sm:grid-cols-4 sm:gap-5"
+        className="grid grid-cols-2 items-start gap-4 sm:grid-cols-4 sm:gap-6"
       >
         {sec.products.map((prod) => (
           <ContentBlockProductCard
@@ -284,26 +294,26 @@ export function InspirationSection({
 }) {
   if (!sec.cards?.length) return null;
   return (
-    <SectionShell withHolmesMarkers={withHolmesMarkers} className="mb-10 last:mb-0">
+    <SectionShell withHolmesMarkers={withHolmesMarkers} className="mb-12 last:mb-0">
       <h2
         {...(withHolmesMarkers ? { "data-holmes-home-section-title": true } : {})}
-        className="text-xl font-bold mb-4 flex items-center gap-2"
+        className="font-display text-xl font-semibold tracking-[-0.02em] mb-3 sm:text-2xl flex items-center gap-2"
       >
         {sec.title}
       </h2>
       {sec.subtitle ? (
-        <p className="text-aurora-muted text-sm mb-4">{sec.subtitle}</p>
+        <p className="text-aurora-muted text-sm mb-6 leading-relaxed max-w-2xl">{sec.subtitle}</p>
       ) : null}
       <div
         {...(withHolmesMarkers ? { "data-holmes-home-section-grid": true } : {})}
-        className="grid grid-cols-2 items-start gap-4 sm:grid-cols-4 sm:gap-5"
+        className="grid grid-cols-2 items-start gap-4 sm:grid-cols-4 sm:gap-6"
       >
         {sec.cards.map((card, j) => (
           <Link
             key={j}
             href={card.linkUrl || "/catalogue"}
             {...(withHolmesMarkers ? { "data-holmes-home-card": true } : {})}
-            className={`flex flex-col overflow-hidden rounded-xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
+            className={`flex flex-col overflow-hidden rounded-2xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
           >
             <div
               {...(withHolmesMarkers ? { "data-holmes-home-card-image": true } : {})}
@@ -344,28 +354,28 @@ export function RecipeIdeasRail({
   return (
     <section
       {...(withHolmesMarkers ? { "data-holmes-home-section": true } : {})}
-      className="mb-10 last:mb-0 pt-4 border-t border-aurora-border/80"
+      className="mb-12 last:mb-0 pt-10 mt-2"
     >
       <h2
         {...(withHolmesMarkers ? { "data-holmes-home-section-title": true } : {})}
-        className="font-display text-xl sm:text-2xl font-bold text-aurora-text mb-1 flex items-center gap-2"
+        className="font-display text-xl sm:text-2xl font-semibold tracking-[-0.02em] text-aurora-text mb-2 flex items-center gap-3"
       >
         <ChefHat className="w-6 h-6 text-aurora-primary shrink-0" aria-hidden />
         Common next steps
       </h2>
-      <p className="text-sm text-aurora-muted mb-4 max-w-2xl">
+      <p className="text-sm text-aurora-muted mb-6 max-w-2xl leading-relaxed">
         Recipes and meal ideas — one way to complete a cooking mission, not the only path.
       </p>
       <div
         {...(withHolmesMarkers ? { "data-holmes-home-section-grid": true } : {})}
-        className="grid grid-cols-2 items-start gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4"
+        className="grid grid-cols-2 items-start gap-4 sm:grid-cols-3 lg:grid-cols-4 sm:gap-5"
       >
         {recipesWithProducts.map((r) => (
           <Link
             key={r.id}
             href={`/recipes/${encodeURIComponent(r.slug)}`}
             {...(withHolmesMarkers ? { "data-holmes-home-card": true } : {})}
-            className={`flex flex-col overflow-hidden rounded-xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
+            className={`flex flex-col overflow-hidden rounded-2xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
           >
             <div
               {...(withHolmesMarkers ? { "data-holmes-home-card-image": true } : {})}

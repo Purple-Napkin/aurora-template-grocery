@@ -60,7 +60,7 @@ export async function HomeSections() {
         currency={currencyCode}
         recipesWithProducts={recipesWithProducts}
         withHolmesMarkers
-        pairGridClassName="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10 last:mb-0"
+        pairGridClassName="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 last:mb-0"
       />
       <RecipeIdeasRail recipesWithProducts={recipesWithProducts} />
     </AdaptiveFeed>
