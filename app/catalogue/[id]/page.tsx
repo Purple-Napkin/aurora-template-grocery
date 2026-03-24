@@ -1,14 +1,14 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { createAuroraClient } from "@aurora-studio/starter-core";
+import { createAuroraClient, getStoreConfig } from "@aurora-studio/starter-core";
 import { AddToCartButton } from "@aurora-studio/starter-core";
 import { HolmesProductViewTracker } from "@aurora-studio/starter-core";
 import { ProductDetailTabs } from "@aurora-studio/starter-core";
 import { ProductImageGallery } from "@aurora-studio/starter-core";
-import { YouMayAlsoLike } from "@/components/YouMayAlsoLike";
 import { HolmesContextualWell } from "@/components/HolmesContextualWell";
 import { HolmesTidbits } from "@aurora-studio/starter-core";
-import { StoreContentRails } from "@/components/StoreContentRails";
+import { PdpBelowFold } from "@/components/PdpBelowFold";
 
 export const dynamic = "force-dynamic";
 
@@ -52,26 +52,30 @@ export default async function ProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const aurora = createAuroraClient();
   const baseUrl = process.env.NEXT_PUBLIC_AURORA_API_URL ?? "";
   const apiKey = process.env.AURORA_API_KEY ?? "";
 
   if (!baseUrl || !apiKey) notFound();
 
   let catalogTableSlug: string | null = null;
-  let currency = "GBP";
+  let storeRow: Awaited<ReturnType<typeof getStoreConfig>> = null;
 
   try {
-    const config = await aurora.store.config();
-    if (config.enabled && config.catalogTableSlug) {
-      catalogTableSlug = config.catalogTableSlug;
-      currency = (config as { currency?: string }).currency ?? "GBP";
+    storeRow = await getStoreConfig();
+    if (storeRow?.enabled && storeRow.catalogTableSlug) {
+      catalogTableSlug = storeRow.catalogTableSlug;
     }
   } catch {
     notFound();
   }
 
   if (!catalogTableSlug) notFound();
+
+  const curNorm = ((storeRow as { currency?: string })?.currency ?? "gbp").toLowerCase();
+  const currencyCode = curNorm.length >= 3 ? curNorm.toUpperCase() : "GBP";
+  const currency = currencyCode;
+
+  const aurora = createAuroraClient();
 
   let record: Record<string, unknown>;
 
@@ -178,18 +182,14 @@ export default async function ProductPage({
         <ProductDetailTabs record={record} tabSet="grocery" />
       </div>
 
-      <div className="mt-10 space-y-10">
-        <StoreContentRails contentPage="product_detail" contentRegion="pdp_below_tabs" />
-        <StoreContentRails contentPage="product_detail" contentRegion="pdp_below_context" />
-      </div>
-
-      <div className="mt-12">
-        <YouMayAlsoLike
+      <Suspense fallback={null}>
+        <PdpBelowFold
           productId={id}
           catalogTableSlug={catalogTableSlug}
           categoryId={categoryId}
+          currencyCode={currencyCode}
         />
-      </div>
+      </Suspense>
     </div>
   );
 }

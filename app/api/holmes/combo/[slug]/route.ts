@@ -16,6 +16,9 @@ export async function GET(
     if (!combo) {
       return NextResponse.json({ error: "Combo not found", slug }, { status: 404 });
     }
+    if (typeof combo === "object" && "pending" in combo && combo.pending === true) {
+      return NextResponse.json(combo, { status: 202 });
+    }
     return NextResponse.json(combo);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Combo fetch failed";

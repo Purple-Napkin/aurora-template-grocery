@@ -1,7 +1,7 @@
 {
   "$schema": "./content-regions.schema.json",
   "version": 1,
-  "generatedAt": "2026-03-24T22:16:58.293Z",
+  "generatedAt": "2026-03-24T23:32:43.968Z",
   "legacyAliases": {
     "hippo-grocery": "aurora-template-grocery",
     "hippo-hotels": "aurora-template-hotels",
@@ -49,16 +49,6 @@
         "page": "offers",
         "region": "offers_below_header",
         "label": "Offers — Offers Below Header"
-      },
-      {
-        "page": "product_detail",
-        "region": "pdp_below_context",
-        "label": "Product Detail — Pdp Below Context"
-      },
-      {
-        "page": "product_detail",
-        "region": "pdp_below_tabs",
-        "label": "Product Detail — Pdp Below Tabs"
       },
       {
         "page": "recipe",

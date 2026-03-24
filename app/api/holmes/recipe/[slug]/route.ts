@@ -19,6 +19,9 @@ export async function GET(
     if (!combo) {
       return NextResponse.json({ error: "Recipe not found", slug }, { status: 404 });
     }
+    if (typeof combo === "object" && "pending" in combo && combo.pending === true) {
+      return NextResponse.json(combo, { status: 202 });
+    }
     return NextResponse.json(combo);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Recipe fetch failed";

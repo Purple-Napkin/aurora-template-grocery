@@ -4,7 +4,15 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Carrot, Apple, Check } from "lucide-react";
 import { useCart } from "@aurora-studio/starter-core";
-import { holmesCombosForCart, holmesRecentRecipes, holmesRecipe, holmesRecipeProducts, getStoreConfig } from "@aurora-studio/starter-core";
+import {
+  holmesCombosForCart,
+  holmesRecentRecipes,
+  holmesRecipe,
+  holmesRecipeProducts,
+  getStoreConfig,
+  isHolmesComboPending,
+  holmesComboPollUntilReady,
+} from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "@/components/DietaryExclusionsContext";
 import { getMealToComplete, rankRecipesByIngredientHints } from "@/lib/cart-intelligence";
 import { getTimeOfDay } from "@aurora-studio/starter-core";
@@ -207,37 +215,42 @@ export function RecipeFolioCarousel({
     }
     setLoading(true);
     let cancelled = false;
-    Promise.all([
-      holmesRecipe(currentSlug),
-      holmesRecipeProducts(currentSlug, 24, {
-        excludeDietary: excludeDietary.length ? excludeDietary : undefined,
-      }),
-      getStoreConfig(),
-    ])
-      .then(([rec, prodRes, config]) => {
+    (async () => {
+      try {
+        const [rec, prodRes, config] = await Promise.all([
+          holmesRecipe(currentSlug),
+          holmesRecipeProducts(currentSlug, 24, {
+            excludeDietary: excludeDietary.length ? excludeDietary : undefined,
+          }),
+          getStoreConfig(),
+        ]);
+        if (cancelled) return;
+        let resolved = rec;
+        if (resolved && isHolmesComboPending(resolved)) {
+          resolved = await holmesComboPollUntilReady(currentSlug);
+        }
         if (cancelled) return;
         const slug = (config as { catalogTableSlug?: string })?.catalogTableSlug ?? null;
         setRecipe(
-          rec
+          resolved && !isHolmesComboPending(resolved)
             ? {
-                title: rec.title,
-                description: rec.description,
-                image_url: rec.image_url?.trim() ? rec.image_url.trim() : null,
-                ingredients: rec.ingredients ?? [],
-                instructions: rec.instructions,
+                title: resolved.title,
+                description: resolved.description,
+                image_url: resolved.image_url?.trim() ? resolved.image_url.trim() : null,
+                ingredients: resolved.ingredients ?? [],
+                instructions: resolved.instructions,
                 products: (prodRes.products ?? []) as SearchHit[],
                 catalogSlug: slug,
               }
             : null
         );
         setCurrency((config as { currency?: string })?.currency ?? "GBP");
-      })
-      .catch(() => {
+      } catch {
         if (!cancelled) setRecipe(null);
-      })
-      .finally(() => {
+      } finally {
         if (!cancelled) setLoading(false);
-      });
+      }
+    })();
     return () => { cancelled = true; };
   }, [currentSlug, excludeDietary]);
 
