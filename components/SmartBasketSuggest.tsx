@@ -8,7 +8,12 @@ import { useCart } from "@aurora-studio/starter-core";
 import { useStore } from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "./DietaryExclusionsContext";
 import { formatPrice } from "@aurora-studio/starter-core";
-import { holmesGoesWith, search, type SearchHit } from "@aurora-studio/starter-core";
+import {
+  catalogueRecordIdFromSearchHit,
+  holmesGoesWith,
+  search,
+  type SearchHit,
+} from "@aurora-studio/starter-core";
 import { toCents } from "@aurora-studio/starter-core";
 import {
   CONTENT_BLOCK_CARD_SHELL,
@@ -22,7 +27,13 @@ function getPrice(hit: SearchHit): number | undefined {
   return hit.price != null ? toCents(hit.price) : undefined;
 }
 function getName(hit: SearchHit): string {
-  return hit.name ?? hit.title ?? hit.snippet ?? hit.recordId ?? "";
+  return (
+    hit.name ??
+    hit.title ??
+    hit.snippet ??
+    catalogueRecordIdFromSearchHit(hit) ??
+    ""
+  );
 }
 
 /** "Customers usually buy" - suggests related products when basket has items. */
@@ -39,15 +50,24 @@ export function SmartBasketSuggest() {
       setSuggestions([]);
       return;
     }
-    const inCartIds = new Set(items.map((i) => i.recordId));
+    const inCartIds = new Set(
+      items.map((i) => i.recordId).filter((id): id is string => Boolean(id))
+    );
     const firstRecordId = items[0]?.recordId;
-    holmesGoesWith(firstRecordId!, 6, {
+    if (!firstRecordId) {
+      setSuggestions([]);
+      return;
+    }
+    holmesGoesWith(firstRecordId, 6, {
       excludeDietary: excludeDietary.length ? excludeDietary : undefined,
     })
       .then((res) => {
-        const hits = (res.products ?? []).filter(
-          (h) => !inCartIds.has((h.recordId ?? h.id) as string)
-        ) as SearchHit[];
+        const hits = (res.products ?? [])
+          .map((h) => h as SearchHit)
+          .filter((h) => {
+            const rid = catalogueRecordIdFromSearchHit(h);
+            return rid != null && !inCartIds.has(rid);
+          });
         setSuggestions(hits.slice(0, 4));
       })
       .catch(() =>
@@ -58,7 +78,10 @@ export function SmartBasketSuggest() {
           excludeDietary: excludeDietary.length ? excludeDietary : undefined,
         })
           .then((res) => {
-            const hits = (res.hits ?? []).filter((h) => !inCartIds.has(h.recordId));
+            const hits = (res.hits ?? []).filter((h) => {
+              const rid = catalogueRecordIdFromSearchHit(h);
+              return rid != null && !inCartIds.has(rid);
+            });
             setSuggestions(hits.slice(0, 4));
           })
           .catch(() => setSuggestions([]))
@@ -72,7 +95,8 @@ export function SmartBasketSuggest() {
       <h2 className="font-semibold mb-4">Customers usually buy</h2>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {suggestions.map((hit) => {
-          const id = hit.recordId;
+          const id = catalogueRecordIdFromSearchHit(hit);
+          if (!id) return null;
           const name = getName(hit);
           const priceCents = getPrice(hit);
           const imageUrl = getImageUrl(hit);
