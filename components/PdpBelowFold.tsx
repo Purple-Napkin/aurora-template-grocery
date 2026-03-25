@@ -1,5 +1,4 @@
-import { getHomePersonalization } from "@aurora-studio/starter-core";
-import { getDietaryFromCookie } from "@/lib/dietary-server";
+import { getHomePersonalizationCached } from "@/lib/server-request-cache";
 import { GroupedStoreContentSections } from "./storeContentBlocksUi";
 import { YouMayAlsoLike } from "./YouMayAlsoLike";
 
@@ -18,20 +17,9 @@ export async function PdpBelowFold({
   categoryId?: string | null;
   currencyCode: string;
 }) {
-  const excludeDietary = await getDietaryFromCookie();
-  const dietaryOpts = excludeDietary.length ? { excludeDietary } : undefined;
-
   const [tabsData, ctxData] = await Promise.all([
-    getHomePersonalization(undefined, {
-      ...dietaryOpts,
-      contentPage: "product_detail",
-      contentRegion: "pdp_below_tabs",
-    }),
-    getHomePersonalization(undefined, {
-      ...dietaryOpts,
-      contentPage: "product_detail",
-      contentRegion: "pdp_below_context",
-    }),
+    getHomePersonalizationCached("product_detail", "pdp_below_tabs", ""),
+    getHomePersonalizationCached("product_detail", "pdp_below_context", ""),
   ]);
 
   const tabsSections = tabsData?.sections ?? [];

@@ -1,6 +1,7 @@
 import { cache } from "react";
-import { getHomePersonalization, getStoreConfig } from "@aurora-studio/starter-core";
+import { getStoreConfig } from "@aurora-studio/starter-core";
 import { getDietaryFromCookie } from "@/lib/dietary-server";
+import { getHomePersonalizationProcessCached } from "@/lib/home-personalization-process-cache";
 
 /** One store config resolution per RSC request (parallel callers share one fetch). */
 export const getStoreConfigCached = cache(getStoreConfig);
@@ -17,11 +18,11 @@ export const getHomePersonalizationCached = cache(
     const excludeDietary = await getDietaryFromCookieCached();
     const dietaryOpts = excludeDietary.length ? { excludeDietary } : undefined;
     const cat = categorySlug.trim();
-    return getHomePersonalization(undefined, {
+    return getHomePersonalizationProcessCached({
       ...dietaryOpts,
       contentPage,
       contentRegion,
-      ...(cat ? { categorySlug: cat } : {}),
+      categorySlug: cat || undefined,
     });
   }
 );

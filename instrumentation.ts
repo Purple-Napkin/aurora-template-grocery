@@ -1,2 +1,7 @@
-/** Next.js requires this at project root; first-run logic lives in init/. */
-export { register } from "./init/register";
+export async function register() {
+  if (process.env.NEXT_RUNTIME !== "nodejs") return;
+  const { warmHomePersonalizationCache } = await import(
+    "@/lib/warm-home-personalization-cache"
+  );
+  await warmHomePersonalizationCache();
+}
