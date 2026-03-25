@@ -19,6 +19,9 @@ export async function GET(req: NextRequest) {
       ? excludeDietaryRaw.split(",").map((s) => s.trim()).filter(Boolean)
       : undefined;
 
+    const modeRaw = searchParams.get("mode")?.trim().toLowerCase();
+    const mode = modeRaw === "storefront" ? ("storefront" as const) : undefined;
+
     const result = await search({
       q: q.trim() || undefined,
       limit,
@@ -28,6 +31,7 @@ export async function GET(req: NextRequest) {
       sort,
       order,
       excludeDietary,
+      mode,
     });
 
     return NextResponse.json(result);

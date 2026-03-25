@@ -178,7 +178,7 @@ export function CommandSurface({
         {/* Secondary: search as tool, not entry point */}
         <div className="relative z-10">
           <p className="text-[0.6875rem] font-medium text-aurora-muted/90 uppercase tracking-[0.14em] mb-3">
-            Search the store
+            Find what you need
           </p>
           {store ? (
             <div
@@ -192,6 +192,7 @@ export function CommandSurface({
                 variant="embedded"
                 excludeDietary={excludeForSearch}
                 getRecipeSuggestion={getRecipeSuggestion}
+                getComboHref={(slug) => `/recipes/${encodeURIComponent(slug)}`}
               />
             </div>
           ) : (
@@ -218,7 +219,7 @@ export function CommandSurface({
             <IntentHeroPanel hero={hero} edgeToEdge />
           </div>
         </div>
-        <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-12 sm:py-14 lg:py-20 flex justify-center lg:justify-start">
+        <div className="relative z-50 max-w-6xl mx-auto w-full px-4 sm:px-6 py-12 sm:py-14 lg:py-20 flex justify-center lg:justify-start">
           {formContent}
         </div>
       </section>
@@ -236,7 +237,7 @@ export function CommandSurface({
           <IntentHeroPanel hero={hero} />
         </div>
 
-        <div className="min-w-0 order-1 lg:order-2 flex justify-center lg:justify-end w-full lg:min-w-[320px] justify-self-center lg:justify-self-end">
+        <div className="relative z-50 min-w-0 order-1 lg:order-2 flex justify-center lg:justify-end w-full lg:min-w-[320px] justify-self-center lg:justify-self-end">
           {formContent}
         </div>
       </div>

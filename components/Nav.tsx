@@ -77,24 +77,26 @@ export function Nav() {
           </div>
 
           <div
-            className="hidden md:flex flex-1 justify-center min-w-0 max-w-md mx-5"
+            className="relative z-50 hidden md:flex flex-1 justify-center min-w-0 max-w-md mx-5"
             data-grocery-search="nav"
           >
             {store ? (
               <SearchDropdown
-                placeholder="Search products"
+                placeholder="Search milk, pasta, dinner…"
                 vendorId={store.id}
                 excludeDietary={excludeForSearch}
                 getRecipeSuggestion={getRecipeSuggestion}
+                getComboHref={(slug) => `/recipes/${encodeURIComponent(slug)}`}
               />
             ) : (
               <Link href="/stores" className="block cursor-pointer">
                 <span className="pointer-events-none block">
                   <SearchDropdown
-                    placeholder="Select a store to search products…"
+                    placeholder="Select a store to search…"
                     vendorId={undefined}
                     excludeDietary={excludeForSearch}
                     getRecipeSuggestion={getRecipeSuggestion}
+                    getComboHref={(slug) => `/recipes/${encodeURIComponent(slug)}`}
                   />
                 </span>
               </Link>
