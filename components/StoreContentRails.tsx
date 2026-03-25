@@ -1,6 +1,8 @@
-import { getHomePersonalization, getStoreConfig } from "@aurora-studio/starter-core";
-import { getDietaryFromCookie } from "@/lib/dietary-server";
 import { GroupedStoreContentSections } from "./storeContentBlocksUi";
+import {
+  getHomePersonalizationCached,
+  getStoreConfigCached,
+} from "@/lib/server-request-cache";
 
 /** SSR: load `store_content_blocks` for a CMS page + region (and optional catalogue category). */
 export async function StoreContentRails({
@@ -16,17 +18,10 @@ export async function StoreContentRails({
   className?: string;
   withHolmesMarkers?: boolean;
 }) {
-  const excludeDietary = await getDietaryFromCookie();
-  const dietaryOpts = excludeDietary.length ? { excludeDietary } : undefined;
   const cat = categorySlug != null ? String(categorySlug).trim() : "";
   const [data, config] = await Promise.all([
-    getHomePersonalization(undefined, {
-      ...dietaryOpts,
-      contentPage,
-      contentRegion,
-      ...(cat ? { categorySlug: cat } : {}),
-    }),
-    getStoreConfig(),
+    getHomePersonalizationCached(contentPage, contentRegion, cat),
+    getStoreConfigCached(),
   ]);
 
   const sections = data?.sections ?? [];
