@@ -1,4 +1,7 @@
-import { getHomePersonalization } from "@aurora-studio/starter-core";
+import {
+  cachedStoreContentPersonalization,
+  getHomePersonalization,
+} from "@aurora-studio/starter-core";
 
 type P13nOpts = {
   excludeDietary?: string[];
@@ -7,31 +10,26 @@ type P13nOpts = {
   categorySlug?: string | null;
 };
 
-const inflight = new Map<string, ReturnType<typeof getHomePersonalization>>();
-
-function cacheKey(o: P13nOpts): string {
-  const d = (o.excludeDietary ?? []).slice().sort().join(",");
-  const cat = (o.categorySlug ?? "").toString().trim();
-  return `${o.contentPage}\0${o.contentRegion}\0${cat}\0${d}`;
-}
-
 /**
- * Fetches home personalization once per process + cache key; reuses the same promise/result until restart.
- * Invalidation/TTL can be added later.
+ * Store CMS / home-personalization via Next.js Data Cache (default 30m, tag + env in starter-core).
+ * Request-level dedupe remains in `server-request-cache` (`react` cache).
  */
 export function getHomePersonalizationProcessCached(opts: P13nOpts) {
-  const k = cacheKey(opts);
-  let p = inflight.get(k);
-  if (!p) {
-    p = getHomePersonalization(undefined, {
-      ...(opts.excludeDietary?.length ? { excludeDietary: opts.excludeDietary } : {}),
+  return cachedStoreContentPersonalization(
+    {
       contentPage: opts.contentPage,
       contentRegion: opts.contentRegion,
-      ...(opts.categorySlug?.toString().trim()
-        ? { categorySlug: opts.categorySlug.toString().trim() }
-        : {}),
-    });
-    inflight.set(k, p);
-  }
-  return p;
+      categorySlug: opts.categorySlug,
+      excludeDietary: opts.excludeDietary,
+    },
+    () =>
+      getHomePersonalization(undefined, {
+        ...(opts.excludeDietary?.length ? { excludeDietary: opts.excludeDietary } : {}),
+        contentPage: opts.contentPage,
+        contentRegion: opts.contentRegion,
+        ...(opts.categorySlug?.toString().trim()
+          ? { categorySlug: opts.categorySlug.toString().trim() }
+          : {}),
+      })
+  );
 }
