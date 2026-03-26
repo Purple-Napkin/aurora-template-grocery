@@ -1,3 +1,4 @@
+import { warmStoresCatalogueAndPdp } from "@aurora-studio/starter-core";
 import { getHomePersonalizationProcessCached } from "./home-personalization-process-cache";
 
 /** CMS page + region + category slug — warmed with no dietary exclusions at server boot. */
@@ -17,13 +18,15 @@ const SLOTS: readonly [contentPage: string, contentRegion: string, categorySlug:
 
 /** Preload common editorial slots so first real request does not pay cold fetch. */
 export async function warmHomePersonalizationCache(): Promise<void> {
-  await Promise.all(
-    SLOTS.map(([contentPage, contentRegion, categorySlug]) =>
+  const sampleProductId = process.env.AURORA_WARM_SAMPLE_PRODUCT_ID?.trim() || undefined;
+  await Promise.all([
+    ...SLOTS.map(([contentPage, contentRegion, categorySlug]) =>
       getHomePersonalizationProcessCached({
         contentPage,
         contentRegion,
         categorySlug: categorySlug || undefined,
       }).catch(() => null)
-    )
-  );
+    ),
+    warmStoresCatalogueAndPdp({ sampleProductId }).catch(() => null),
+  ]);
 }
