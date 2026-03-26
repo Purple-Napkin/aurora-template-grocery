@@ -71,6 +71,17 @@ function getRating(record: Record<string, unknown>): number | null {
 }
 
 /** Listing copy from search/Meili/Redis; avoid showing snippet when it duplicates the title. */
+/** Dedupe rapid infer events that did not change mission/bundle (avoids grid flicker vs the Holmes bar). */
+function holmesInferFingerprint(detail: unknown): string {
+  const d = detail as {
+    mission?: { key?: string } | null;
+    bundle?: { productIds?: string[] } | null;
+  } | null;
+  const k = d?.mission?.key ?? "";
+  const ids = Array.isArray(d?.bundle?.productIds) ? [...d.bundle.productIds].sort().join(",") : "";
+  return `${k}|${ids}`;
+}
+
 function getCardDescription(record: Record<string, unknown>): string | null {
   const raw = record.description ?? record.summary;
   if (typeof raw === "string" && raw.trim()) return raw.trim();
@@ -103,6 +114,7 @@ function CatalogueContent() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [missionFocusHits, setMissionFocusHits] = useState<SearchHit[]>([]);
   const hasAppliedSuggestionRef = useRef(false);
+  const lastInferFingerprintRef = useRef<string | null>(null);
   const limit = 24;
 
   const activeMission = missionData?.activeMission;
@@ -141,8 +153,8 @@ function CatalogueContent() {
     setPage(0);
   }
 
-  const loadProducts = useCallback(async () => {
-    setLoading(true);
+  const loadProducts = useCallback(async (opts?: { silent?: boolean }) => {
+    if (!opts?.silent) setLoading(true);
     try {
       const sort = tab === "new" ? "created_at" : tab === "sale" ? "price" : "name";
       const order = tab === "new" ? "desc" : "asc";
@@ -193,10 +205,17 @@ function CatalogueContent() {
     loadProducts();
   }, [loadProducts]);
 
-  /** Session stream / poll infer: refresh grid so mission-scoped behaviour can track the shopper. */
+  /** Session infer: refresh Meilisearch grid when mission/bundle actually changes (silent = no skeleton flicker). */
   useEffect(() => {
-    const onInfer = () => {
-      loadProducts();
+    lastInferFingerprintRef.current = null;
+  }, [category, q, tab, page]);
+
+  useEffect(() => {
+    const onInfer = (ev: Event) => {
+      const fp = holmesInferFingerprint((ev as CustomEvent).detail);
+      if (fp === lastInferFingerprintRef.current) return;
+      lastInferFingerprintRef.current = fp;
+      loadProducts({ silent: true });
     };
     document.addEventListener("holmes:inferApplied", onInfer);
     return () => document.removeEventListener("holmes:inferApplied", onInfer);
