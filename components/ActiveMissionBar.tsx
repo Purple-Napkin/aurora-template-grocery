@@ -151,7 +151,13 @@ export function ActiveMissionBar() {
               <Sparkles className="w-4 h-4 text-aurora-primary" aria-hidden />
             </div>
             <div className="min-w-0 flex-1 space-y-2">
-              <p className="text-sm font-semibold text-aurora-text leading-snug">{headline}</p>
+              <p
+                className="text-sm font-semibold text-aurora-text leading-snug transition-opacity duration-150 ease-out motion-reduce:transition-none"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                {headline}
+              </p>
               <div className="relative" ref={whyRef}>
                 <button
                   type="button"

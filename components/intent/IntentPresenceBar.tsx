@@ -112,7 +112,11 @@ export function IntentPresenceBar() {
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
         <div className="min-w-0 flex-1">
-          <p className="text-sm sm:text-base font-semibold tracking-tight">
+          <p
+            className="text-sm sm:text-base font-semibold tracking-tight transition-opacity duration-150 ease-out motion-reduce:transition-none"
+            aria-live="polite"
+            aria-atomic="true"
+          >
             <span className="text-emerald-200/90">Shop by mission · </span>
             {activeMission.label}
             <span className="font-normal text-emerald-100/85"> — mode active</span>

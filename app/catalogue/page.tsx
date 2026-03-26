@@ -193,6 +193,15 @@ function CatalogueContent() {
     loadProducts();
   }, [loadProducts]);
 
+  /** Session stream / poll infer: refresh grid so mission-scoped behaviour can track the shopper. */
+  useEffect(() => {
+    const onInfer = () => {
+      loadProducts();
+    };
+    document.addEventListener("holmes:inferApplied", onInfer);
+    return () => document.removeEventListener("holmes:inferApplied", onInfer);
+  }, [loadProducts]);
+
   useEffect(() => {
     setMissionBarDismissed(isMissionBarDismissed());
   }, []);

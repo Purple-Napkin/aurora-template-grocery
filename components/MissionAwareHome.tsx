@@ -56,6 +56,8 @@ export function MissionAwareHomeProvider({
 }) {
   const [data, setData] = useState<HomePersonalization>(null);
   const fetchRef = useRef<() => void>(() => {});
+  /** Latest fetch wins — rapid infer/session updates must not apply stale home-personalization. */
+  const fetchGenerationRef = useRef(0);
   const { excludeDietary } = useDietaryExclusions();
 
   const refresh = useCallback(() => {
@@ -65,12 +67,13 @@ export function MissionAwareHomeProvider({
   useEffect(() => {
     let cancelled = false;
     const fetchData = () => {
+      const gen = ++fetchGenerationRef.current;
       const sid =
         (window as { holmes?: { getSessionId?: () => string } }).holmes?.getSessionId?.() ?? "";
       const url = `/api/holmes/home-personalization?sid=${encodeURIComponent(sid)}&page=home&region=home_main_feed${excludeDietary.length ? `&excludeDietary=${encodeURIComponent(excludeDietary.join(","))}` : ""}`;
       fetchHomePersonalizationDeduped(url)
         .then((d) => {
-          if (cancelled) return;
+          if (cancelled || gen !== fetchGenerationRef.current) return;
           const am = d.activeMission;
           setData({
             mode: d.mode === "recipe_mission" ? "recipe_mission" : "default",
@@ -103,7 +106,7 @@ export function MissionAwareHomeProvider({
           });
         })
         .catch(() => {
-          if (!cancelled) setData({ mode: "default" });
+          if (!cancelled && gen === fetchGenerationRef.current) setData({ mode: "default" });
         });
     };
     fetchRef.current = fetchData;
@@ -119,6 +122,16 @@ export function MissionAwareHomeProvider({
         fetchRef.current();
       }, 350);
     };
+    /** Infer/session: refetch immediately (no 350ms debounce). Coalesce bursts in one turn so we do not stack duplicate GETs. */
+    let inferMicrotaskPending = false;
+    const scheduleInferRefetch = () => {
+      if (inferMicrotaskPending) return;
+      inferMicrotaskPending = true;
+      queueMicrotask(() => {
+        inferMicrotaskPending = false;
+        fetchRef.current();
+      });
+    };
     const holmesEvents = [
       "holmes:search",
       "holmes:cartUpdate",
@@ -128,11 +141,13 @@ export function MissionAwareHomeProvider({
       "holmes:missionBarReset",
     ] as const;
     holmesEvents.forEach((ev) => document.addEventListener(ev, scheduleRefetch));
+    document.addEventListener("holmes:inferApplied", scheduleInferRefetch);
 
     return () => {
       cancelled = true;
       document.removeEventListener("holmes:ready", onReady);
       holmesEvents.forEach((ev) => document.removeEventListener(ev, scheduleRefetch));
+      document.removeEventListener("holmes:inferApplied", scheduleInferRefetch);
       if (debounce) clearTimeout(debounce);
     };
   }, [excludeDietary]);
