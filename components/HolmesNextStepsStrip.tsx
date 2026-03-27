@@ -17,7 +17,7 @@ export type HolmesNextStepWire = {
 function hrefForCandidate(route: string, pathname: string, fragmentType: string): string {
   /** Dedicated alternate catalogue layout (not “another PDP” of the same product). */
   if (fragmentType === "product-detail") {
-    return "/catalogue?view=personalized";
+    return "/catalogue?view=personalised";
   }
   const r = route || "/";
   if (r === "/catalogue/[id]") {

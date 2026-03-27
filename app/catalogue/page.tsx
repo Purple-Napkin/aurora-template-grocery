@@ -722,7 +722,7 @@ function CatalogueContent() {
 function CataloguePageInner() {
   const searchParams = useSearchParams();
   const view = searchParams.get("view") ?? "";
-  if (view === "personalized") {
+  if (view === "personalised" || view === "personalized") {
     return (
       <div
         className="relative border-t border-b border-emerald-900/10 bg-[linear-gradient(165deg,#fbfaf7_0%,#eef4ef_38%,#e5ebe4_100%)] py-8 shadow-[inset_0_1px_0_rgb(255_255_255/0.9)] dark:border-emerald-900/25 dark:bg-[linear-gradient(165deg,#0c1912_0%,#14221a_45%,#0f1a14_100%)] dark:shadow-none sm:py-12"

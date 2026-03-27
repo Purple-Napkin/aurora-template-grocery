@@ -17,7 +17,7 @@ import {
   isRecordOnSale,
   ProductSaleBadge,
 } from "@aurora-studio/starter-core";
-/** Deliberately not using CONTENT_BLOCK_* from the main catalogue — distinct “editorial aisle” tiles. */
+/** Distinct tiles from the main catalogue grid; same CMS patterns, different layout. */
 
 function getHolmesSid(): string | null {
   if (typeof window === "undefined") return null;
@@ -73,7 +73,7 @@ type Section = { id: string; title: string; subtitle?: string; hits: SearchHit[]
 
 /**
  * Alternate catalogue layout: mission-led sections, suggested aisles, goes-with basket.
- * Triggered by ?view=personalized (e.g. “Another product view” in the next-steps strip).
+ * Triggered by ?view=personalised (e.g. next-steps strip). `personalized` is accepted too.
  */
 export function PersonalizedCatalogueView() {
   const { items } = useCart();
@@ -124,7 +124,7 @@ export function PersonalizedCatalogueView() {
         if (hits.length > 0) {
           next.push({
             id: "mission",
-            title: "Picked for what you’re doing",
+            title: "Starting with what fits your moment",
             subtitle: activeMission?.label,
             hits,
           });
@@ -151,7 +151,7 @@ export function PersonalizedCatalogueView() {
         next.push({
           id: `cat-${slug}`,
           title: `From ${titleCaseSlug(slug)}`,
-          subtitle: "Suggested from how you browse",
+          subtitle: "We thought you might like these",
           hits,
         });
       }
@@ -176,8 +176,8 @@ export function PersonalizedCatalogueView() {
           if (mapped.length > 0) {
             next.push({
               id: "goes-with",
-              title: "Goes well with your basket",
-              subtitle: `Around ${first.name}`,
+              title: "Lovely beside what you’ve chosen",
+              subtitle: `Next to ${first.name}`,
               hits: mapped,
             });
           }
@@ -198,8 +198,8 @@ export function PersonalizedCatalogueView() {
         if (hits.length > 0) {
           next.push({
             id: "fallback",
-            title: "Fresh picks to start from",
-            subtitle: "We’ll personalise more as you browse.",
+            title: "A few ideas to begin with",
+            subtitle: "We’ll keep refining this as you look around.",
             hits,
           });
         }
@@ -225,57 +225,53 @@ export function PersonalizedCatalogueView() {
           className="inline-flex items-center gap-2 rounded-full border border-stone-400/80 bg-white/90 px-4 py-2 text-sm font-semibold text-stone-800 shadow-sm shadow-stone-900/5 hover:bg-white dark:border-stone-600 dark:bg-stone-900/80 dark:text-stone-100 dark:hover:bg-stone-900"
         >
           <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
-          Standard catalogue
+          Shop full catalogue
         </Link>
-        <p className="hidden text-xs font-medium uppercase tracking-[0.2em] text-stone-500 sm:block dark:text-stone-400">
-          Editorial picks · not the default grid
+        <p className="hidden text-sm font-medium text-stone-600 sm:block dark:text-stone-300">
+          Glad you’re here
         </p>
       </div>
 
       <header className="relative overflow-hidden rounded-[1.75rem] border border-emerald-900/20 bg-gradient-to-br from-[#0f3d24] via-[#14532d] to-[#064e3b] p-7 text-emerald-50 shadow-[0_20px_50px_-24px_rgba(6,78,59,0.55)] sm:p-10">
         <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-emerald-400/15 blur-3xl" aria-hidden />
         <div className="pointer-events-none absolute -bottom-10 left-1/3 h-40 w-40 rounded-full bg-amber-200/10 blur-3xl" aria-hidden />
-        <div className="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex min-w-0 items-start gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/25 backdrop-blur-sm">
-              <Sparkles className="h-7 w-7 text-emerald-200" aria-hidden />
-            </div>
-            <div className="min-w-0">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-emerald-200/95">
-                Personalised aisle
-              </p>
-              <h1 className="mt-2 font-display text-3xl font-semibold leading-[1.1] tracking-tight sm:text-4xl">
-                {activeMission?.label ?? "Curated for you"}
-              </h1>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-emerald-100/90">
-                Horizontal story rails and portrait tiles—built from your mission, browsing, and
-                basket. The main catalogue stays a filterable grid; this is a different surface.
-              </p>
-            </div>
+        <div className="relative flex min-w-0 items-start gap-4">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/25 backdrop-blur-sm">
+            <Sparkles className="h-7 w-7 text-emerald-200" aria-hidden />
           </div>
-          <div className="shrink-0 rounded-xl border border-white/15 bg-black/10 px-4 py-3 text-center sm:text-left">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-200/80">
-              Layout
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-emerald-200/95">
+              Your aisle
             </p>
-            <p className="mt-2 max-w-[12rem] text-xs leading-snug text-emerald-50/90">
-              No category sidebar · carousel rails · editorial cards
+            <h1 className="mt-2 font-display text-3xl font-semibold leading-[1.1] tracking-tight sm:text-4xl">
+              Welcome to your corner of the shop
+            </h1>
+            {activeMission?.label ? (
+              <p className="mt-2 text-lg font-medium leading-snug text-emerald-50/95 sm:text-xl">
+                {activeMission.label}
+              </p>
+            ) : null}
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-emerald-100/92 sm:text-[15px]">
+              This space is yours. We notice what you’re in the mood for and gently shape what you
+              see. You don’t need to work anything out. Stay as long as you like; we’re glad you’re
+              here.
             </p>
           </div>
         </div>
       </header>
 
       {loading ? (
-        <p className="text-sm text-stone-600 dark:text-stone-400">Loading your picks…</p>
+        <p className="text-sm text-stone-600 dark:text-stone-400">Gathering a few things we think you’ll love…</p>
       ) : sections.length === 0 ? (
         <p className="text-sm text-stone-600 dark:text-stone-400">
-          Nothing to show yet.{" "}
+          We’re still getting this corner ready for you.{" "}
           <Link
             href="/catalogue"
             className="font-semibold text-emerald-800 underline-offset-2 hover:underline dark:text-emerald-400"
           >
-            Browse the full catalogue
+            Explore the full shop
           </Link>
-          .
+          {" "}whenever you like.
         </p>
       ) : (
         <div className="space-y-14">
