@@ -124,7 +124,7 @@ export function ActiveMissionBar() {
 
   if (collapsed) {
     return (
-      <div className="fixed top-20 right-4 z-40" data-holmes="active-mission-bar">
+      <div className="fixed top-20 right-4 z-[100]" data-holmes="active-mission-bar">
         <button
           type="button"
           onClick={handleExpand}
@@ -142,7 +142,7 @@ export function ActiveMissionBar() {
 
   return (
     <div
-      className="fixed top-20 right-4 z-40 w-[min(100%-2rem,26rem)]"
+      className="fixed top-20 right-4 z-[100] w-[min(100%-2rem,26rem)]"
       data-holmes="active-mission-bar"
     >
       <div className="rounded-2xl border border-aurora-border/80 bg-aurora-surface/95 backdrop-blur-md shadow-lg shadow-aurora-primary/5 overflow-hidden">
@@ -169,7 +169,7 @@ export function ActiveMissionBar() {
                   Why am I seeing this?
                 </button>
                 {whyOpen && (
-                  <div className="absolute left-0 top-full mt-1 z-50 w-full min-w-[240px] max-w-[min(100vw-2rem,22rem)] rounded-lg border border-aurora-border bg-aurora-bg p-3 text-xs text-aurora-muted shadow-lg whitespace-pre-line leading-relaxed">
+                  <div className="absolute left-0 top-full z-[110] mt-1 w-full min-w-[240px] max-w-[min(100vw-2rem,22rem)] rounded-lg border border-aurora-border bg-aurora-bg p-3 text-xs text-aurora-muted shadow-lg whitespace-pre-line leading-relaxed">
                     {whyText}
                   </div>
                 )}
