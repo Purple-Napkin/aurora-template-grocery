@@ -82,6 +82,7 @@ export function Nav() {
           >
             {store ? (
               <SearchDropdown
+                clearQueryOnFocus
                 placeholder="Search products, brands, recipes…"
                 vendorId={store.id}
                 excludeDietary={excludeForSearch}
@@ -92,6 +93,7 @@ export function Nav() {
               <Link href="/stores" className="block cursor-pointer">
                 <span className="pointer-events-none block">
                   <SearchDropdown
+                    clearQueryOnFocus
                     placeholder="Select a store to search…"
                     vendorId={undefined}
                     excludeDietary={excludeForSearch}
