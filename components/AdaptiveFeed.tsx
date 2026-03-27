@@ -209,7 +209,7 @@ export function AdaptiveFeed({
               <span className="text-xs text-aurora-muted/90 font-medium shrink-0">{trustSignal}</span>
             )}
           </div>
-          <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-3 lg:grid-cols-5 sm:gap-5">
+          <div className="grid grid-cols-2 items-stretch gap-4 sm:grid-cols-3 lg:grid-cols-5 sm:gap-5">
             {sec.products.map((prod) => (
               <ContentBlockProductCard
                 key={prod.id}
@@ -279,7 +279,7 @@ export function AdaptiveFeed({
           Common next steps
         </h2>
         <p className="text-sm text-aurora-muted max-w-2xl leading-relaxed">
-          Recipes — optional inspiration when you&apos;re cooking, not the main shop story.
+          Recipes are optional inspiration when you&apos;re cooking, not the main shop story.
         </p>
         <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-3 lg:grid-cols-4 sm:gap-5">
           {recipes.slice(0, 4).map((r) => (

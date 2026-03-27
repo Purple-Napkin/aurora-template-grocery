@@ -60,7 +60,7 @@ export default function CartPageClient() {
         </span>
         <h1 className="text-2xl font-bold mb-2">Your basket is empty</h1>
         <p className="text-aurora-muted mb-8">
-          Nothing in here yet — start a mission from the homepage or browse the catalogue.
+          Nothing in here yet. Start a mission from the homepage or browse the catalogue.
         </p>
         <Link
           href="/catalogue"
@@ -273,7 +273,7 @@ export default function CartPageClient() {
             </div>
             {highMission && (
               <p className="text-xs text-aurora-muted mt-3 text-center">
-                Checkout is prioritised — fewer distractions on purpose.
+                Checkout is prioritised: fewer distractions on purpose.
               </p>
             )}
           </div>

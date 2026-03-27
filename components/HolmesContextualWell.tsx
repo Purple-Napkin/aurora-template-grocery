@@ -76,11 +76,11 @@ export function HolmesContextualWell({ currentProductId, variant = "default" }: 
     const cartCopy =
       variant === "cart" && comboTitle
         ? isRecipeStyle
-          ? `You may be building a meal — add what’s missing for “${comboTitle}” (based on your basket).`
-          : `Complete your “${comboTitle}” bundle — suggested items based on your basket.`
+          ? `You may be building a meal. Add what’s missing for “${comboTitle}” (based on your basket).`
+          : `Complete your “${comboTitle}” bundle. Suggested items are based on your basket.`
         : isRecipeStyle
-          ? `Based on your basket, you might be cooking${comboTitle ? ` — ideas around “${comboTitle}”` : ""}.`
-          : `We have bundle suggestions for your cart${comboTitle ? ` — “${comboTitle}”` : ""}.`;
+          ? `Based on your basket, you might be cooking${comboTitle ? `. Ideas around “${comboTitle}”` : ""}.`
+          : `We have bundle suggestions for your cart${comboTitle ? `. “${comboTitle}”` : ""}.`;
     return (
       <div
         className={`mb-8 rounded-[1.25rem] bg-white/88 backdrop-blur-sm dark:bg-aurora-surface/85 p-5 sm:p-6 ${CONTENT_BLOCK_PANEL_SHELL}`}

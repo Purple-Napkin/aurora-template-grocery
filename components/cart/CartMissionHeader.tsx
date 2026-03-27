@@ -5,7 +5,7 @@ import { isCookingMissionKey, isTravelLikeMission } from "@/lib/intent-mission";
 import { getForgottenSuggestions } from "@/lib/cart-intelligence";
 
 /**
- * Basket page narrative — frames the cart as a mission-completion surface.
+ * Basket page narrative: frames the cart as a mission-completion surface.
  */
 export function CartMissionHeader({ itemNames }: { itemNames: string[] }) {
   const data = useMissionAware();
@@ -20,14 +20,14 @@ export function CartMissionHeader({ itemNames }: { itemNames: string[] }) {
   let title = "Complete your shop";
   let subtitle =
     m?.summary?.trim() ||
-    "Review your lines, add anything missing, then head to checkout — we keep suggestions relevant to what you’re doing.";
+    "Review your lines, add anything missing, then head to checkout. We keep suggestions relevant to what you’re doing.";
 
   if (band === "high" && m) {
     if (isTravelLikeMission(m.key)) {
       title = "Complete your travel kit";
       subtitle =
         m.summary?.trim() ||
-        "Based on your basket — finish essentials in one pass, then checkout fast.";
+        "Based on your basket, finish essentials in one pass, then checkout fast.";
     } else if (isCookingMissionKey(m.key)) {
       title = nudge ? "Almost there for your meal" : "Finish your meal shop";
       subtitle =
@@ -36,18 +36,18 @@ export function CartMissionHeader({ itemNames }: { itemNames: string[] }) {
           ? `${nudge.charAt(0).toUpperCase() + nudge.slice(1)}. Based on your basket.`
           : "Add any missing ingredients, then checkout.");
     } else {
-      title = `${m.label} — mode active`;
+      title = `${m.label} · mode active`;
       subtitle = m.summary?.trim() || subtitle;
     }
   } else if (band === "medium" && m) {
     title = "Suggested next steps";
     subtitle =
       m.summary?.trim() ||
-      `We think you might be focused on “${m.label}”. Add bundles or essentials below — dismiss anytime from the insight card.`;
+      `We think you might be focused on “${m.label}”. Add bundles or essentials below. Dismiss anytime from the insight card.`;
   } else if (itemNames.length > 0) {
     title = "Your basket";
     subtitle =
-      "Nothing is locked in — browse suggestions below or go straight to checkout when you’re ready.";
+      "Nothing is locked in. Browse suggestions below or go straight to checkout when you’re ready.";
   }
 
   return (

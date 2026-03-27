@@ -4,8 +4,9 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@aurora-studio/starter-core";
-import { ChefHat, Sparkles, ShoppingBasket, ArrowRight, Search, Zap } from "lucide-react";
+import { ChefHat, ShoppingBasket, ArrowRight, Search } from "lucide-react";
 import type { HolmesNextStepWire } from "./HolmesNextStepsStrip";
+import { CONTENT_BLOCK_PANEL_SHELL } from "@/components/ContentBlockProductCard";
 
 const STOPWORDS = new Set([
   "the",
@@ -160,34 +161,34 @@ export function RecipeHolmesExperience({
 
   return (
     <section
-      className="relative overflow-hidden rounded-2xl border border-emerald-500/25 bg-gradient-to-br from-emerald-950/30 via-aurora-surface to-violet-950/20 p-5 sm:p-6 shadow-[0_20px_60px_-24px_rgba(16,185,129,0.35)]"
+      className={`rounded-[1.25rem] bg-white/88 backdrop-blur-sm dark:bg-aurora-surface/85 p-5 sm:p-6 ${CONTENT_BLOCK_PANEL_SHELL}`}
       aria-label="Personalised for your shop"
     >
-      <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute -left-12 bottom-0 h-40 w-40 rounded-full bg-violet-500/10 blur-3xl" />
-
-      <div className="relative flex flex-col gap-5">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-200 ring-1 ring-emerald-400/30">
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="flex min-w-0 items-start gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-aurora-primary/12 text-aurora-primary ring-1 ring-aurora-primary/15">
               <ChefHat className="h-5 w-5" aria-hidden />
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-widest text-emerald-200/90 flex items-center gap-2">
-                <Sparkles className="h-3.5 w-3.5" aria-hidden />
+              <p className="text-xs font-semibold uppercase tracking-widest text-aurora-muted">
                 Holmes for this recipe
               </p>
-              <p className="mt-1 text-sm text-aurora-muted leading-snug max-w-xl">
+              <p className="mt-1 max-w-xl text-sm leading-snug text-aurora-muted">
                 We use your session, basket, and this page to preload routes and surface smarter
-                shortcuts—no extra taps to “train” the shop.
+                shortcuts, without extra taps to “train” the shop.
               </p>
             </div>
           </div>
           {showMission ? (
-            <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-right max-w-xs">
-              <p className="text-[10px] uppercase tracking-wider text-aurora-muted">Detected intent</p>
-              <p className="text-sm font-medium text-aurora-text line-clamp-2">{mission!.summary}</p>
-              <p className="text-[10px] text-aurora-muted mt-0.5">
+            <div className="max-w-xs rounded-xl border border-aurora-border/45 bg-[color-mix(in_srgb,var(--aurora-bg)_14%,white)] px-3 py-2.5 text-right shadow-[inset_0_1px_0_0_rgba(0,0,0,0.04)] dark:border-aurora-border/35 dark:bg-white/[0.05] dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-aurora-muted">
+                Detected intent
+              </p>
+              <p className="mt-0.5 line-clamp-2 text-sm font-semibold text-stone-900 dark:text-aurora-text">
+                {mission!.summary}
+              </p>
+              <p className="mt-1 text-[10px] text-aurora-muted">
                 {Math.round(conf * 100)}% confidence
                 {mission!.key ? ` · ${mission!.key}` : ""}
               </p>
@@ -197,8 +198,8 @@ export function RecipeHolmesExperience({
 
         {chips.length > 0 && (
           <div>
-            <p className="text-xs font-semibold text-aurora-muted uppercase tracking-wider mb-2 flex items-center gap-2">
-              <Search className="h-3.5 w-3.5" aria-hidden />
+            <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-aurora-muted">
+              <Search className="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden />
               Shop ingredients &amp; ideas
             </p>
             <div className="flex flex-wrap gap-2">
@@ -206,7 +207,7 @@ export function RecipeHolmesExperience({
                 <Link
                   key={term}
                   href={`/catalogue?q=${encodeURIComponent(term)}`}
-                  className="inline-flex items-center rounded-full border border-aurora-border/80 bg-aurora-surface/80 px-3 py-1.5 text-xs font-medium text-aurora-text hover:border-emerald-500/50 hover:bg-emerald-500/10 transition-colors"
+                  className="inline-flex items-center rounded-full border border-stone-200/90 bg-white px-3 py-1.5 text-xs font-medium text-stone-800 shadow-sm shadow-stone-900/[0.03] transition-[border-color,background-color] duration-luxury ease-concierge hover:border-aurora-primary/25 hover:bg-aurora-primary/[0.06] dark:border-aurora-border/50 dark:bg-aurora-surface dark:text-aurora-text dark:hover:border-aurora-primary/30 dark:hover:bg-aurora-primary/10"
                 >
                   {term}
                 </Link>
@@ -216,9 +217,9 @@ export function RecipeHolmesExperience({
         )}
 
         {hintLine ? (
-          <div className="rounded-xl border border-aurora-border/60 bg-aurora-surface/50 px-4 py-3">
-            <p className="text-xs font-semibold text-aurora-muted uppercase tracking-wider mb-1 flex items-center gap-2">
-              <ShoppingBasket className="h-3.5 w-3.5" aria-hidden />
+          <div className="rounded-xl border border-aurora-border/45 bg-[color-mix(in_srgb,var(--aurora-bg)_12%,white)] px-4 py-3 dark:bg-white/[0.04]">
+            <p className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-aurora-muted">
+              <ShoppingBasket className="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden />
               Because of your basket
             </p>
             <p className="text-sm text-aurora-text">{hintLine}</p>
@@ -231,7 +232,7 @@ export function RecipeHolmesExperience({
                     <li key={`${id}-${i}`}>
                       <Link
                         href={`/catalogue/${id}`}
-                        className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 dark:text-emerald-300 hover:underline"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-aurora-primary hover:text-aurora-primary-dark hover:underline"
                       >
                         {p.name ?? "Product"} <ArrowRight className="h-3 w-3" aria-hidden />
                       </Link>
@@ -245,8 +246,7 @@ export function RecipeHolmesExperience({
 
         {nextSteps.length > 0 && (
           <div>
-            <p className="text-xs font-semibold text-aurora-muted uppercase tracking-wider mb-2 flex items-center gap-2">
-              <Zap className="h-3.5 w-3.5 text-amber-400/90" aria-hidden />
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-aurora-muted">
               Likely next steps
             </p>
             <div className="flex flex-wrap gap-2">
@@ -256,8 +256,8 @@ export function RecipeHolmesExperience({
                   href={hrefForNextStep(c.route, pathname)}
                   className={
                     c.kind === "suggestion"
-                      ? "inline-flex items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-100 hover:bg-amber-500/20"
-                      : "inline-flex items-center rounded-full border border-emerald-500/35 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-100 hover:bg-emerald-500/18"
+                      ? "inline-flex items-center rounded-full border border-aurora-border/55 bg-stone-100/90 px-3 py-1 text-xs font-medium text-stone-800 transition-colors hover:bg-stone-200/90 dark:border-aurora-border/45 dark:bg-white/[0.06] dark:text-aurora-text dark:hover:bg-white/[0.1]"
+                      : "inline-flex items-center rounded-full border border-aurora-primary/22 bg-aurora-primary/10 px-3 py-1 text-xs font-semibold text-aurora-primary transition-colors hover:bg-aurora-primary/16"
                   }
                 >
                   {c.intentLabel ?? c.fragmentType}

@@ -25,7 +25,7 @@ function hrefForCandidate(route: string, pathname: string): string {
 }
 
 /**
- * Shows Holmes “predict the future” next steps as a slim strip under the nav —
+ * Shows Holmes “predict the future” next steps as a slim strip under the nav:
  * predicted flow vs exploratory probes (from infer payload + holmes:nextSteps).
  */
 export function HolmesNextStepsStrip() {
@@ -74,7 +74,7 @@ export function HolmesNextStepsStrip() {
           <span>Next for you</span>
           {missionSummary ? (
             <span className="hidden md:inline font-normal normal-case tracking-normal text-aurora-muted/90 truncate max-w-[220px]">
-              — {missionSummary}
+              · {missionSummary}
             </span>
           ) : null}
         </div>

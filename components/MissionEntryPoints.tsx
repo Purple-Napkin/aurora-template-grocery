@@ -59,7 +59,7 @@ export function MissionEntryPoints() {
             Shop by mission
           </h2>
           <p className="text-sm text-aurora-muted mb-7 max-w-2xl leading-relaxed">
-            Pick a path — we&apos;ll adapt aisles and suggestions as we learn what you&apos;re trying to do. No
+            Pick a path. We&apos;ll adapt aisles and suggestions as we learn what you&apos;re trying to do. No
             single mode is forced.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

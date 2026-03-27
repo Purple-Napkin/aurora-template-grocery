@@ -300,18 +300,36 @@ export function ContentBlockProductCard({
     thumbnail: true as const,
     fallback: (
       <span className="flex h-full min-h-[5rem] w-full items-center justify-center text-aurora-muted text-2xl font-light">
-        —
+        -
       </span>
     ),
   };
 
   const pdp = `/catalogue/${prod.id}`;
 
+  const bodyBand = (
+    <>
+      <Link
+        href={pdp}
+        className={`block min-w-0 ${layout === "split" ? "text-stone-900" : ""}`}
+      >
+        <TitlePrice
+          prod={prod}
+          currency={currency}
+          titleClassName={
+            layout === "split" ? "text-stone-900" : "text-aurora-text"
+          }
+        />
+      </Link>
+      <CardMeta prod={prod} variant={layout === "split" ? "split" : "radial"} />
+    </>
+  );
+
   if (layout === "split") {
     return (
       <div
         {...cardMarkers}
-        className={`group flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-white ${cardShell}`}
+        className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-white dark:bg-white ${cardShell}`}
       >
         <Link href={pdp} {...imgMarkers} className={CONTENT_BLOCK_IMAGE_WELL}>
           {prod.on_sale ? <span className="sr-only">On sale. </span> : null}
@@ -321,11 +339,8 @@ export function ContentBlockProductCard({
           />
           {prod.on_sale ? <ProductSaleBadge /> : null}
         </Link>
-        <div className="flex flex-col bg-white dark:bg-white p-4 sm:p-5">
-          <Link href={pdp} className="block min-w-0 text-stone-900">
-            <TitlePrice prod={prod} currency={currency} titleClassName="text-stone-900" />
-          </Link>
-          <CardMeta prod={prod} variant="split" />
+        <div className="flex min-h-0 flex-1 flex-col bg-white dark:bg-white p-4 sm:p-5">
+          <div className="flex min-h-0 flex-1 flex-col">{bodyBand}</div>
           <AddToCartRow prod={prod} resolvedImageUrl={resolved} />
         </div>
       </div>
@@ -335,7 +350,7 @@ export function ContentBlockProductCard({
   return (
     <div
       {...cardMarkers}
-      className={`group flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-white ${cardShell}`}
+      className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-white dark:bg-white ${cardShell}`}
     >
       <Link href={pdp} {...imgMarkers} className={CONTENT_BLOCK_IMAGE_WELL}>
         {prod.on_sale ? <span className="sr-only">On sale. </span> : null}
@@ -345,11 +360,8 @@ export function ContentBlockProductCard({
         />
         {prod.on_sale ? <ProductSaleBadge /> : null}
       </Link>
-      <div className="flex flex-col border-t border-stone-200/90 bg-white dark:bg-white p-3 sm:p-4">
-        <Link href={pdp} className="block min-w-0">
-          <TitlePrice prod={prod} currency={currency} />
-        </Link>
-        <CardMeta prod={prod} variant="radial" />
+      <div className="flex min-h-0 flex-1 flex-col border-t border-stone-200/90 bg-white dark:bg-white p-3 sm:p-4">
+        <div className="flex min-h-0 flex-1 flex-col">{bodyBand}</div>
         <AddToCartRow prod={prod} resolvedImageUrl={resolved} />
       </div>
     </div>

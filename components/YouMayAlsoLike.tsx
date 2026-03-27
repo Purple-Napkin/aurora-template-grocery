@@ -84,7 +84,7 @@ export async function YouMayAlsoLike({
       <h2 className="font-display text-xl font-bold mb-4">
         {fromHolmes ? "Pairs well with" : "You may also like"}
       </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 items-start">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 items-stretch">
         {records.map((record) => {
           const id = String(record.id ?? "");
           const name = getDisplayName(record);
@@ -94,7 +94,7 @@ export async function YouMayAlsoLike({
           return (
             <div
               key={id}
-              className={`flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
+              className={`flex h-full flex-col overflow-hidden rounded-xl bg-white dark:bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
             >
               <Link href={`/catalogue/${id}`} className="block shrink-0">
                 <div className={CONTENT_BLOCK_IMAGE_WELL}>

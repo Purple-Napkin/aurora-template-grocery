@@ -271,7 +271,7 @@ export function ProductGridSection({
       </div>
       <div
         {...(withHolmesMarkers ? { "data-holmes-home-section-grid": true } : {})}
-        className="grid grid-cols-2 items-start gap-4 sm:grid-cols-4 sm:gap-6"
+        className="grid grid-cols-2 items-stretch gap-4 sm:grid-cols-4 sm:gap-6"
       >
         {sec.products.map((prod) => (
           <ContentBlockProductCard
@@ -307,14 +307,14 @@ export function InspirationSection({
       ) : null}
       <div
         {...(withHolmesMarkers ? { "data-holmes-home-section-grid": true } : {})}
-        className="grid grid-cols-2 items-start gap-4 sm:grid-cols-4 sm:gap-6"
+        className="grid grid-cols-2 items-stretch gap-4 sm:grid-cols-4 sm:gap-6"
       >
         {sec.cards.map((card, j) => (
           <Link
             key={j}
             href={card.linkUrl || "/catalogue"}
             {...(withHolmesMarkers ? { "data-holmes-home-card": true } : {})}
-            className={`flex flex-col overflow-hidden rounded-2xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
+            className={`flex h-full flex-col overflow-hidden rounded-2xl bg-white ${CONTENT_BLOCK_CARD_SHELL}`}
           >
             <div
               {...(withHolmesMarkers ? { "data-holmes-home-card-image": true } : {})}
@@ -365,7 +365,7 @@ export function RecipeIdeasRail({
         Common next steps
       </h2>
       <p className="text-sm text-aurora-muted mb-6 max-w-2xl leading-relaxed">
-        Recipes and meal ideas — one way to complete a cooking mission, not the only path.
+        Recipes and meal ideas are one way to complete a cooking mission, not the only path.
       </p>
       <div
         {...(withHolmesMarkers ? { "data-holmes-home-section-grid": true } : {})}
