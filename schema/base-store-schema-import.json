@@ -5,10 +5,10 @@
       "name": "Vendors",
       "icon": "Store",
       "fields": [
+        { "slug": "image_url", "name": "Image URL", "field_type": "text", "required": false },
         { "slug": "name", "name": "Name", "field_type": "text", "required": true },
         { "slug": "email", "name": "Email", "field_type": "text", "required": false },
         { "slug": "address", "name": "Address", "field_type": "text", "required": false },
-        { "slug": "image_url", "name": "Image URL", "field_type": "text", "required": false },
         { "slug": "status", "name": "Status", "field_type": "select", "required": false, "validation": { "options": ["active", "inactive", "pending"] } }
       ]
     },
@@ -17,6 +17,7 @@
       "name": "Categories",
       "icon": "Folder",
       "fields": [
+        { "slug": "image_url", "name": "Image URL", "field_type": "text", "required": false },
         { "slug": "name", "name": "Name", "field_type": "text", "required": true },
         { "slug": "slug", "name": "Slug", "field_type": "text", "required": false }
       ]
@@ -67,6 +68,7 @@
       "name": "Promotions",
       "icon": "Tag",
       "fields": [
+        { "slug": "image_url", "name": "Image URL", "field_type": "text", "required": false },
         { "slug": "name", "name": "Name", "field_type": "text", "required": true },
         { "slug": "description", "name": "Description", "field_type": "text", "required": false },
         { "slug": "discount_type", "name": "Discount Type", "field_type": "select", "required": false, "validation": { "options": ["percent", "fixed", "bogo"] } },
