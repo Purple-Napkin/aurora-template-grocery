@@ -111,6 +111,14 @@ Spec and acceptance criteria: [HOLMES-WHITEPAPER.md](../../aurora-studio/docs/HO
 
 ---
 
+## Cart meal occasion (grocery templates)
+
+For **supermarket / ecom** tenants, the platform infers a **meal occasion** from cart line names and recent search (breakfast, lunch, dinner, or neutral) so **recipe and combo suggestions** stay coherent—e.g. breakfast staples in the basket should not surface heavy dinner-mains as top editorial picks. This is **automatic on the API** for `ecom` combo domain; travel, hardware, and hotel tenants are out of scope.
+
+Platform reference: **[holmes-cart-meal-occasion.md](../../aurora-studio/docs/holmes-cart-meal-occasion.md)**, **[holmes-cart-intent-ai.md](../../aurora-studio/docs/holmes-cart-intent-ai.md)**.
+
+---
+
 ## Don't Lose Track
 
 The command surface, missions, and feed are **expression layers**. Holmes is the **brain**.

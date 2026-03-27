@@ -57,6 +57,18 @@ export const HERO_VARIANTS: Record<string, HeroVariant> = {
     title: "Finish your breakfast in one go",
     subtitle: "Add missing items in one tap",
   },
+  cookingLunchMedium: {
+    key: "cookingLunchMedium",
+    image: H.cookingMedium,
+    title: "Looks like you’re building lunch",
+    subtitle: "We’ll help you finish faster",
+  },
+  cookingLunchHigh: {
+    key: "cookingLunchHigh",
+    image: H.cookingHigh,
+    title: "Finish your lunch in one go",
+    subtitle: "Add missing items in one tap",
+  },
   travelMedium: {
     key: "travelMedium",
     image: H.travelMedium,
@@ -83,7 +95,7 @@ export function inferHeroIntent(missionKey: string | undefined): HeroIntent {
   if (!missionKey?.trim()) return "neutral";
   const k = missionKey.trim();
   if (isTravelLikeMission(k)) return "travel";
-  if (k === "breakfast_mission") return "cooking";
+  if (k === "breakfast_mission" || k === "lunch_mission") return "cooking";
   if (COOKING_MISSION_KEYS.has(k)) return "cooking";
   if (isTopUpMissionKey(k)) return "topup";
   return "neutral";
@@ -110,6 +122,11 @@ export function getHero(
       return confidence === "high"
         ? HERO_VARIANTS.cookingBreakfastHigh
         : HERO_VARIANTS.cookingBreakfastMedium;
+    }
+    if (missionKey === "lunch_mission") {
+      return confidence === "high"
+        ? HERO_VARIANTS.cookingLunchHigh
+        : HERO_VARIANTS.cookingLunchMedium;
     }
     return confidence === "high" ? HERO_VARIANTS.cookingHigh : HERO_VARIANTS.cookingMedium;
   }
