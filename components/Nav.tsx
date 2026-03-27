@@ -82,7 +82,7 @@ export function Nav() {
           >
             {store ? (
               <SearchDropdown
-                placeholder="Search milk, pasta, dinner…"
+                placeholder="Search products, brands, recipes…"
                 vendorId={store.id}
                 excludeDietary={excludeForSearch}
                 getRecipeSuggestion={getRecipeSuggestion}

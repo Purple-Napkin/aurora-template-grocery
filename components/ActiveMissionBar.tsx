@@ -103,6 +103,7 @@ export function ActiveMissionBar() {
     `Looks like you might be focused on: ${activeMission.label}`;
 
   const whyText =
+    activeMission.whyDetail?.trim() ||
     trustLine ||
     "Based on your basket, search terms, and how you’re browsing the store.";
 
@@ -168,7 +169,7 @@ export function ActiveMissionBar() {
                   Why am I seeing this?
                 </button>
                 {whyOpen && (
-                  <div className="absolute left-0 top-full mt-1 z-50 w-full min-w-[220px] rounded-lg border border-aurora-border bg-aurora-bg p-2.5 text-xs text-aurora-muted shadow-lg">
+                  <div className="absolute left-0 top-full mt-1 z-50 w-full min-w-[240px] max-w-[min(100vw-2rem,22rem)] rounded-lg border border-aurora-border bg-aurora-bg p-3 text-xs text-aurora-muted shadow-lg whitespace-pre-line leading-relaxed">
                     {whyText}
                   </div>
                 )}

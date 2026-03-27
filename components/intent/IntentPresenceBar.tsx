@@ -71,6 +71,11 @@ export function IntentPresenceBar() {
     items.length > 0
   );
 
+  const whyExplanation =
+    activeMission.whyDetail?.trim() ||
+    summary ||
+    "We combine your basket, searches, and browsing to pick this mode.";
+
   const missionCta = () => {
     if (isTravelLikeMission(activeMission.key)) {
       return { href: "/catalogue?q=travel+essentials", label: "Shop travel essentials" };
@@ -143,8 +148,8 @@ export function IntentPresenceBar() {
               Why am I seeing this?
             </button>
             {whyOpen && (
-              <div className="absolute right-0 top-full mt-1 z-50 w-[min(100vw-2rem,20rem)] rounded-xl border border-emerald-800 bg-[#0f3d24] p-3 text-xs text-emerald-100 shadow-xl">
-                {summary}
+              <div className="absolute right-0 top-full mt-1 z-50 w-[min(100vw-2rem,24rem)] rounded-xl border border-emerald-800 bg-[#0f3d24] p-3 text-xs text-emerald-100 shadow-xl whitespace-pre-line leading-relaxed">
+                {whyExplanation}
               </div>
             )}
           </div>

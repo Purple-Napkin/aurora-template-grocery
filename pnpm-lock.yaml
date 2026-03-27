@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@aurora-studio/sdk':
-        specifier: ^0.2.51
-        version: 0.2.51
+        specifier: ^0.2.52
+        version: 0.2.52
       '@aurora-studio/starter-core':
         specifier: ^0.1.62
-        version: 0.1.62(@aurora-studio/sdk@0.2.51)(lucide-react@0.454.0(react@19.2.4))(next@15.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 0.1.62(@aurora-studio/sdk@0.2.52)(lucide-react@0.454.0(react@19.2.4))(next@15.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
@@ -73,8 +73,8 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@aurora-studio/sdk@0.2.51':
-    resolution: {integrity: sha512-6GCvvjCxM3+o+xBev6HyNnd27yj2JLz77YsR0VaTF1GgjFU3+rAJcUUS6p5XPyVoJOtCn/h2bWGQcyFm8FLxug==}
+  '@aurora-studio/sdk@0.2.52':
+    resolution: {integrity: sha512-BbM02++s5htl3/oonI7H3OhMIMqnhiwozIaKMbWvW3uece67TxxCB/luy/XKQYpD/IIv6XsN67ub5yfik9fVkQ==}
     engines: {node: '>=18'}
 
   '@aurora-studio/starter-core@0.1.62':
@@ -1873,11 +1873,11 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@aurora-studio/sdk@0.2.51': {}
+  '@aurora-studio/sdk@0.2.52': {}
 
-  '@aurora-studio/starter-core@0.1.62(@aurora-studio/sdk@0.2.51)(lucide-react@0.454.0(react@19.2.4))(next@15.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@aurora-studio/starter-core@0.1.62(@aurora-studio/sdk@0.2.52)(lucide-react@0.454.0(react@19.2.4))(next@15.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
-      '@aurora-studio/sdk': 0.2.51
+      '@aurora-studio/sdk': 0.2.52
       lucide-react: 0.454.0(react@19.2.4)
       next: 15.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react: 19.2.4

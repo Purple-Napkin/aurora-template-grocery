@@ -45,6 +45,18 @@ export const HERO_VARIANTS: Record<string, HeroVariant> = {
     title: "Finish your dinner in one go",
     subtitle: "Add missing ingredients in one tap",
   },
+  cookingBreakfastMedium: {
+    key: "cookingBreakfastMedium",
+    image: H.cookingMedium,
+    title: "Looks like you’re building breakfast",
+    subtitle: "We’ll help you finish faster",
+  },
+  cookingBreakfastHigh: {
+    key: "cookingBreakfastHigh",
+    image: H.cookingHigh,
+    title: "Finish your breakfast in one go",
+    subtitle: "Add missing items in one tap",
+  },
   travelMedium: {
     key: "travelMedium",
     image: H.travelMedium,
@@ -71,6 +83,7 @@ export function inferHeroIntent(missionKey: string | undefined): HeroIntent {
   if (!missionKey?.trim()) return "neutral";
   const k = missionKey.trim();
   if (isTravelLikeMission(k)) return "travel";
+  if (k === "breakfast_mission") return "cooking";
   if (COOKING_MISSION_KEYS.has(k)) return "cooking";
   if (isTopUpMissionKey(k)) return "topup";
   return "neutral";
@@ -84,11 +97,20 @@ export function missionBandToHeroConfidence(band: MissionBand | undefined): Hero
 /**
  * Deterministic hero: low confidence always neutral (never “finished dish” / “trip ready” on weak signals).
  */
-export function getHero(intent: HeroIntent, confidence: HeroConfidence): HeroVariant {
+export function getHero(
+  intent: HeroIntent,
+  confidence: HeroConfidence,
+  missionKey?: string | undefined
+): HeroVariant {
   if (confidence === "low") {
     return HERO_VARIANTS.neutral;
   }
   if (intent === "cooking") {
+    if (missionKey === "breakfast_mission") {
+      return confidence === "high"
+        ? HERO_VARIANTS.cookingBreakfastHigh
+        : HERO_VARIANTS.cookingBreakfastMedium;
+    }
     return confidence === "high" ? HERO_VARIANTS.cookingHigh : HERO_VARIANTS.cookingMedium;
   }
   if (intent === "travel") {
@@ -106,5 +128,5 @@ export function resolveHeroFromMission(
 ): HeroVariant {
   const intent = inferHeroIntent(missionKey);
   const confidence = missionBandToHeroConfidence(band);
-  return getHero(intent, confidence);
+  return getHero(intent, confidence, missionKey);
 }

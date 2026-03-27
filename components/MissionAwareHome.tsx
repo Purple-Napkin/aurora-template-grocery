@@ -26,6 +26,8 @@ export type ActiveMission = {
   confidence: number;
   band: "low" | "medium" | "high";
   summary?: string;
+  /** Rules-engine + session context — shown in “Why am I seeing this?” */
+  whyDetail?: string;
   uiHints?: ActiveMissionUiHints;
 };
 
@@ -93,6 +95,7 @@ export function MissionAwareHomeProvider({
                     confidence: typeof am.confidence === "number" ? am.confidence : 0,
                     band: ["low", "medium", "high"].includes(am.band) ? am.band : "low",
                     summary: typeof am.summary === "string" ? am.summary : undefined,
+                    whyDetail: typeof am.whyDetail === "string" ? am.whyDetail : undefined,
                     uiHints:
                       am.uiHints && typeof am.uiHints === "object"
                         ? {

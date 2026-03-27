@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { UtensilsCrossed, Cookie, Sparkles, Salad, Wine, MapPin } from "lucide-react";
+import { UtensilsCrossed, Cookie, Sparkles, Salad, Wine, MapPin, Apple } from "lucide-react";
 import { useMissionAware } from "./MissionAwareHome";
 import { holmesMissionLockCombo } from "@aurora-studio/starter-core";
 import { shouldLockRecipeMissionForMissionPill } from "@/lib/holmes-mission-lock";
@@ -33,6 +33,9 @@ const ICON_MAP: Record<string, typeof UtensilsCrossed> = {
   "Packing checklist": MapPin,
   "Recipe ideas": Sparkles,
   "Quick meals": UtensilsCrossed,
+  "Bakery & spreads": Apple,
+  "Coffee & juice": Cookie,
+  "Sandwiches & salads": Salad,
 };
 
 /** Mission-based entry points - Holmes-influenced when inference exists, else defaults. */

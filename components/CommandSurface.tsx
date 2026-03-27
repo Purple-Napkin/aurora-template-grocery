@@ -1,7 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { Search, UtensilsCrossed, RotateCcw, Apple, PiggyBank, Sparkles } from "lucide-react";
+import {
+  Search,
+  UtensilsCrossed,
+  RotateCcw,
+  Apple,
+  PiggyBank,
+  Sparkles,
+  Salad,
+} from "lucide-react";
 import {
   SearchDropdown,
   useStore,
@@ -42,6 +50,9 @@ const ICON_MAP: Record<string, typeof UtensilsCrossed> = {
   "Seasonal picks": Sparkles,
   "Fresh ingredients": UtensilsCrossed,
   "Quick meals": UtensilsCrossed,
+  "Bakery & spreads": Apple,
+  "Coffee & juice": Sparkles,
+  "Sandwiches & salads": Salad,
 };
 
 type LocalQuickAction = {
