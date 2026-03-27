@@ -122,9 +122,9 @@ export function IntentPresenceBar() {
             aria-live="polite"
             aria-atomic="true"
           >
-            <span className="text-emerald-200/90">Shop by mission · </span>
+            <span className="text-emerald-200/90">We’re with you on · </span>
             {activeMission.label}
-            <span className="font-normal text-emerald-100/85"> · mode active</span>
+            <span className="font-normal text-emerald-100/85"> · active</span>
           </p>
           {summaryHref ? (
             <Link
@@ -163,8 +163,8 @@ export function IntentPresenceBar() {
             type="button"
             onClick={handleReset}
             className="p-2 rounded-lg text-emerald-200 hover:bg-white/10 transition-colors"
-            aria-label="Reset Holmes session. Clears basket and browsing state, then reloads."
-            title="Reset Holmes session. Clears basket, session data, and starts a fresh Holmes session (reloads)."
+            aria-label="Reset your session. Clears basket and browsing state, then reloads."
+            title="Reset your session. Clears basket, session data, and starts fresh (reloads)."
           >
             <RotateCcw className="w-4 h-4" />
           </button>

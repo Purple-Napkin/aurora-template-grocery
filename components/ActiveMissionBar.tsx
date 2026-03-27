@@ -204,8 +204,8 @@ export function ActiveMissionBar() {
               type="button"
               onClick={handleReset}
               className="p-2 rounded-lg text-aurora-muted hover:text-aurora-text hover:bg-aurora-surface-hover/80 transition-colors"
-              aria-label="Reset Holmes session. Clears basket and browsing state, then reloads."
-              title="Reset Holmes session. Clears basket, session data, and starts a fresh Holmes session (reloads)."
+              aria-label="Reset your session. Clears basket and browsing state, then reloads."
+              title="Reset your session. Clears basket, session data, and starts fresh (reloads)."
             >
               <RotateCcw className="w-4 h-4" />
             </button>

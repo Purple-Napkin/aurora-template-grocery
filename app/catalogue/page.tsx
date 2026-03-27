@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
+import { PersonalizedCatalogueView } from "@/components/PersonalizedCatalogueView";
 import { AddToCartButton } from "@aurora-studio/starter-core";
 import { useStore } from "@aurora-studio/starter-core";
 import { useDietaryExclusions } from "@/components/DietaryExclusionsContext";
@@ -718,10 +719,36 @@ function CatalogueContent() {
   );
 }
 
+function CataloguePageInner() {
+  const searchParams = useSearchParams();
+  const view = searchParams.get("view") ?? "";
+  if (view === "personalized") {
+    return (
+      <div
+        className="relative border-t border-b border-emerald-900/10 bg-[linear-gradient(165deg,#fbfaf7_0%,#eef4ef_38%,#e5ebe4_100%)] py-8 shadow-[inset_0_1px_0_rgb(255_255_255/0.9)] dark:border-emerald-900/25 dark:bg-[linear-gradient(165deg,#0c1912_0%,#14221a_45%,#0f1a14_100%)] dark:shadow-none sm:py-12"
+        data-personalised-aisle
+      >
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.4] dark:opacity-[0.15]"
+          style={{
+            backgroundImage: `radial-gradient(circle at 20% 10%, rgba(20, 83, 45, 0.08) 0%, transparent 45%),
+              radial-gradient(circle at 80% 90%, rgba(120, 113, 108, 0.06) 0%, transparent 40%)`,
+          }}
+          aria-hidden
+        />
+        <div className="relative z-[1] mx-auto max-w-6xl px-4 sm:px-6">
+          <PersonalizedCatalogueView />
+        </div>
+      </div>
+    );
+  }
+  return <CatalogueContent />;
+}
+
 export default function CataloguePage() {
   return (
     <Suspense fallback={<div className="max-w-6xl mx-auto py-16 px-6 text-center text-aurora-muted">Loading…</div>}>
-      <CatalogueContent />
+      <CataloguePageInner />
     </Suspense>
   );
 }

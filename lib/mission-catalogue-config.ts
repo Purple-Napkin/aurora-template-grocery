@@ -16,6 +16,9 @@ export const MISSION_CATEGORY_PRIORITY: Record<string, string[]> = {
 export const MISSION_FOCUS_QUERY: Record<string, string> = {
   travel_prep: "travel essentials",
   recipe_mission: "fresh ingredients",
+  combo_mission: "meal ideas",
+  cook_dinner: "dinner ingredients",
+  cook_dinner_tonight: "tonight dinner",
   urgent_replenishment: "essentials",
   ready_to_pay: "",
   routine_shop: "essentials",
