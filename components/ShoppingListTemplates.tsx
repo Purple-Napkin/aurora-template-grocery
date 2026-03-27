@@ -34,15 +34,15 @@ export function ShoppingListTemplates() {
                 <Link
                   key={t.slug}
                   href={href}
-                  className="flex items-center gap-3.5 px-5 py-3.5 rounded-full bg-white/80 dark:bg-white/[0.05] border border-aurora-border/35 dark:border-aurora-border/45 shadow-[0_2px_12px_rgba(27,67,50,0.05)] font-medium text-aurora-text transition-[transform,box-shadow,border-color] duration-luxury ease-concierge hover:-translate-y-0.5 hover:border-aurora-primary/22 hover:shadow-[0_8px_24px_rgba(47,93,69,0.1)]"
+                  className="flex w-full sm:w-auto max-w-full items-center gap-3.5 px-5 py-3.5 rounded-full bg-white/80 dark:bg-white/[0.05] border border-aurora-border/35 dark:border-aurora-border/45 shadow-[0_2px_12px_rgba(27,67,50,0.05)] font-medium text-aurora-text transition-[transform,box-shadow,border-color] duration-luxury ease-concierge hover:-translate-y-0.5 hover:border-aurora-primary/22 hover:shadow-[0_8px_24px_rgba(47,93,69,0.1)]"
                 >
                   <span className="flex items-center justify-center w-10 h-10 rounded-2xl bg-aurora-primary/10 text-aurora-primary">
                     <ListChecks className="w-5 h-5" />
                   </span>
-                  <div>
-                    <span className="block">{t.label}</span>
+                  <div className="min-w-0">
+                    <span className="block break-words">{t.label}</span>
                     {t.description && (
-                      <span className="block text-xs text-aurora-muted font-normal mt-0.5">
+                      <span className="block break-words text-xs text-aurora-muted font-normal mt-0.5">
                         {t.description}
                       </span>
                     )}
