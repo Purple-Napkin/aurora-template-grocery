@@ -21,6 +21,7 @@ import {
   CONTENT_BLOCK_CARD_SHELL,
   CONTENT_BLOCK_IMAGE_WELL,
 } from "@/components/ContentBlockProductCard";
+import { RecipeHolmesExperience } from "@/components/RecipeHolmesExperience";
 
 interface RecipePageViewProps {
   recipeSlug: string;
@@ -192,6 +193,14 @@ export function RecipePageView({
           </div>
         )}
       </header>
+
+      {!compact && recipe && (
+        <RecipeHolmesExperience
+          recipeTitle={displayTitle}
+          recipeSlug={recipeSlug}
+          ingredients={recipe.ingredients ?? []}
+        />
+      )}
 
       {!compact && recipe?.image_url && (
         <div

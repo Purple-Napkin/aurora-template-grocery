@@ -8,6 +8,7 @@ import { ActiveMissionBar } from "./ActiveMissionBar";
 import { IntentPresenceBar } from "./intent/IntentPresenceBar";
 import { Footer } from "./Footer";
 import { FooterTip } from "./FooterTip";
+import { HolmesNextStepsStrip } from "./HolmesNextStepsStrip";
 
 export function ConditionalLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -23,6 +24,7 @@ export function ConditionalLayout({ children }: { children: React.ReactNode }) {
       <Suspense fallback={null}>
         <ActiveMissionBar />
       </Suspense>
+      <HolmesNextStepsStrip />
       <main className="min-h-[calc(100vh-3.5rem)] flex flex-col">
         <div key={pathname} className="animate-page-enter">
           {children}
